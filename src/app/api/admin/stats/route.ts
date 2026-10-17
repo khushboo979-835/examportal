@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import connectToDatabase from '@/lib/db';
+import { Order } from '@/models/Order';
+import { PDFProduct } from '@/models/PDFProduct';
+import { DownloadLog } from '@/models/DownloadLog';
 import { mockOrders, mockPDFProducts } from '@/lib/mock-db';
 
 export const dynamic = 'force-dynamic';
@@ -12,15 +15,13 @@ export async function GET(request: NextRequest) {
     let activeProductsCount = 0;
 
     try {
-      const orders = await prisma.order.findMany({
-        where: { paymentStatus: 'PAID' },
-        include: { orderItems: true },
-      });
+      await connectToDatabase();
+      const orders = await Order.find({ status: 'SUCCESS' }).lean();
       totalOrdersCount = orders.length;
-      totalRevenue = orders.reduce((sum, o) => sum + o.totalAmount, 0);
+      totalRevenue = orders.reduce((sum, o: any) => sum + (o.amount || 0), 0);
 
-      totalDownloadsCount = await prisma.downloadLog.count();
-      activeProductsCount = await prisma.pDFProduct.count({ where: { isPublished: true } });
+      totalDownloadsCount = await DownloadLog.countDocuments();
+      activeProductsCount = await PDFProduct.countDocuments({ isPublished: true });
     } catch {
       totalRevenue = mockOrders
         .filter((o) => o.paymentStatus === 'PAID')

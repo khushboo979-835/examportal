@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import connectToDatabase from '@/lib/db';
+import { Order } from '@/models/Order';
 import { mockOrders } from '@/lib/mock-db';
 
 export const dynamic = 'force-dynamic';
@@ -11,17 +12,21 @@ export async function GET(request: NextRequest) {
   try {
     let orders: any[] = [];
     try {
-      orders = await prisma.order.findMany({
-        include: {
-          orderItems: {
-            include: {
-              pdfProduct: true,
-            },
-          },
-          user: true,
-        },
-        orderBy: { createdAt: 'desc' },
-      });
+      await connectToDatabase();
+      const dbOrders = await Order.find()
+        .populate('pdfProductId')
+        .populate('userId')
+        .sort({ createdAt: -1 })
+        .lean();
+      if (dbOrders && dbOrders.length > 0) {
+        orders = JSON.parse(JSON.stringify(dbOrders)).map((o: any) => ({
+          ...o,
+          id: o._id,
+          totalAmount: o.amount ?? o.totalAmount ?? 0,
+          paymentStatus: o.status === 'SUCCESS' ? 'PAID' : o.status ?? 'PENDING',
+          gatewayOrderId: o.razorpayOrderId ?? o.gatewayOrderId ?? 'N/A',
+        }));
+      }
     } catch {
       orders = mockOrders;
     }

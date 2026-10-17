@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createRazorpayOrder } from '@/lib/razorpay';
-import prisma from '@/lib/prisma';
+import connectToDatabase from '@/lib/db';
+import { PDFProduct } from '@/models/PDFProduct';
+import { User } from '@/models/User';
+import { Order } from '@/models/Order';
 import { mockPDFProducts, mockOrders } from '@/lib/mock-db';
 
 export const dynamic = 'force-dynamic';
@@ -17,15 +20,23 @@ export async function POST(request: NextRequest) {
     // Lookup products
     let products: any[] = [];
     try {
-      products = await prisma.pDFProduct.findMany({
-        where: { id: { in: productIds } },
-      });
+      await connectToDatabase();
+      const dbProducts = await PDFProduct.find({
+        $or: [{ _id: { $in: productIds } }, { slug: { $in: productIds } }],
+      }).lean();
+
+      if (dbProducts && dbProducts.length > 0) {
+        products = JSON.parse(JSON.stringify(dbProducts)).map((p: any) => ({
+          ...p,
+          id: p._id,
+        }));
+      }
     } catch {
-      products = mockPDFProducts.filter((p) => productIds.includes(p.id));
+      products = mockPDFProducts.filter((p) => productIds.includes(p.id) || productIds.includes(p.slug));
     }
 
     if (!products || products.length === 0) {
-      products = mockPDFProducts.filter((p) => productIds.includes(p.id));
+      products = mockPDFProducts.filter((p) => productIds.includes(p.id) || productIds.includes(p.slug));
     }
 
     if (products.length === 0) {
@@ -49,39 +60,32 @@ export async function POST(request: NextRequest) {
 
     // Save Order in Database or mock store
     try {
-      // Find or create user
-      let user = await prisma.user.findFirst({
-        where: { email: customerEmail || 'guest@exampustak.in' },
+      await connectToDatabase();
+      const userPhone = customerPhone || `+91-98${Math.floor(10000000 + Math.random() * 90000000)}`;
+      let user = await User.findOne({
+        $or: [{ phone: userPhone }, { email: customerEmail || 'guest@exampustak.in' }],
       });
 
       if (!user) {
-        user = await prisma.user.create({
-          data: {
-            name: customerName || 'Exam Aspirant',
-            email: customerEmail || `student_${Date.now()}@exampustak.in`,
-            phone: customerPhone,
-            role: 'USER',
-          },
+        user = await User.create({
+          name: customerName || 'Exam Aspirant',
+          phone: userPhone,
+          email: customerEmail || `student_${Date.now()}@exampustak.in`,
+          role: 'STUDENT',
         });
       }
 
-      await prisma.order.create({
-        data: {
-          orderNumber,
-          userId: user.id,
-          totalAmount,
-          paymentStatus: 'PENDING',
-          gatewayOrderId: razorpayOrder.id,
-          customerName: customerName || user.name,
-          customerEmail: customerEmail || user.email,
-          customerPhone: customerPhone || user.phone,
-          orderItems: {
-            create: products.map((p) => ({
-              pdfProductId: p.id,
-              price: p.discountedPrice ?? p.price,
-            })),
-          },
-        },
+      await Order.create({
+        orderNumber,
+        userId: user._id,
+        orderType: 'SINGLE_PDF',
+        pdfProductId: products[0]?.id || products[0]?._id,
+        amount: totalAmount,
+        status: 'PENDING',
+        razorpayOrderId: razorpayOrder.id,
+        customerName: customerName || user.name,
+        customerEmail: customerEmail || user.email,
+        customerPhone: customerPhone || user.phone,
       });
     } catch (dbErr) {
       console.warn('Database order record creation note (memory fallback):', dbErr);

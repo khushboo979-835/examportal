@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import connectToDatabase from '@/lib/db';
+import { PDFProduct } from '@/models/PDFProduct';
+import { ExamNode } from '@/models/ExamNode';
+import { Category } from '@/models/Category';
+import { Sector } from '@/models/Sector';
 import { mockPDFProducts, getHydratedProducts } from '@/lib/mock-db';
 import { slugify } from '@/lib/utils';
 
@@ -9,16 +13,25 @@ export async function GET(request: NextRequest) {
   try {
     let products: any[] = [];
     try {
-      products = await prisma.pDFProduct.findMany({
-        include: {
-          subject: {
-            include: {
-              boardOrExam: true,
-            },
-          },
-        },
-        orderBy: { createdAt: 'desc' },
-      });
+      await connectToDatabase();
+      const dbProducts = await PDFProduct.find()
+        .populate('examNodeId categoryId sectorId subjectId')
+        .sort({ createdAt: -1 })
+        .lean();
+
+      if (dbProducts && dbProducts.length > 0) {
+        products = JSON.parse(JSON.stringify(dbProducts)).map((p: any) => ({
+          ...p,
+          id: p._id,
+          pageCount: p.totalPages || p.pageCount || 40,
+          fileSize: p.fileSizeBytes || p.fileSize || 5000000,
+          rating: p.avgRating || p.rating || 4.8,
+          reviewCount: p.totalReviews || p.reviewCount || 0,
+          tags: p.searchTags || p.tags || [],
+        }));
+      } else {
+        products = getHydratedProducts();
+      }
     } catch {
       products = getHydratedProducts();
     }
@@ -60,63 +73,75 @@ export async function POST(request: NextRequest) {
     }
 
     const generatedSlug = `${slugify(title)}-${Date.now().toString(36)}`;
-
-    const newProduct = {
-      id: `pdf-custom-${Date.now()}`,
-      title,
-      slug: generatedSlug,
-      description: description || 'Comprehensive exam preparation study material.',
-      highlights: highlights || ['Comprehensive chapter notes', 'VVI exam questions solved'],
-      tableOfContents: tableOfContents || ['Chapter 1 Overview', 'Chapter 2 Key Concepts'],
-      price: Number(price),
-      discountedPrice: discountedPrice ? Number(discountedPrice) : null,
-      fileKey,
-      previewKey: previewKey || null,
-      previewUrl: `/api/preview/${generatedSlug}`,
-      pageCount: Number(pageCount || 45),
-      fileSize: Number(fileSize || 10485760),
-      fileFormat: 'PDF',
-      medium: medium || 'BILINGUAL',
-      materialType: materialType || 'NOTES',
-      tags: Array.isArray(tags) ? tags : (tags || '').split(',').map((t: string) => t.trim()).filter(Boolean),
-      authorName: authorName || 'Verified Educator',
-      subjectId: subjectId || 'sub-bpsc-bihar',
-      isPublished: true,
-      isFeatured: false,
-      rating: 5.0,
-      reviewCount: 0,
-      totalDownloads: 0,
-      totalSales: 0,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
+    const parsedTags = Array.isArray(tags) ? tags : (tags || '').split(',').map((t: string) => t.trim()).filter(Boolean);
 
     try {
-      const created = await prisma.pDFProduct.create({
-        data: {
-          title: newProduct.title,
-          slug: newProduct.slug,
-          description: newProduct.description,
-          highlights: newProduct.highlights,
-          tableOfContents: newProduct.tableOfContents,
-          price: newProduct.price,
-          discountedPrice: newProduct.discountedPrice,
-          fileKey: newProduct.fileKey,
-          previewKey: newProduct.previewKey,
-          previewUrl: newProduct.previewUrl,
-          pageCount: newProduct.pageCount,
-          fileSize: newProduct.fileSize,
-          medium: newProduct.medium as any,
-          materialType: newProduct.materialType as any,
-          tags: newProduct.tags,
-          authorName: newProduct.authorName,
-          subjectId: newProduct.subjectId,
-          isPublished: true,
-        },
+      await connectToDatabase();
+      // Ensure we have fallback sector and category if creating new
+      let defaultExam = await ExamNode.findOne();
+      let defaultCat = await Category.findOne();
+      let defaultSector = await Sector.findOne();
+
+      const created = await PDFProduct.create({
+        title,
+        slug: generatedSlug,
+        sectorId: defaultSector?._id || defaultCat?.sectorId,
+        categoryId: defaultCat?._id,
+        examNodeId: defaultExam?._id,
+        subject: title,
+        materialType: materialType || 'NOTES',
+        medium: medium || 'BILINGUAL',
+        accessType: Number(price) === 0 ? 'FREE' : 'PREMIUM',
+        price: Number(price),
+        discountedPrice: discountedPrice ? Number(discountedPrice) : undefined,
+        fileKey,
+        previewKey: previewKey || fileKey,
+        totalPages: Number(pageCount || 45),
+        fileSizeBytes: Number(fileSize || 10485760),
+        searchTags: parsedTags,
+        isPublished: true,
       });
-      return NextResponse.json({ success: true, product: created });
-    } catch {
-      // Memory store fallback
+
+      return NextResponse.json({ 
+        success: true, 
+        product: {
+          ...created.toObject(),
+          id: created._id,
+          pageCount: created.totalPages,
+          fileSize: created.fileSizeBytes,
+        } 
+      });
+    } catch (dbErr) {
+      console.warn('DB creation fallback to memory:', dbErr);
+      const newProduct = {
+        id: `pdf-custom-${Date.now()}`,
+        title,
+        slug: generatedSlug,
+        description: description || 'Comprehensive exam preparation study material.',
+        highlights: highlights || ['Comprehensive chapter notes', 'VVI exam questions solved'],
+        tableOfContents: tableOfContents || ['Chapter 1 Overview', 'Chapter 2 Key Concepts'],
+        price: Number(price),
+        discountedPrice: discountedPrice ? Number(discountedPrice) : null,
+        fileKey,
+        previewKey: previewKey || null,
+        previewUrl: `/api/preview/${generatedSlug}`,
+        pageCount: Number(pageCount || 45),
+        fileSize: Number(fileSize || 10485760),
+        fileFormat: 'PDF',
+        medium: medium || 'BILINGUAL',
+        materialType: materialType || 'NOTES',
+        tags: parsedTags,
+        authorName: authorName || 'Verified Educator',
+        subjectId: subjectId || 'sub-bpsc-bihar',
+        isPublished: true,
+        isFeatured: false,
+        rating: 5.0,
+        reviewCount: 0,
+        totalDownloads: 0,
+        totalSales: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
       mockPDFProducts.unshift(newProduct as any);
       return NextResponse.json({ success: true, product: newProduct });
     }
@@ -134,24 +159,36 @@ export async function PATCH(request: NextRequest) {
     if (!id) return NextResponse.json({ error: 'Missing product ID' }, { status: 400 });
 
     try {
-      const updated = await prisma.pDFProduct.update({
-        where: { id },
-        data: {
-          ...(isPublished !== undefined ? { isPublished } : {}),
-          ...(price !== undefined ? { price: Number(price) } : {}),
-          ...(discountedPrice !== undefined ? { discountedPrice: Number(discountedPrice) } : {}),
-        },
-      });
-      return NextResponse.json({ success: true, product: updated });
-    } catch {
-      const p = mockPDFProducts.find((item) => item.id === id);
-      if (p) {
-        if (isPublished !== undefined) p.isPublished = isPublished;
-        if (price !== undefined) p.price = Number(price);
-        if (discountedPrice !== undefined) p.discountedPrice = Number(discountedPrice);
+      await connectToDatabase();
+      const updateData: any = {};
+      if (isPublished !== undefined) updateData.isPublished = isPublished;
+      if (price !== undefined) updateData.price = Number(price);
+      if (discountedPrice !== undefined) updateData.discountedPrice = Number(discountedPrice);
+
+      const updated = await PDFProduct.findOneAndUpdate(
+        { $or: [{ _id: id }, { slug: id }] },
+        { $set: updateData },
+        { new: true }
+      ).lean();
+
+      if (updated) {
+        return NextResponse.json({ 
+          success: true, 
+          product: {
+            ...updated,
+            id: (updated as any)._id,
+          } 
+        });
       }
-      return NextResponse.json({ success: true, product: p });
+    } catch {}
+
+    const p = mockPDFProducts.find((item) => item.id === id || item.slug === id);
+    if (p) {
+      if (isPublished !== undefined) p.isPublished = isPublished;
+      if (price !== undefined) p.price = Number(price);
+      if (discountedPrice !== undefined) p.discountedPrice = Number(discountedPrice);
     }
+    return NextResponse.json({ success: true, product: p });
   } catch (error) {
     return NextResponse.json({ error: 'Update failed' }, { status: 500 });
   }

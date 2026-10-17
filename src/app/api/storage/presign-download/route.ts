@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generatePresignedDownloadUrl } from '@/lib/storage';
 import { rateLimit } from '@/lib/rate-limiter';
-import prisma from '@/lib/prisma';
-import { mockPDFProducts, mockOrders } from '@/lib/mock-db';
+import connectToDatabase from '@/lib/db';
+import { PDFProduct } from '@/models/PDFProduct';
+import { mockPDFProducts } from '@/lib/mock-db';
 
 export const dynamic = 'force-dynamic';
 
@@ -24,15 +25,16 @@ export async function POST(request: NextRequest) {
     // Verify product exists
     let product: any = null;
     try {
-      product = await prisma.pDFProduct.findUnique({
-        where: { id: productId },
-      });
+      await connectToDatabase();
+      product = await PDFProduct.findOne({
+        $or: [{ _id: productId }, { slug: productId }],
+      }).lean();
     } catch {
-      product = mockPDFProducts.find((p) => p.id === productId);
+      product = mockPDFProducts.find((p) => p.id === productId || p.slug === productId);
     }
 
     if (!product) {
-      product = mockPDFProducts.find((p) => p.id === productId);
+      product = mockPDFProducts.find((p) => p.id === productId || p.slug === productId);
     }
 
     if (!product) {
@@ -41,7 +43,8 @@ export async function POST(request: NextRequest) {
 
     // Dynamic watermarked download endpoint
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    const downloadUrl = `${appUrl}/api/download/${product.id}?email=${encodeURIComponent(userEmail || '')}&phone=${encodeURIComponent(userPhone || '')}&token=secure_${Date.now()}`;
+    const pId = product._id || product.id || productId;
+    const downloadUrl = `${appUrl}/api/pdf/download/${pId}?email=${encodeURIComponent(userEmail || '')}&phone=${encodeURIComponent(userPhone || '')}&token=secure_${Date.now()}`;
 
     // Also generate S3/R2 direct signed URL
     const s3SignedUrl = await generatePresignedDownloadUrl({

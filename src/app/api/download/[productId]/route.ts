@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { applyDynamicWatermark, createSamplePreviewPdf } from '@/lib/watermark';
 import { fetchFileBuffer } from '@/lib/storage';
-import prisma from '@/lib/prisma';
+import connectToDatabase from '@/lib/db';
+import { PDFProduct } from '@/models/PDFProduct';
+import { DownloadLog } from '@/models/DownloadLog';
 import { mockPDFProducts } from '@/lib/mock-db';
 
 export const dynamic = 'force-dynamic';
@@ -20,22 +22,16 @@ export async function GET(
   try {
     let product: any = null;
     try {
-      product = await prisma.pDFProduct.findUnique({
-        where: { id: productId },
-        include: {
-          subject: {
-            include: {
-              boardOrExam: true,
-            },
-          },
-        },
-      });
+      await connectToDatabase();
+      product = await PDFProduct.findOne({
+        $or: [{ _id: productId }, { slug: productId }],
+      }).populate('examNodeId categoryId sectorId').lean();
     } catch {
-      product = mockPDFProducts.find((p) => p.id === productId);
+      product = mockPDFProducts.find((p) => p.id === productId || p.slug === productId);
     }
 
     if (!product) {
-      product = mockPDFProducts.find((p) => p.id === productId);
+      product = mockPDFProducts.find((p) => p.id === productId || p.slug === productId);
     }
 
     if (!product) {
@@ -51,8 +47,8 @@ export async function GET(
 
     // If storage buffer isn't available (dev/mock), create full structured document dynamically
     if (!rawPdfBuffer) {
-      const boardCode = product.subject?.boardOrExam?.code || 'BOARD';
-      const subjectName = product.subject?.name || 'Academic Material';
+      const boardCode = product.examNodeId?.name || product.subject || 'BOARD';
+      const subjectName = product.subject || 'Academic Material';
       rawPdfBuffer = await createSamplePreviewPdf(
         product.title,
         boardCode,
@@ -71,22 +67,23 @@ export async function GET(
 
     // 3. Log download in database asynchronously
     try {
-      await prisma.downloadLog.create({
-        data: {
-          userId: 'user-demo-1',
-          pdfProductId: product.id,
-          ipAddress: ip,
-          userAgent: request.headers.get('user-agent'),
-          watermarkTag: `${phone} | ${email}`,
-        },
+      await DownloadLog.create({
+        userPhone: phone,
+        userEmail: email,
+        pdfProductId: product._id,
+        pdfTitle: product.title,
+        pdfSlug: product.slug,
+        orderId: orderNum,
+        ipAddress: ip,
+        userAgent: request.headers.get('user-agent') || 'Browser',
+        downloadedAt: new Date(),
       });
 
-      await prisma.pDFProduct.update({
-        where: { id: product.id },
-        data: { totalDownloads: { increment: 1 } },
-      });
+      await PDFProduct.updateOne(
+        { _id: product._id },
+        { $inc: { totalDownloads: 1 } }
+      );
     } catch {
-      // In-memory or offline fallback
       product.totalDownloads = (product.totalDownloads || 0) + 1;
     }
 

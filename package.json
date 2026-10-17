@@ -7,15 +7,11 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:generate": "prisma generate",
-    "db:push": "prisma db push",
-    "db:seed": "node prisma/seed.js",
     "db:migrate": "node --experimental-strip-types scripts/migrate-and-seed.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.750.0",
     "@aws-sdk/s3-request-presigner": "^3.750.0",
-    "@prisma/client": "^6.4.0",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "dotenv": "^18.0.6",
@@ -34,8 +30,9 @@
     "@types/react": "19.0.8",
     "@types/react-dom": "19.0.3",
     "autoprefixer": "^10.6.1",
+    "eslint": "^9.19.0",
+    "eslint-config-next": "15.1.7",
     "postcss": "^8.5.2",
-    "prisma": "^6.4.0",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.3"
   }

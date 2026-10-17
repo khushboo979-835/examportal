@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyRazorpaySignature } from '@/lib/razorpay';
-import prisma from '@/lib/prisma';
+import connectToDatabase from '@/lib/db';
+import { Order } from '@/models/Order';
+import { PDFProduct } from '@/models/PDFProduct';
+import { User } from '@/models/User';
 import { mockOrders } from '@/lib/mock-db';
 
 export const dynamic = 'force-dynamic';
@@ -32,29 +35,30 @@ export async function POST(request: NextRequest) {
 
     // Update order status in DB or mock store
     try {
-      const order = await prisma.order.update({
-        where: { orderNumber },
-        data: {
-          paymentStatus: 'PAID',
-          paymentMethod: 'RAZORPAY_UPI',
-          gatewayPaymentId: razorpayPaymentId,
-          gatewayTransactionId: razorpaySignature,
-        },
-        include: {
-          orderItems: {
-            include: {
-              pdfProduct: true,
-            },
+      await connectToDatabase();
+      const order = await Order.findOneAndUpdate(
+        { orderNumber },
+        {
+          $set: {
+            status: 'SUCCESS',
+            razorpayPaymentId,
           },
         },
-      });
+        { new: true }
+      ).populate('pdfProductId userId').lean();
 
-      // Increment product total sales
-      for (const item of order.orderItems) {
-        await prisma.pDFProduct.update({
-          where: { id: item.pdfProductId },
-          data: { totalSales: { increment: 1 } },
-        });
+      if (order && order.pdfProductId) {
+        await PDFProduct.updateOne(
+          { _id: (order.pdfProductId as any)._id || order.pdfProductId },
+          { $inc: { totalSales: 1 } }
+        );
+
+        if (order.userId) {
+          await User.updateOne(
+            { _id: (order.userId as any)._id || order.userId },
+            { $addToSet: { purchasedPDFs: (order.pdfProductId as any)._id || order.pdfProductId } }
+          );
+        }
       }
 
       return NextResponse.json({

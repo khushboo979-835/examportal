@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSamplePreviewPdf } from '@/lib/watermark';
-import prisma from '@/lib/prisma';
+import connectToDatabase from '@/lib/db';
+import { PDFProduct } from '@/models/PDFProduct';
 import { mockPDFProducts } from '@/lib/mock-db';
 
 export const dynamic = 'force-dynamic';
@@ -14,16 +15,10 @@ export async function GET(
   try {
     let product: any = null;
     try {
-      product = await prisma.pDFProduct.findUnique({
-        where: { id: productId },
-        include: {
-          subject: {
-            include: {
-              boardOrExam: true,
-            },
-          },
-        },
-      });
+      await connectToDatabase();
+      product = await PDFProduct.findOne({
+        $or: [{ _id: productId }, { slug: productId }],
+      }).populate('examNodeId categoryId').lean();
     } catch {
       product = mockPDFProducts.find((p) => p.id === productId || p.slug === productId);
     }
@@ -36,8 +31,8 @@ export async function GET(
       return NextResponse.json({ error: 'Product not found' }, { status: 404 });
     }
 
-    const boardCode = product.subject?.boardOrExam?.code || 'BOARD';
-    const subjectName = product.subject?.name || 'Subject';
+    const boardCode = product.examNodeId?.name || product.subject || 'BOARD';
+    const subjectName = product.subject || 'Subject Notes';
 
     const previewPdfBytes = await createSamplePreviewPdf(
       product.title,
