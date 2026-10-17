@@ -1,0 +1,226 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearchPostgres"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+  CREATOR
+}
+
+enum CategoryLevel {
+  K12
+  HIGHER_ED
+  COMPETITIVE
+}
+
+enum Medium {
+  HINDI
+  ENGLISH
+  BILINGUAL
+}
+
+enum MaterialType {
+  NOTES
+  PYQ
+  MODEL_PAPER
+  FORMULA_SHEET
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+model User {
+  id           String        @id @default(cuid())
+  name         String
+  email        String        @unique
+  phone        String?       @unique
+  role         Role          @default(USER)
+  avatarUrl    String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  orders       Order[]
+  downloadLogs DownloadLog[]
+  createdPdfs  PDFProduct[]  @relation("CreatorProducts")
+
+  @@index([email])
+  @@index([phone])
+}
+
+model Category {
+  id          String         @id @default(cuid())
+  name        String
+  slug        String         @unique
+  description String?
+  icon        String?
+  level       CategoryLevel  @default(COMPETITIVE)
+  parentId    String?
+  parent      Category?      @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children    Category[]     @relation("CategoryHierarchy")
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  boardOrExams BoardOrExam[]
+
+  @@index([slug])
+  @@index([parentId])
+  @@index([level])
+}
+
+model BoardOrExam {
+  id          String     @id @default(cuid())
+  name        String
+  code        String     @unique // e.g., CBSE, BSEB, BPSC, UPSC, SSC
+  slug        String     @unique
+  description String?
+  logoUrl     String?
+  categoryId  String
+  category    Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  subjects    Subject[]
+
+  @@index([code])
+  @@index([slug])
+  @@index([categoryId])
+}
+
+model Subject {
+  id            String       @id @default(cuid())
+  name          String       // e.g. "Mathematics", "Indian Polity", "Data Structures"
+  slug          String
+  classLevel    String       // e.g., "Class 10", "Class 12", "Semester 3", "Prelims", "Mains"
+  boardOrExamId String
+  boardOrExam   BoardOrExam  @relation(fields: [boardOrExamId], references: [id], onDelete: Cascade)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  products      PDFProduct[]
+
+  @@unique([boardOrExamId, name, classLevel])
+  @@index([slug])
+  @@index([boardOrExamId])
+  @@index([classLevel])
+}
+
+model PDFProduct {
+  id              String        @id @default(cuid())
+  title           String
+  slug            String        @unique
+  description     String
+  highlights      String[]      @default([])
+  tableOfContents String[]      @default([])
+  price           Int           // In INR (e.g. 149 = Rs 149)
+  discountedPrice Int?          // In INR (e.g. 79 = Rs 79)
+  
+  fileKey         String        // Private object storage key in S3/R2
+  previewKey      String?       // Public or watermarked 2-3 sample pages key
+  previewUrl      String?       // Direct preview PDF url or local fallback
+  
+  pageCount       Int           @default(1)
+  fileSize        Int           @default(0) // In bytes
+  fileFormat      String        @default("PDF")
+  
+  medium          Medium        @default(BILINGUAL)
+  materialType    MaterialType  @default(NOTES)
+  tags            String[]      @default([])
+  
+  authorName      String?       @default("Top Educator")
+  creatorId       String?
+  creator         User?         @relation("CreatorProducts", fields: [creatorId], references: [id])
+  
+  subjectId       String
+  subject         Subject       @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  
+  isPublished     Boolean       @default(true)
+  isFeatured      Boolean       @default(false)
+  rating          Float         @default(4.8)
+  reviewCount     Int           @default(1)
+  totalDownloads  Int           @default(0)
+  totalSales      Int           @default(0)
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  orderItems      OrderItem[]
+  downloadLogs    DownloadLog[]
+
+  @@index([slug])
+  @@index([subjectId])
+  @@index([medium])
+  @@index([materialType])
+  @@index([isPublished])
+  @@index([price])
+}
+
+model Order {
+  id                   String        @id @default(cuid())
+  orderNumber          String        @unique // e.g. "ORD-2026-X9Y2"
+  userId               String
+  user                 User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  totalAmount          Int           // In INR
+  paymentStatus        PaymentStatus @default(PENDING)
+  paymentMethod        String?       // "RAZORPAY", "UPI", "TEST"
+  gatewayOrderId       String?       // Razorpay Order ID
+  gatewayPaymentId     String?       // Razorpay Payment ID
+  gatewayTransactionId String?       // Razorpay Signature or txn ref
+  
+  customerName         String?
+  customerEmail        String?
+  customerPhone        String?
+  
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  orderItems           OrderItem[]
+
+  @@index([orderNumber])
+  @@index([userId])
+  @@index([paymentStatus])
+  @@index([gatewayOrderId])
+}
+
+model OrderItem {
+  id           String      @id @default(cuid())
+  orderId      String
+  order        Order       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  pdfProductId String
+  pdfProduct   PDFProduct  @relation(fields: [pdfProductId], references: [id], onDelete: Cascade)
+  price        Int         // Price at time of purchase
+
+  createdAt    DateTime    @default(now())
+
+  @@index([orderId])
+  @@index([pdfProductId])
+}
+
+model DownloadLog {
+  id           String      @id @default(cuid())
+  userId       String
+  user         User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pdfProductId String
+  pdfProduct   PDFProduct  @relation(fields: [pdfProductId], references: [id], onDelete: Cascade)
+  ipAddress    String?
+  userAgent    String?
+  watermarkTag String?     // e.g. "9876543210 | student@gmail.com"
+  downloadedAt DateTime    @default(now())
+
+  @@index([userId])
+  @@index([pdfProductId])
+  @@index([downloadedAt])
+}
