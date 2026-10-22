@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, UploadCloud, FileText, ArrowLeft, ShieldCheck, Sparkles } from 'lucide-react';
+import { LayoutDashboard, UploadCloud, FileText, ArrowLeft, ShieldCheck, Sparkles, GraduationCap } from 'lucide-react';
 
 export default function AdminHeader() {
   const pathname = usePathname();
@@ -12,6 +12,7 @@ export default function AdminHeader() {
     { label: 'Analytics Dashboard', href: '/admin', icon: LayoutDashboard },
     { label: 'Upload New Notes (S3/R2)', href: '/admin/upload', icon: UploadCloud },
     { label: 'Orders & CSV Ledger', href: '/admin/orders', icon: FileText },
+    { label: '🎓 NEP-2020 Internships & Certs', href: '/admin/internships', icon: GraduationCap },
   ];
 
   return (

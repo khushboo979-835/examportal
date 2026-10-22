@@ -7,3 +7,6 @@ export * from './PDFProduct';
 export * from './User';
 export * from './Order';
 export * from './DownloadLog';
+export * from './InternshipTrack';
+export * from './StudentInternship';
+export * from './DDISCertificate';

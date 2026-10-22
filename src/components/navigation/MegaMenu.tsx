@@ -203,6 +203,8 @@ const mockNavHierarchy: SectorItem[] = [
 export default function MegaMenu() {
   const router = useRouter();
   const [isMegaOpen, setIsMegaOpen] = useState(false);
+  const [isInternshipOpen, setIsInternshipOpen] = useState(false);
+  const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
   const [activeSectorIndex, setActiveSectorIndex] = useState(0);
   const [activeCategoryIndex, setActiveCategoryIndex] = useState(0);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
@@ -210,6 +212,8 @@ export default function MegaMenu() {
   const [mobileExpandedCategory, setMobileExpandedCategory] = useState<string | null>('bseb');
   const [language, setLanguage] = useState<'HI' | 'EN'>('HI');
   const menuTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const internshipTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const accountTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const activeSector = mockNavHierarchy[activeSectorIndex] || mockNavHierarchy[0];
   const activeCategory = activeSector.categories[activeCategoryIndex] || activeSector.categories[0];
@@ -389,6 +393,110 @@ export default function MegaMenu() {
                   </div>
                 )}
               </div>
+
+              {/* 🎓 High-Priority Tab: Internships (NEP-2020) */}
+              <div
+                className="hidden lg:block relative"
+                onMouseEnter={() => {
+                  if (internshipTimeoutRef.current) clearTimeout(internshipTimeoutRef.current);
+                  setIsInternshipOpen(true);
+                }}
+                onMouseLeave={() => {
+                  internshipTimeoutRef.current = setTimeout(() => setIsInternshipOpen(false), 200);
+                }}
+              >
+                <Link
+                  href="/internships"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all bg-gradient-to-r from-emerald-50 via-teal-50 to-blue-50 hover:from-emerald-100 hover:to-blue-100 text-slate-800 border border-emerald-200/80 shadow-xs group"
+                >
+                  <GraduationCap className="w-4 h-4 text-[#00A389] group-hover:scale-110 transition-transform" />
+                  <span className="font-extrabold text-slate-900">Internships</span>
+                  <span className="text-[10px] text-slate-500 font-semibold">(NEP-2020)</span>
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  </span>
+                  <span className="text-[8px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-gradient-to-r from-[#00A389] to-[#1A73E8] text-white shadow-xs">
+                    DDIS Certified
+                  </span>
+                  <ChevronDown className={`w-3.5 h-3.5 text-slate-500 transition-transform duration-200 ${isInternshipOpen ? 'rotate-180' : ''}`} />
+                </Link>
+
+                {/* Dropdown Menu for NEP-2020 Internships */}
+                {isInternshipOpen && (
+                  <div className="absolute left-0 top-full mt-1.5 w-80 bg-white rounded-2xl shadow-2xl border border-slate-200 p-3 z-50 animate-in fade-in space-y-1">
+                    <div className="px-3 py-1.5 text-[10px] font-extrabold uppercase text-slate-400 tracking-wider flex items-center justify-between border-b border-slate-100 pb-2 mb-1">
+                      <span>NEP-2020 Accredited Tracks</span>
+                      <span className="text-[9px] text-[#00A389] font-black uppercase">DDIS Approved</span>
+                    </div>
+
+                    <Link
+                      href="/internships?stream=BCA_IT"
+                      onClick={() => setIsInternshipOpen(false)}
+                      className="p-2 rounded-xl hover:bg-slate-50 flex items-center gap-2.5 text-xs font-bold text-slate-800 hover:text-[#00A389] transition-colors"
+                    >
+                      <span className="w-7 h-7 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center text-[10px] font-black shrink-0">IT</span>
+                      <div>
+                        <div>BCA / IT & Web Dev</div>
+                        <div className="text-[10px] text-slate-400 font-normal">Next.js & MongoDB Full-Stack (4-8 Wks)</div>
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/internships?stream=COMMERCE"
+                      onClick={() => setIsInternshipOpen(false)}
+                      className="p-2 rounded-xl hover:bg-slate-50 flex items-center gap-2.5 text-xs font-bold text-slate-800 hover:text-[#00A389] transition-colors"
+                    >
+                      <span className="w-7 h-7 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-[10px] font-black shrink-0">COM</span>
+                      <div>
+                        <div>Commerce & E-Commerce</div>
+                        <div className="text-[10px] text-slate-400 font-normal">Digital Marketing & Analytics</div>
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/internships?stream=SCIENCE"
+                      onClick={() => setIsInternshipOpen(false)}
+                      className="p-2 rounded-xl hover:bg-slate-50 flex items-center gap-2.5 text-xs font-bold text-slate-800 hover:text-[#00A389] transition-colors"
+                    >
+                      <span className="w-7 h-7 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-[10px] font-black shrink-0">SCI</span>
+                      <div>
+                        <div>Science & Data Analytics</div>
+                        <div className="text-[10px] text-slate-400 font-normal">Python for Scientific Computing</div>
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/internships?stream=ARTS"
+                      onClick={() => setIsInternshipOpen(false)}
+                      className="p-2 rounded-xl hover:bg-slate-50 flex items-center gap-2.5 text-xs font-bold text-slate-800 hover:text-[#00A389] transition-colors"
+                    >
+                      <span className="w-7 h-7 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center text-[10px] font-black shrink-0">ART</span>
+                      <div>
+                        <div>Arts & Digital PR</div>
+                        <div className="text-[10px] text-slate-400 font-normal">Technical Content & Brand Comm</div>
+                      </div>
+                    </Link>
+
+                    <div className="pt-2 border-t border-slate-100 mt-2 flex items-center justify-between text-xs px-1">
+                      <Link
+                        href="/verify"
+                        onClick={() => setIsInternshipOpen(false)}
+                        className="text-[11px] font-bold text-[#00A389] hover:text-emerald-700 flex items-center gap-1"
+                      >
+                        <ShieldCheck className="w-3.5 h-3.5" /> Verify Certificate
+                      </Link>
+                      <Link
+                        href="/internships"
+                        onClick={() => setIsInternshipOpen(false)}
+                        className="text-[11px] font-extrabold text-[#1A73E8] hover:underline flex items-center gap-0.5"
+                      >
+                        View All Tracks <ArrowRight className="w-3 h-3" />
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Center: Search & Quick Links */}
@@ -429,15 +537,82 @@ export default function MegaMenu() {
                 <span>PDF Pass @ ₹199</span>
               </Link>
 
-              {/* User Dashboard / Admin Shortcut */}
-              <Link
-                href="/dashboard"
-                className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition-colors"
-                title="My Account"
+              {/* User Dashboard / Account Dropdown */}
+              <div
+                className="relative"
+                onMouseEnter={() => {
+                  if (accountTimeoutRef.current) clearTimeout(accountTimeoutRef.current);
+                  setIsAccountMenuOpen(true);
+                }}
+                onMouseLeave={() => {
+                  accountTimeoutRef.current = setTimeout(() => setIsAccountMenuOpen(false), 200);
+                }}
               >
-                <User className="w-4 h-4" />
-                <span className="hidden md:inline">Account</span>
-              </Link>
+                <Link
+                  href="/dashboard"
+                  className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition-colors"
+                  title="My Account"
+                >
+                  <User className="w-4 h-4 text-slate-600" />
+                  <span className="hidden md:inline">Account</span>
+                  <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform ${isAccountMenuOpen ? 'rotate-180' : ''}`} />
+                </Link>
+
+                {isAccountMenuOpen && (
+                  <div className="absolute right-0 top-full mt-1.5 w-64 bg-white rounded-2xl shadow-2xl border border-slate-200 p-2 z-50 animate-in fade-in space-y-1">
+                    <div className="px-3 py-1.5 text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
+                      Student Account
+                    </div>
+
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setIsAccountMenuOpen(false)}
+                      className="px-3 py-2 rounded-xl hover:bg-slate-50 text-xs font-bold text-slate-700 flex items-center gap-2.5 transition-colors"
+                    >
+                      <BookOpen className="w-4 h-4 text-[#00A389]" />
+                      <span>My Study Room</span>
+                    </Link>
+
+                    <Link
+                      href="/dashboard/internships"
+                      onClick={() => setIsAccountMenuOpen(false)}
+                      className="px-3 py-2 rounded-xl hover:bg-blue-50 text-xs font-bold text-blue-700 flex items-center gap-2.5 transition-colors"
+                    >
+                      <GraduationCap className="w-4 h-4 text-blue-600" />
+                      <span>My Enrolled Internships</span>
+                    </Link>
+
+                    <Link
+                      href="/verify"
+                      onClick={() => setIsAccountMenuOpen(false)}
+                      className="px-3 py-2 rounded-xl hover:bg-amber-50 text-xs font-bold text-amber-800 flex items-center gap-2.5 transition-colors"
+                    >
+                      <Award className="w-4 h-4 text-amber-500" />
+                      <span>Download DDIS Certificates</span>
+                    </Link>
+
+                    <Link
+                      href="/verify"
+                      onClick={() => setIsAccountMenuOpen(false)}
+                      className="px-3 py-2 rounded-xl hover:bg-emerald-50 text-xs font-bold text-emerald-800 flex items-center gap-2.5 transition-colors"
+                    >
+                      <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                      <span>Verify Credential</span>
+                    </Link>
+
+                    <div className="pt-1.5 border-t border-slate-100 mt-1">
+                      <Link
+                        href="/admin/internships"
+                        onClick={() => setIsAccountMenuOpen(false)}
+                        className="px-3 py-1.5 rounded-xl hover:bg-slate-100 text-[11px] font-medium text-slate-500 flex items-center gap-2 transition-colors"
+                      >
+                        <ShieldCheck className="w-3.5 h-3.5 text-slate-400" />
+                        <span>Admin Evaluation Panel</span>
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {/* Mobile Hamburger Toggle */}
               <button
@@ -542,11 +717,25 @@ export default function MegaMenu() {
               {/* Drawer Bottom CTA */}
               <div className="p-4 bg-slate-50 border-t border-slate-200 space-y-2">
                 <Link
+                  href="/internships"
+                  onClick={() => setIsMobileDrawerOpen(false)}
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-blue-500/20"
+                >
+                  <GraduationCap className="w-4 h-4" /> 🎓 NEP-2020 Internships (DDIS)
+                </Link>
+                <Link
+                  href="/verify"
+                  onClick={() => setIsMobileDrawerOpen(false)}
+                  className="w-full py-2.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-xs flex items-center justify-center gap-2"
+                >
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" /> Verify DDIS Certificate
+                </Link>
+                <Link
                   href="/dashboard"
                   onClick={() => setIsMobileDrawerOpen(false)}
-                  className="w-full py-3 rounded-xl bg-[#00A389] text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-emerald-500/20"
+                  className="w-full py-2.5 rounded-xl bg-white hover:bg-slate-100 text-slate-800 border border-slate-200 font-bold text-xs flex items-center justify-center gap-2"
                 >
-                  <BookOpen className="w-4 h-4" /> Go to My Study Room
+                  <BookOpen className="w-4 h-4 text-[#00A389]" /> My Study Room
                 </Link>
               </div>
 
