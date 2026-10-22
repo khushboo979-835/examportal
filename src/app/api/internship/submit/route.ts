@@ -8,18 +8,20 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { internshipId, weekNumber, submissionUrl } = body;
+    const { internshipId, weekNumber, submissionUrl, hostedLink, driveLink } = body;
 
-    if (!internshipId || !weekNumber || !submissionUrl) {
+    const primaryUrl = submissionUrl || hostedLink || driveLink;
+
+    if (!internshipId || !weekNumber || !primaryUrl) {
       return NextResponse.json(
-        { error: 'Internship ID, week number, and submission URL are required' },
+        { error: 'Internship ID, week number, and a project artifact URL are required' },
         { status: 400 }
       );
     }
 
     // Basic URL validation
     try {
-      new URL(submissionUrl);
+      new URL(primaryUrl);
     } catch {
       return NextResponse.json(
         { error: 'Please provide a valid web URL (e.g. https://github.com/... or https://drive.google.com/...)' },
@@ -39,18 +41,22 @@ export async function POST(request: NextRequest) {
 
     if (existingIndex >= 0) {
       // Update existing submission
-      internship.submissions[existingIndex].submissionUrl = submissionUrl.trim();
+      internship.submissions[existingIndex].submissionUrl = primaryUrl.trim();
+      if (hostedLink) internship.submissions[existingIndex].hostedLink = hostedLink.trim();
+      if (driveLink) internship.submissions[existingIndex].driveLink = driveLink.trim();
       internship.submissions[existingIndex].submittedAt = new Date();
       internship.submissions[existingIndex].status = 'SUBMITTED';
-      internship.submissions[existingIndex].mentorFeedback = 'Submission received. Mentor review pending.';
+      internship.submissions[existingIndex].mentorFeedback = 'Submission received. Mentor review in progress.';
     } else {
       // Add new submission
       internship.submissions.push({
         weekNumber: weekNum,
-        submissionUrl: submissionUrl.trim(),
+        submissionUrl: primaryUrl.trim(),
+        hostedLink: hostedLink ? hostedLink.trim() : undefined,
+        driveLink: driveLink ? driveLink.trim() : undefined,
         submittedAt: new Date(),
         status: 'SUBMITTED',
-        mentorFeedback: 'Submission received. Mentor review pending.',
+        mentorFeedback: 'Submission received. Mentor review in progress.',
       });
     }
 

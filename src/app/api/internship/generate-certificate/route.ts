@@ -3,7 +3,7 @@ import connectToDatabase from '@/lib/db';
 import { DDISCertificate } from '@/models/DDISCertificate';
 import { StudentInternship } from '@/models/StudentInternship';
 import { InternshipTrack } from '@/models/InternshipTrack';
-import { generateDDISCertificatePdf } from '@/lib/certificate-generator';
+import { generateDDISCertificatePdf } from '@/lib/ddisCertificateGenerator';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,13 +31,14 @@ export async function GET(request: NextRequest) {
     }
 
     // Default fallback demo certificate if ID not in DB yet
-    const targetCertId = certificateId || internshipRecord?.certificateId || 'DDIS-NEP-2026-IT-9482';
+    const targetCertId = certificateId || internshipRecord?.certificateId || 'DDIS-NEP-IT-2026-9482';
     const studentName = certRecord?.studentName || internshipRecord?.studentName || 'Aditya Verma';
     const collegeName = certRecord?.collegeName || internshipRecord?.collegeName || 'Patna Science College, Patna University';
     const degreeProgram = certRecord?.degreeProgram || internshipRecord?.degreeProgram || 'Bachelor of Computer Applications (BCA)';
     const stream = certRecord?.stream || 'BCA / Computer Applications & IT';
-    const trackTitle = certRecord?.trackTitle || internshipRecord?.trackId?.title || 'Full-Stack Web Development (Next.js & MongoDB)';
+    const trackTitle = certRecord?.trackTitle || internshipRecord?.trackId?.title || 'Full-Stack Web Engineering (Next.js, TypeScript & MongoDB)';
     const durationWeeks = certRecord?.durationWeeks || internshipRecord?.trackId?.durationWeeks || 4;
+    const nepCurriculumHours = certRecord?.nepCurriculumHours || internshipRecord?.trackId?.nepCurriculumHours || 75;
     const grade = certRecord?.grade || 'A+ (Distinction)';
     const issueDate = certRecord?.issueDate ? new Date(certRecord.issueDate) : new Date();
 
@@ -47,14 +48,15 @@ export async function GET(request: NextRequest) {
     const milestones = internshipRecord?.submissions?.map((s: any) => ({
       weekNumber: s.weekNumber,
       title: `Milestone Week ${s.weekNumber} Project Deliverable`,
-      taskDescription: s.mentorFeedback || 'Approved industry deliverable with validated unit testing.',
-      submissionUrl: s.submissionUrl,
+      taskDescription: s.mentorFeedback || s.mentorNotes || 'Approved industry deliverable with validated unit testing.',
+      submissionUrl: s.submissionUrl || s.hostedLink || s.driveLink,
       status: s.status || 'APPROVED',
+      estimatedHours: 19,
     })) || [
-      { weekNumber: 1, title: 'Modern UI & Responsive Architecture', taskDescription: 'Designed accessible frontend with Tailwind CSS and Next.js.', status: 'APPROVED' },
-      { weekNumber: 2, title: 'MongoDB Schema & Serverless APIs', taskDescription: 'Built verified Mongoose models and robust API routes.', status: 'APPROVED' },
-      { weekNumber: 3, title: 'Authentication & Webhook Security', taskDescription: 'Configured HMAC signatures and session verification.', status: 'APPROVED' },
-      { weekNumber: 4, title: 'Full Deployment & Academic Defense', taskDescription: 'Live deployment on Vercel with > 90 Lighthouse score.', status: 'APPROVED' },
+      { weekNumber: 1, title: 'Foundational Architecture & Problem Scoping', taskDescription: 'Designed core module hierarchy and conducted competitor benchmarking.', status: 'APPROVED', estimatedHours: 18 },
+      { weekNumber: 2, title: 'Data Flow & Core Logic Implementation', taskDescription: 'Built verified backend/computational pipeline with error boundary checks.', status: 'APPROVED', estimatedHours: 19 },
+      { weekNumber: 3, title: 'Integration, Testing & Quality Assurance', taskDescription: 'Implemented unit validations and performance profiling under realistic data loads.', status: 'APPROVED', estimatedHours: 19 },
+      { weekNumber: 4, title: 'Production Capstone & Academic Defense Report', taskDescription: 'Delivered finalized deliverable, live deployment link, and project presentation.', status: 'APPROVED', estimatedHours: 19 },
     ];
 
     const pdfBytes = await generateDDISCertificatePdf({
@@ -65,6 +67,7 @@ export async function GET(request: NextRequest) {
       stream,
       trackTitle,
       durationWeeks,
+      nepCurriculumHours,
       grade,
       issueDate,
       verificationUrl,

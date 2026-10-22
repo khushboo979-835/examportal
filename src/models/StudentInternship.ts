@@ -1,14 +1,23 @@
 import mongoose, { Schema, Document, Model, Types } from 'mongoose';
 
 export type InternshipStatus = 'ENROLLED' | 'IN_PROGRESS' | 'REVIEW_PENDING' | 'COMPLETED';
-export type SubmissionStatus = 'SUBMITTED' | 'APPROVED' | 'REJECTED';
+export type SubmissionStatus =
+  | 'NOT_STARTED'
+  | 'SUBMITTED'
+  | 'UNDER_REVIEW'
+  | 'REVISIONS_REQUIRED'
+  | 'REJECTED'
+  | 'APPROVED';
 
 export interface ISubmission {
   weekNumber: number;
-  submissionUrl: string;
-  submittedAt: Date;
+  submissionUrl?: string;
+  hostedLink?: string;
+  driveLink?: string;
+  submittedAt?: Date;
   status: SubmissionStatus;
   mentorFeedback?: string;
+  mentorNotes?: string;
 }
 
 export interface IStudentInternship extends Document {
@@ -21,6 +30,8 @@ export interface IStudentInternship extends Document {
   rollNumber: string;
   degreeProgram: string;
   status: InternshipStatus;
+  currentMilestone: number;
+  isCompleted: boolean;
   startDate: Date;
   completedDate?: Date;
   submissions: ISubmission[];
@@ -32,14 +43,17 @@ export interface IStudentInternship extends Document {
 
 const SubmissionSchema = new Schema<ISubmission>({
   weekNumber: { type: Number, required: true },
-  submissionUrl: { type: String, required: true },
+  submissionUrl: { type: String, default: '' },
+  hostedLink: { type: String, default: '' },
+  driveLink: { type: String, default: '' },
   submittedAt: { type: Date, default: Date.now },
   status: {
     type: String,
-    enum: ['SUBMITTED', 'APPROVED', 'REJECTED'],
-    default: 'SUBMITTED',
+    enum: ['NOT_STARTED', 'SUBMITTED', 'UNDER_REVIEW', 'REVISIONS_REQUIRED', 'REJECTED', 'APPROVED'],
+    default: 'NOT_STARTED',
   },
   mentorFeedback: { type: String, default: '' },
+  mentorNotes: { type: String, default: '' },
 });
 
 const StudentInternshipSchema = new Schema<IStudentInternship>(
@@ -58,6 +72,8 @@ const StudentInternshipSchema = new Schema<IStudentInternship>(
       default: 'ENROLLED',
       index: true,
     },
+    currentMilestone: { type: Number, default: 1 },
+    isCompleted: { type: Boolean, default: false, index: true },
     startDate: { type: Date, default: Date.now },
     completedDate: { type: Date },
     submissions: [SubmissionSchema],

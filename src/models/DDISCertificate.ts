@@ -9,12 +9,16 @@ export interface IDDISCertificate extends Document {
   studentName: string;
   collegeName: string;
   stream: string;
+  faculty?: string;
   trackTitle: string;
   degreeProgram?: string;
   durationWeeks?: number;
+  nepCurriculumHours?: number;
   grade?: string;
   issueDate: Date;
   validityStatus: CertificateValidity;
+  qrCodeDataUrl?: string;
+  pdfKey?: string;
   certificatePdfUrl?: string;
   verificationUrl: string;
   accreditationAuthority: string;
@@ -30,10 +34,12 @@ const DDISCertificateSchema = new Schema<IDDISCertificate>(
     studentName: { type: String, required: true, trim: true },
     collegeName: { type: String, required: true, trim: true },
     stream: { type: String, required: true },
+    faculty: { type: String },
     trackTitle: { type: String, required: true },
     degreeProgram: { type: String, default: 'Undergraduate Program' },
     durationWeeks: { type: Number, default: 4 },
-    grade: { type: String, default: 'A+' },
+    nepCurriculumHours: { type: Number, default: 75 },
+    grade: { type: String, default: 'A+ (Distinction)' },
     issueDate: { type: Date, default: Date.now },
     validityStatus: {
       type: String,
@@ -41,6 +47,8 @@ const DDISCertificateSchema = new Schema<IDDISCertificate>(
       default: 'VALID',
       index: true,
     },
+    qrCodeDataUrl: { type: String },
+    pdfKey: { type: String },
     certificatePdfUrl: { type: String },
     verificationUrl: { type: String, required: true },
     accreditationAuthority: {

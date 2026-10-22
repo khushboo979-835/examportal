@@ -1,21 +1,33 @@
-import mongoose, { Schema, Document, Model, Types } from 'mongoose';
+import mongoose, { Schema, Document, Model } from 'mongoose';
 
-export type StreamType = 'SCIENCE' | 'COMMERCE' | 'ARTS' | 'BCA_IT' | 'MANAGEMENT';
+export type StreamType =
+  | 'SCIENCE'
+  | 'COMMERCE'
+  | 'ARTS'
+  | 'BCA_IT'
+  | 'IT'
+  | 'MANAGEMENT'
+  | 'VOCATIONAL';
+
 export type SubmissionType = 'GITHUB' | 'DRIVE_LINK' | 'LIVE_URL' | 'DOCUMENT';
 
 export interface IMilestone {
   weekNumber: number;
   title: string;
+  theoryOverview?: string;
   taskDescription: string;
   resourceMaterialUrl?: string;
   submissionType: SubmissionType;
+  estimatedHours?: number;
 }
 
 export interface IInternshipTrack extends Document {
   title: string;
   slug: string;
   stream: StreamType;
+  faculty: StreamType;
   nepAligned: boolean;
+  nepCurriculumHours: number;
   durationWeeks: number;
   shortDescription: string;
   learningOutcomes: string[];
@@ -29,6 +41,7 @@ export interface IInternshipTrack extends Document {
 const MilestoneSchema = new Schema<IMilestone>({
   weekNumber: { type: Number, required: true },
   title: { type: String, required: true },
+  theoryOverview: { type: String, default: '' },
   taskDescription: { type: String, required: true },
   resourceMaterialUrl: { type: String, default: '' },
   submissionType: {
@@ -36,6 +49,7 @@ const MilestoneSchema = new Schema<IMilestone>({
     enum: ['GITHUB', 'DRIVE_LINK', 'LIVE_URL', 'DOCUMENT'],
     default: 'GITHUB',
   },
+  estimatedHours: { type: Number, default: 18 },
 });
 
 const InternshipTrackSchema = new Schema<IInternshipTrack>(
@@ -44,11 +58,20 @@ const InternshipTrackSchema = new Schema<IInternshipTrack>(
     slug: { type: String, required: true, unique: true, lowercase: true, trim: true, index: true },
     stream: {
       type: String,
-      enum: ['SCIENCE', 'COMMERCE', 'ARTS', 'BCA_IT', 'MANAGEMENT'],
+      enum: ['SCIENCE', 'COMMERCE', 'ARTS', 'BCA_IT', 'IT', 'MANAGEMENT', 'VOCATIONAL'],
       required: true,
       index: true,
     },
+    faculty: {
+      type: String,
+      enum: ['SCIENCE', 'COMMERCE', 'ARTS', 'BCA_IT', 'IT', 'MANAGEMENT', 'VOCATIONAL'],
+      default: function (this: any) {
+        return this.stream;
+      },
+      index: true,
+    },
     nepAligned: { type: Boolean, default: true, index: true },
+    nepCurriculumHours: { type: Number, default: 75 },
     durationWeeks: { type: Number, default: 4, enum: [4, 8] },
     shortDescription: { type: String, required: true },
     learningOutcomes: [{ type: String }],
@@ -62,6 +85,7 @@ const InternshipTrackSchema = new Schema<IInternshipTrack>(
 );
 
 InternshipTrackSchema.index({ stream: 1, isActive: 1 });
+InternshipTrackSchema.index({ faculty: 1, isActive: 1 });
 
 export const InternshipTrack: Model<IInternshipTrack> =
   mongoose.models.InternshipTrack ||
