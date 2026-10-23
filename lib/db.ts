@@ -1,2 +1,2 @@
-export * from '@/lib/db';
-export { default } from '@/lib/db';
+export * from '../src/lib/db';
+export { default } from '../src/lib/db';

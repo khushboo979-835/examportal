@@ -1,2 +1,2 @@
-export * from '@/models/Category';
-export { default } from '@/models/Category';
+export * from '../src/models/Category';
+export { default } from '../src/models/Category';

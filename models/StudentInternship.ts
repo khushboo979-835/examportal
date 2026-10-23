@@ -1,2 +1,2 @@
-export * from '@/models/StudentInternship';
-export { default } from '@/models/StudentInternship';
+export * from '../src/models/StudentInternship';
+export { default } from '../src/models/StudentInternship';

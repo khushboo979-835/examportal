@@ -12,7 +12,7 @@
     "lint": "next lint",
     "db:migrate": "node --experimental-strip-types scripts/migrate-and-seed.ts",
     "db:seed:internships": "node --experimental-strip-types scripts/seed-internships.ts",
-    "db:seed:enterprise": "node --experimental-strip-types scripts/seed-enterprise.ts"
+    "db:validate": "node --experimental-strip-types scripts/validate-indexes-and-seed.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.750.0",

@@ -9,28 +9,26 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const startTime = Date.now();
   try {
     const { id } = await params;
-    const cleanId = (id || '').trim();
+    const cleanId = id?.trim();
 
     if (!cleanId) {
-      return NextResponse.json({ error: 'Certificate ID is required' }, { status: 400 });
+      return NextResponse.json({ success: false, error: 'Certificate ID is required' }, { status: 400 });
     }
 
     await connectToDatabase();
 
-    // Single indexed lookup with lean projection to prevent payload bloating
+    // Selective projection: only client-safe presentation fields
     const projection = {
       certificateId: 1,
       studentName: 1,
       collegeName: 1,
-      degreeProgram: 1,
       stream: 1,
       faculty: 1,
       trackTitle: 1,
+      degreeProgram: 1,
       durationWeeks: 1,
-      creditHours: 1,
       nepCurriculumHours: 1,
       grade: 1,
       issueDate: 1,
@@ -41,78 +39,95 @@ export async function GET(
       qrCodeDataUrl: 1,
     };
 
-    let cert = await DDISCertificate.findOne(
+    // 1. Single direct lookup against DDISCertificate collection
+    const cert = await DDISCertificate.findOne(
       {
-        $or: [{ certificateId: cleanId }, { certificateId: cleanId.toUpperCase() }],
+        $or: [
+          { certificateId: cleanId },
+          { certificateId: cleanId.toUpperCase() },
+        ],
       },
       projection
     ).lean();
 
-    // Fallback lookup in StudentInternship if certificate record pending sync
-    if (!cert) {
-      const internship = await StudentInternship.findOne(
-        {
-          $or: [{ certificateId: cleanId }, { rollNumber: cleanId }],
-          certificateIssued: true,
+    if (cert) {
+      return NextResponse.json({
+        success: true,
+        verified: (cert as any).validityStatus === 'VALID',
+        certificate: {
+          ...cert,
+          pdfDownloadUrl: `/api/internship/generate-certificate?id=${(cert as any).certificateId}`,
+          verificationTimestamp: new Date().toISOString(),
         },
-        {
-          certificateId: 1,
-          studentName: 1,
-          collegeName: 1,
-          degreeProgram: 1,
-          trackId: 1,
-          completedDate: 1,
-          updatedAt: 1,
-        }
-      )
-        .populate('trackId', 'title stream faculty durationWeeks creditHours nepCurriculumHours')
-        .lean();
-
-      if (internship && internship.certificateId) {
-        const track = internship.trackId as any;
-        cert = {
-          certificateId: internship.certificateId,
-          studentName: internship.studentName || 'Student Intern',
-          collegeName: internship.collegeName,
-          degreeProgram: internship.degreeProgram,
-          stream: track?.stream || 'Undergraduate Faculty',
-          faculty: track?.faculty || track?.stream || 'IT',
-          trackTitle: track?.title || 'NEP-2020 Industry Internship',
-          durationWeeks: track?.durationWeeks || 4,
-          creditHours: track?.creditHours || 75,
-          nepCurriculumHours: track?.nepCurriculumHours || 75,
-          grade: 'A+ (Distinction)',
-          issueDate: internship.completedDate || internship.updatedAt,
-          validityStatus: 'VALID',
-          verificationUrl: `https://studyfreepdf.com/verify/${internship.certificateId}`,
-          accreditationAuthority: 'Digital Developer Infinity Solution (DDIS) • NEP-2020 Compliant',
-          certificatePdfUrl: `/api/internship/generate-certificate?id=${internship.certificateId}`,
-        } as any;
-      }
+      });
     }
 
-    if (!cert) {
-      return NextResponse.json(
-        {
-          valid: false,
-          error: `No accredited credential found for ID "${cleanId}". Please verify the certificate number.`,
-          executionTimeMs: Date.now() - startTime,
-        },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json({
-      valid: cert.validityStatus === 'VALID',
-      certificate: {
-        ...cert,
-        pdfDownloadUrl: `/api/internship/generate-certificate?id=${cert.certificateId}`,
-        watermarkedDownloadUrl: `/api/internship/download/${cert.certificateId}`,
+    // 2. Secondary fallback against StudentInternship by certificateId or rollNumber
+    const internship = await StudentInternship.findOne(
+      {
+        $or: [
+          { certificateId: cleanId },
+          { certificateId: cleanId.toUpperCase() },
+          { rollNumber: cleanId },
+        ],
+        certificateIssued: true,
       },
-      executionTimeMs: Date.now() - startTime,
-    });
-  } catch (error) {
-    console.error('Accredited verification API error:', error);
-    return NextResponse.json({ error: 'Failed to verify credential' }, { status: 500 });
+      {
+        certificateId: 1,
+        studentName: 1,
+        collegeName: 1,
+        degreeProgram: 1,
+        trackId: 1,
+        completedDate: 1,
+        status: 1,
+      }
+    )
+      .populate('trackId', 'title stream faculty durationWeeks nepCurriculumHours')
+      .lean();
+
+    if (internship && (internship as any).certificateId) {
+      const track = (internship as any).trackId || {};
+      const fallbackCert = {
+        certificateId: (internship as any).certificateId,
+        studentName: (internship as any).studentName || 'Student Intern',
+        collegeName: (internship as any).collegeName,
+        degreeProgram: (internship as any).degreeProgram,
+        stream: track.stream || 'IT',
+        faculty: track.faculty || track.stream || 'Computer Apps & IT',
+        trackTitle: track.title || 'NEP-2020 Virtual Industry Internship',
+        durationWeeks: track.durationWeeks || 4,
+        nepCurriculumHours: track.nepCurriculumHours || 75,
+        grade: 'A+ (Distinction)',
+        issueDate: (internship as any).completedDate || new Date(),
+        validityStatus: 'VALID',
+        verificationUrl: `https://studyfreepdf.com/verify/${(internship as any).certificateId}`,
+        accreditationAuthority: 'Digital Developer Infinity Solution (DDIS) • NEP-2020 Compliant',
+        pdfDownloadUrl: `/api/internship/generate-certificate?id=${(internship as any).certificateId}`,
+      };
+
+      return NextResponse.json({
+        success: true,
+        verified: true,
+        certificate: {
+          ...fallbackCert,
+          verificationTimestamp: new Date().toISOString(),
+        },
+      });
+    }
+
+    return NextResponse.json(
+      {
+        success: false,
+        verified: false,
+        error: 'No authentic DDIS credential found matching this ID. Ensure the certificate code is accurate.',
+      },
+      { status: 404 }
+    );
+  } catch (error: any) {
+    console.error('Certificate verification error:', error);
+    return NextResponse.json(
+      { success: false, error: 'Verification server error occurred' },
+      { status: 500 }
+    );
   }
 }

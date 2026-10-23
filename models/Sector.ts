@@ -1,2 +1,2 @@
-export * from '@/models/Sector';
-export { default } from '@/models/Sector';
+export * from '../src/models/Sector';
+export { default } from '../src/models/Sector';

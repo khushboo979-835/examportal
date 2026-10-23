@@ -62,26 +62,27 @@ export default function Header() {
 
   return (
     <>
-      {/* Top NEP-2020 Announcement Banner as in Screenshot 1 */}
-      <div className="bg-[#0B132B] text-white py-1.5 px-3 sm:px-6 text-[11px] font-medium border-b border-slate-800/80">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 overflow-hidden">
-            <span className="shrink-0 text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+      {/* Top Announcement Bar (NEP-2020 University Notice) */}
+      <div className="bg-[#0B132B] text-white text-[11px] py-1.5 px-4 font-medium border-b border-slate-800">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <span className="bg-[#00E599]/20 text-[#00E599] border border-[#00E599]/40 text-[10px] font-black uppercase px-2 py-0.5 rounded-full shrink-0">
               NEW NEP-2020 BATCH
             </span>
-            <span className="truncate text-slate-300">
+            <span className="text-slate-200 truncate">
               Patliputra &amp; Bihar University UG Students: Enrol in 4-Week Mandatory Industry Internship
             </span>
           </div>
-          <div className="hidden sm:flex items-center gap-4 shrink-0 text-slate-300">
-            <Link href="/verify" className="hover:text-emerald-300 flex items-center gap-1 font-bold text-xs">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="flex items-center gap-4 text-xs font-semibold text-slate-300 shrink-0">
+            <Link href="/verify" className="flex items-center gap-1 hover:text-[#00E599] transition-colors">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#00E599]" />
               <span>Verify Certificate</span>
             </Link>
-            <span className="text-slate-600">|</span>
-            <span className="flex items-center gap-1 text-xs text-slate-400 font-semibold">
-              Support: +91 98765 43210
-            </span>
+            <span className="text-slate-700">|</span>
+            <a href="tel:+919876543210" className="flex items-center gap-1.5 hover:text-white transition-colors">
+              <span className="text-amber-400">📞</span>
+              <span>Support: +91 98765 43210</span>
+            </a>
           </div>
         </div>
       </div>
@@ -92,20 +93,20 @@ export default function Header() {
           
           {/* Left: Minimal Modern Brand Logo */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#00A389] to-[#1A73E8] flex items-center justify-center text-white shadow-sm shadow-emerald-500/20 group-hover:scale-105 transition-transform duration-200">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#1A73E8] to-[#00A389] flex items-center justify-center text-white shadow-sm shadow-blue-500/20 group-hover:scale-105 transition-transform duration-200">
               <BookOpen className="w-4 h-4 text-white" />
             </div>
             <div className="flex flex-col">
               <div className="flex items-center gap-1.5 leading-none">
                 <span className="font-black text-lg tracking-tight text-slate-900 dark:text-white">
-                  Study<span className="text-[#00A389]">Free</span>
+                  Study<span className="text-[#1A73E8]">Free</span>
                 </span>
-                <span className="text-[9px] font-black tracking-wider uppercase px-1.5 py-0.5 rounded-md bg-slate-900 text-white">
+                <span className="text-[9px] font-black tracking-wider uppercase px-1.5 py-0.5 rounded-md bg-slate-900 text-white dark:bg-white dark:text-slate-900">
                   PDF
                 </span>
               </div>
-              <span className="text-[9px] font-semibold text-indigo-600 dark:text-indigo-400 tracking-wide mt-0.5">
-                Accredited by DDIS Solutions
+              <span className="text-[9px] font-bold text-slate-400 tracking-wide mt-0.5">
+                Accredited by <strong className="text-[#00A389] font-extrabold">DDIS Solutions</strong>
               </span>
             </div>
           </Link>
@@ -433,10 +434,11 @@ export default function Header() {
             >
               <Link
                 href="/dashboard"
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-black transition-all shadow-sm"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0F172A] hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-xs"
               >
                 <User className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Student Login</span>
+                <span className="hidden sm:inline">Student Login</span>
+                <span className="sm:hidden">Login</span>
               </Link>
 
               {accountMenuOpen && (

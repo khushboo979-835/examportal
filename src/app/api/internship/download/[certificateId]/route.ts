@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PDFDocument, rgb, StandardFonts, degrees } from 'pdf-lib';
 import connectToDatabase from '@/lib/db';
 import { DDISCertificate } from '@/models/DDISCertificate';
 import { StudentInternship } from '@/models/StudentInternship';
 import { generateDDISCertificatePdf } from '@/lib/ddisCertificateGenerator';
+import { PDFDocument, rgb, StandardFonts, degrees } from 'pdf-lib';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,62 +11,75 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ certificateId: string }> }
 ) {
-  const startTime = Date.now();
   try {
     const { certificateId } = await params;
-    const cleanId = (certificateId || '').trim();
+    const cleanId = certificateId?.trim();
 
     if (!cleanId) {
       return NextResponse.json({ error: 'Certificate ID is required' }, { status: 400 });
     }
 
     const { searchParams } = new URL(request.url);
-    const userPhone = searchParams.get('phone') || searchParams.get('licensee') || '9876543210';
+    const userPhone = searchParams.get('phone') || '+91 98765 43210';
 
     await connectToDatabase();
 
-    let certRecord = await DDISCertificate.findOne({
+    // 1. Fetch certificate metadata
+    let cert = await DDISCertificate.findOne({
       $or: [{ certificateId: cleanId }, { certificateId: cleanId.toUpperCase() }],
     }).lean();
 
-    let internshipRecord: any = null;
-    if (certRecord?.internshipId) {
-      internshipRecord = await StudentInternship.findById(certRecord.internshipId).populate('trackId').lean();
-    } else {
-      internshipRecord = await StudentInternship.findOne({
-        $or: [{ certificateId: cleanId }, { rollNumber: cleanId }],
-      }).populate('trackId').lean();
+    let studentName = (cert as any)?.studentName;
+    let collegeName = (cert as any)?.collegeName;
+    let degreeProgram = (cert as any)?.degreeProgram || 'Undergraduate Degree';
+    let stream = (cert as any)?.stream || 'IT';
+    let trackTitle = (cert as any)?.trackTitle || 'NEP-2020 Virtual Industry Internship';
+    let durationWeeks = (cert as any)?.durationWeeks || 4;
+    let nepCurriculumHours = (cert as any)?.nepCurriculumHours || 75;
+    let grade = (cert as any)?.grade || 'A+ (Distinction)';
+    let issueDate = (cert as any)?.issueDate ? new Date((cert as any).issueDate) : new Date();
+
+    let milestonesData: any[] = [];
+
+    // Also look up student internship to get exact milestone submissions
+    const internship = await StudentInternship.findOne({
+      $or: [{ certificateId: cleanId }, { certificateId: cleanId.toUpperCase() }],
+    })
+      .populate('trackId')
+      .lean();
+
+    if (internship) {
+      studentName = studentName || (internship as any).studentName;
+      collegeName = collegeName || (internship as any).collegeName;
+      degreeProgram = (internship as any).degreeProgram || degreeProgram;
+      const track = (internship as any).trackId || {};
+      stream = track.stream || stream;
+      trackTitle = track.title || trackTitle;
+      durationWeeks = track.durationWeeks || durationWeeks;
+      nepCurriculumHours = track.nepCurriculumHours || nepCurriculumHours;
+
+      if (track.milestones) {
+        milestonesData = track.milestones.map((m: any) => {
+          const sub = (internship as any).submissions?.find((s: any) => s.weekNumber === m.weekNumber);
+          return {
+            weekNumber: m.weekNumber,
+            title: m.title,
+            taskDescription: m.taskDescription,
+            submissionUrl: sub?.submissionUrl || sub?.hostedLink || 'https://github.com/ddis-solutions/internship-project',
+            status: sub?.status || 'APPROVED',
+            estimatedHours: m.estimatedHours || 18,
+          };
+        });
+      }
     }
 
-    const studentName = certRecord?.studentName || internshipRecord?.studentName || 'Aditya Verma';
-    const collegeName = certRecord?.collegeName || internshipRecord?.collegeName || 'Patna Science College, Patna University';
-    const degreeProgram = certRecord?.degreeProgram || internshipRecord?.degreeProgram || 'Bachelor of Computer Applications (BCA)';
-    const stream = certRecord?.stream || 'BCA / Computer Applications & IT';
-    const trackTitle = certRecord?.trackTitle || (internshipRecord?.trackId as any)?.title || 'Full-Stack Web Engineering';
-    const durationWeeks = certRecord?.durationWeeks || (internshipRecord?.trackId as any)?.durationWeeks || 4;
-    const nepCurriculumHours = certRecord?.nepCurriculumHours || (internshipRecord?.trackId as any)?.nepCurriculumHours || 75;
-    const grade = certRecord?.grade || 'A+ (Distinction)';
-    const issueDate = certRecord?.issueDate ? new Date(certRecord.issueDate) : new Date();
+    if (!studentName) {
+      studentName = 'Khushboo Kumari';
+      collegeName = 'Patliputra University, Patna';
+    }
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studyfreepdf.com';
-    const verificationUrl = `${appUrl}/verify/${cleanId}`;
-
-    const milestones = internshipRecord?.submissions?.map((s: any) => ({
-      weekNumber: s.weekNumber,
-      title: `Milestone Week ${s.weekNumber} Project Deliverable`,
-      taskDescription: s.mentorFeedback || s.mentorNotes || 'Approved industry deliverable with validated unit testing.',
-      submissionUrl: s.submissionUrl || s.hostedLink || s.driveLink,
-      status: s.status || 'APPROVED',
-      estimatedHours: 19,
-    })) || [
-      { weekNumber: 1, title: 'Foundational Architecture & Problem Scoping', taskDescription: 'Designed core module hierarchy and conducted competitor benchmarking.', status: 'APPROVED', estimatedHours: 18 },
-      { weekNumber: 2, title: 'Data Flow & Core Logic Implementation', taskDescription: 'Built verified backend/computational pipeline with error boundary checks.', status: 'APPROVED', estimatedHours: 19 },
-      { weekNumber: 3, title: 'Integration, Testing & Quality Assurance', taskDescription: 'Implemented unit validations and performance profiling under realistic data loads.', status: 'APPROVED', estimatedHours: 19 },
-      { weekNumber: 4, title: 'Production Capstone & Academic Defense Report', taskDescription: 'Delivered finalized deliverable, live deployment link, and project presentation.', status: 'APPROVED', estimatedHours: 19 },
-    ];
-
-    // 1. Generate in-memory PDF Buffer using ddisCertificateGenerator
-    const basePdfBytes = await generateDDISCertificatePdf({
+    // 2. Fast on-the-fly PDF Generation in Memory (<200ms)
+    const rawPdfBytes = await generateDDISCertificatePdf({
       certificateId: cleanId,
       studentName,
       collegeName,
@@ -77,68 +90,57 @@ export async function GET(
       nepCurriculumHours,
       grade,
       issueDate,
-      verificationUrl,
-      milestones,
+      verificationUrl: `https://studyfreepdf.com/verify/${cleanId}`,
+      milestones: milestonesData.length > 0 ? milestonesData : undefined,
     });
 
-    // 2. Load PDF into memory buffer with pdf-lib and apply on-the-fly dynamic watermarking (<200ms)
-    const pdfDoc = await PDFDocument.load(basePdfBytes);
-    const font = await pdfDoc.embedFont(StandardFonts.Helvetica);
-    const fontBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
-
+    // 3. Apply On-the-Fly Secure Watermark Buffer using pdf-lib in memory
+    const pdfDoc = await PDFDocument.load(rawPdfBytes);
+    const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
     const pages = pdfDoc.getPages();
-    const watermarkText = `Licensed to: +91 ${userPhone} | Certificate: ${cleanId} | DDIS Verified | UGC NEP-2020 Compliant`;
-    const diagonalText = `OFFICIAL DDIS ACCREDITED • +91 ${userPhone}`;
+
+    const watermarkText = `Licensed to: ${userPhone} | Certificate: ${cleanId} | DDIS Accredited`;
 
     pages.forEach((page) => {
       const { width, height } = page.getSize();
-
-      // Top margin watermark
+      // Bottom footer license mark
       page.drawText(watermarkText, {
-        x: 35,
-        y: height - 18,
-        size: 7,
-        font,
-        color: rgb(0.4, 0.45, 0.5),
-        opacity: 0.65,
-      });
-
-      // Bottom margin watermark
-      page.drawText(watermarkText, {
-        x: 35,
+        x: 40,
         y: 12,
         size: 7,
-        font,
-        color: rgb(0.4, 0.45, 0.5),
-        opacity: 0.65,
+        font: helveticaFont,
+        color: rgb(0.5, 0.5, 0.5),
+        opacity: 0.6,
       });
 
-      // Subtle diagonal anti-piracy watermark across canvas
-      page.drawText(diagonalText, {
-        x: width * 0.15,
-        y: height * 0.35,
-        size: 24,
-        font: fontBold,
-        rotate: degrees(30),
-        color: rgb(0, 0.64, 0.54),
-        opacity: 0.06,
+      // Subtle diagonal anti-piracy security watermark across document
+      page.drawText(`VERIFIED DDIS NEP-2020 • ${cleanId}`, {
+        x: width / 2 - 180,
+        y: height / 2 - 20,
+        size: 20,
+        font: helveticaFont,
+        color: rgb(0.2, 0.6, 0.5),
+        opacity: 0.04,
+        rotate: degrees(35),
       });
     });
 
     const finalPdfBytes = await pdfDoc.save();
-    const duration = Date.now() - startTime;
 
+    // 4. Return as Streaming PDF Response
     return new NextResponse(Buffer.from(finalPdfBytes), {
       status: 200,
       headers: {
         'Content-Type': 'application/pdf',
-        'Content-Disposition': `inline; filename="${cleanId}-Watermarked.pdf"`,
-        'X-Watermark-Execution-Time-Ms': duration.toString(),
-        'Cache-Control': 'private, no-cache, no-store, must-revalidate',
+        'Content-Disposition': `inline; filename="DDIS-Certificate-${cleanId}.pdf"`,
+        'Cache-Control': 'private, no-transform, max-age=3600',
       },
     });
-  } catch (error) {
-    console.error('Secure document stream error:', error);
-    return NextResponse.json({ error: 'Failed to stream watermarked document' }, { status: 500 });
+  } catch (error: any) {
+    console.error('Certificate stream download error:', error);
+    return NextResponse.json(
+      { error: 'Failed to stream secure certificate document' },
+      { status: 500 }
+    );
   }
 }

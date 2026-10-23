@@ -14,7 +14,6 @@ export interface IDDISCertificate extends Document {
   degreeProgram?: string;
   durationWeeks?: number;
   nepCurriculumHours?: number;
-  creditHours?: number;
   grade?: string;
   issueDate: Date;
   validityStatus: CertificateValidity;
@@ -40,7 +39,6 @@ const DDISCertificateSchema = new Schema<IDDISCertificate>(
     degreeProgram: { type: String, default: 'Undergraduate Program' },
     durationWeeks: { type: Number, default: 4 },
     nepCurriculumHours: { type: Number, default: 75 },
-    creditHours: { type: Number, default: 75 },
     grade: { type: String, default: 'A+ (Distinction)' },
     issueDate: { type: Date, default: Date.now },
     validityStatus: {

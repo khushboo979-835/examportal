@@ -28,8 +28,8 @@ export interface IInternshipTrack extends Document {
   stream: StreamType;
   faculty: StreamType;
   nepAligned: boolean;
-  creditHours: number;
   nepCurriculumHours: number;
+  creditHours?: number;
   durationWeeks: number;
   shortDescription: string;
   learningOutcomes: string[];
@@ -74,8 +74,8 @@ const InternshipTrackSchema = new Schema<IInternshipTrack>(
       index: true,
     },
     nepAligned: { type: Boolean, default: true, index: true },
-    creditHours: { type: Number, default: 75 },
     nepCurriculumHours: { type: Number, default: 75 },
+    creditHours: { type: Number, default: 75 },
     durationWeeks: { type: Number, default: 4, enum: [4, 8] },
     shortDescription: { type: String, required: true },
     learningOutcomes: [{ type: String }],
