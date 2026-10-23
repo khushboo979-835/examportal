@@ -17,6 +17,7 @@ export interface IMilestone {
   theoryOverview?: string;
   taskDescription: string;
   resourceMaterialUrl?: string;
+  resourcePdfUrl?: string;
   submissionType: SubmissionType;
   estimatedHours?: number;
 }
@@ -27,6 +28,7 @@ export interface IInternshipTrack extends Document {
   stream: StreamType;
   faculty: StreamType;
   nepAligned: boolean;
+  creditHours: number;
   nepCurriculumHours: number;
   durationWeeks: number;
   shortDescription: string;
@@ -44,6 +46,7 @@ const MilestoneSchema = new Schema<IMilestone>({
   theoryOverview: { type: String, default: '' },
   taskDescription: { type: String, required: true },
   resourceMaterialUrl: { type: String, default: '' },
+  resourcePdfUrl: { type: String, default: '' },
   submissionType: {
     type: String,
     enum: ['GITHUB', 'DRIVE_LINK', 'LIVE_URL', 'DOCUMENT'],
@@ -71,6 +74,7 @@ const InternshipTrackSchema = new Schema<IInternshipTrack>(
       index: true,
     },
     nepAligned: { type: Boolean, default: true, index: true },
+    creditHours: { type: Number, default: 75 },
     nepCurriculumHours: { type: Number, default: 75 },
     durationWeeks: { type: Number, default: 4, enum: [4, 8] },
     shortDescription: { type: String, required: true },

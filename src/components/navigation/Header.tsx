@@ -62,9 +62,33 @@ export default function Header() {
 
   return (
     <>
+      {/* Top NEP-2020 Announcement Banner as in Screenshot 1 */}
+      <div className="bg-[#0B132B] text-white py-1.5 px-3 sm:px-6 text-[11px] font-medium border-b border-slate-800/80">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2 overflow-hidden">
+            <span className="shrink-0 text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+              NEW NEP-2020 BATCH
+            </span>
+            <span className="truncate text-slate-300">
+              Patliputra &amp; Bihar University UG Students: Enrol in 4-Week Mandatory Industry Internship
+            </span>
+          </div>
+          <div className="hidden sm:flex items-center gap-4 shrink-0 text-slate-300">
+            <Link href="/verify" className="hover:text-emerald-300 flex items-center gap-1 font-bold text-xs">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Verify Certificate</span>
+            </Link>
+            <span className="text-slate-600">|</span>
+            <span className="flex items-center gap-1 text-xs text-slate-400 font-semibold">
+              Support: +91 98765 43210
+            </span>
+          </div>
+        </div>
+      </div>
+
       {/* Top Floating Pill-Shaped Glassmorphic Header */}
-      <header className="sticky top-3 z-50 px-3 sm:px-6 max-w-7xl mx-auto w-full transition-all duration-300">
-        <div className="backdrop-blur-md bg-white/85 dark:bg-slate-900/85 border border-slate-200/70 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3">
+      <header className="sticky top-2 z-50 px-3 sm:px-6 max-w-7xl mx-auto w-full transition-all duration-300">
+        <div className="backdrop-blur-md bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3">
           
           {/* Left: Minimal Modern Brand Logo */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
@@ -76,12 +100,12 @@ export default function Header() {
                 <span className="font-black text-lg tracking-tight text-slate-900 dark:text-white">
                   Study<span className="text-[#00A389]">Free</span>
                 </span>
-                <span className="text-[9px] font-black tracking-wider uppercase px-1.5 py-0.5 rounded-md bg-emerald-50 text-[#00A389] border border-emerald-200/60">
+                <span className="text-[9px] font-black tracking-wider uppercase px-1.5 py-0.5 rounded-md bg-slate-900 text-white">
                   PDF
                 </span>
               </div>
-              <span className="text-[9px] font-semibold text-slate-400 tracking-wide mt-0.5">
-                Notes & DDIS Internships
+              <span className="text-[9px] font-semibold text-indigo-600 dark:text-indigo-400 tracking-wide mt-0.5">
+                Accredited by DDIS Solutions
               </span>
             </div>
           </Link>
@@ -409,12 +433,10 @@ export default function Header() {
             >
               <Link
                 href="/dashboard"
-                className="flex items-center gap-1.5 p-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition-colors"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-black transition-all shadow-sm"
               >
-                <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-slate-900 to-slate-700 text-white flex items-center justify-center text-xs font-black">
-                  <User className="w-3.5 h-3.5" />
-                </div>
-                <span className="hidden sm:inline pr-1">Account</span>
+                <User className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Student Login</span>
               </Link>
 
               {accountMenuOpen && (

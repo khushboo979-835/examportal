@@ -50,7 +50,7 @@ const SubmissionSchema = new Schema<ISubmission>({
   status: {
     type: String,
     enum: ['NOT_STARTED', 'SUBMITTED', 'UNDER_REVIEW', 'REVISIONS_REQUIRED', 'REJECTED', 'APPROVED'],
-    default: 'NOT_STARTED',
+    default: 'SUBMITTED',
   },
   mentorFeedback: { type: String, default: '' },
   mentorNotes: { type: String, default: '' },
@@ -60,12 +60,12 @@ const StudentInternshipSchema = new Schema<IStudentInternship>(
   {
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true, index: true },
     trackId: { type: Schema.Types.ObjectId, ref: 'InternshipTrack', required: true, index: true },
-    studentName: { type: String },
-    studentEmail: { type: String },
-    studentPhone: { type: String },
-    collegeName: { type: String, required: true },
-    rollNumber: { type: String, required: true },
-    degreeProgram: { type: String, required: true },
+    studentName: { type: String, trim: true },
+    studentEmail: { type: String, trim: true },
+    studentPhone: { type: String, trim: true },
+    collegeName: { type: String, required: true, trim: true },
+    rollNumber: { type: String, required: true, trim: true },
+    degreeProgram: { type: String, required: true, trim: true },
     status: {
       type: String,
       enum: ['ENROLLED', 'IN_PROGRESS', 'REVIEW_PENDING', 'COMPLETED'],
@@ -86,6 +86,7 @@ const StudentInternshipSchema = new Schema<IStudentInternship>(
 );
 
 StudentInternshipSchema.index({ userId: 1, trackId: 1 });
+StudentInternshipSchema.index({ status: 1, createdAt: -1 });
 
 export const StudentInternship: Model<IStudentInternship> =
   mongoose.models.StudentInternship ||
