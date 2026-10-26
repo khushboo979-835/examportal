@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: PDPProps): Promise<Metadata> 
 
   if (!product) {
     return {
-      title: 'Study Material Not Found | ExamPustak',
+      title: 'Study Material Not Found | StudyFree PDF',
     };
   }
 
@@ -70,7 +70,7 @@ export async function generateMetadata({ params }: PDPProps): Promise<Metadata> 
       ...product.tags,
     ],
     openGraph: {
-      title: `${product.title} — ExamPustak`,
+      title: `${product.title} — StudyFree PDF`,
       description: product.description,
       type: 'article',
       locale: 'en_IN',
@@ -104,13 +104,13 @@ export default async function ProductDetailPage({ params }: PDPProps) {
     '@type': 'Product',
     name: product.title,
     description: product.description,
-    image: 'https://exampustak.in/images/og-notes-cover.png',
+    image: 'https://studyfreepdf.com/images/og-notes-cover.png',
     offers: {
       '@type': 'Offer',
       priceCurrency: 'INR',
       price: activePrice,
       availability: 'https://schema.org/InStock',
-      url: `https://exampustak.in/p/${product.slug}`,
+      url: `https://studyfreepdf.com/p/${product.slug}`,
     },
     aggregateRating: {
       '@type': 'AggregateRating',

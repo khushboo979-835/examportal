@@ -478,8 +478,8 @@ export const mockOrders: Order[] = [
     gatewayPaymentId: 'pay_demo_9981',
     gatewayTransactionId: 'txn_sig_demo_123',
     customerName: 'Aarav Kumar',
-    customerEmail: 'aarav.bihar@gmail.com',
-    customerPhone: '+91-9876543210',
+    customerEmail: 'studyfreepdf2@gmail.com',
+    customerPhone: '+91 7544065425',
     createdAt: new Date(Date.now() - 3600000 * 5),
     updatedAt: new Date(Date.now() - 3600000 * 5),
     orderItems: [
@@ -499,8 +499,8 @@ export const mockUsers: User[] = [
   {
     id: 'user-demo-1',
     name: 'Aarav Kumar',
-    email: 'aarav.bihar@gmail.com',
-    phone: '+91-9876543210',
+    email: 'studyfreepdf2@gmail.com',
+    phone: '+91 7544065425',
     role: 'USER',
     createdAt: new Date('2026-01-01'),
     updatedAt: new Date('2026-01-01'),
@@ -508,8 +508,8 @@ export const mockUsers: User[] = [
   {
     id: 'admin-user-1',
     name: 'Chief Admin',
-    email: 'admin@exampustak.in',
-    phone: '+91-9999900000',
+    email: 'admin@studyfreepdf.com',
+    phone: '+91 7544065425',
     role: 'ADMIN',
     createdAt: new Date('2026-01-01'),
     updatedAt: new Date('2026-01-01'),
@@ -522,7 +522,7 @@ export const mockDownloadLogs: DownloadLog[] = [
     userId: 'user-demo-1',
     pdfProductId: 'pdf-bpsc-bihar-spl-2026',
     ipAddress: '103.24.12.8',
-    watermarkTag: '+91-9876543210 | aarav.bihar@gmail.com',
+    watermarkTag: '+91 7544065425 | studyfreepdf2@gmail.com',
     downloadedAt: new Date(Date.now() - 3600000 * 2),
   },
 ];

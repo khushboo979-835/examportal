@@ -48,12 +48,12 @@ async function validateAndSeed() {
   console.log(pdfProductIndexes.map((i) => i.name || JSON.stringify(i.key)).join(', '));
 
   // 2. Ensure default demo user exists
-  let demoUser = await User.findOne({ email: 'demo@studyfreepdf.com' });
+  let demoUser = await User.findOne({ email: 'studyfreepdf2@gmail.com' });
   if (!demoUser) {
     demoUser = await User.create({
       name: 'Aditya Verma',
-      email: 'demo@studyfreepdf.com',
-      phone: '+91 98765 43210',
+      email: 'studyfreepdf2@gmail.com',
+      phone: '+91 7544065425',
       role: 'STUDENT',
     });
     console.log('✅ Created Demo User:', demoUser.email);

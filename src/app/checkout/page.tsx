@@ -22,8 +22,8 @@ export default function CheckoutPage() {
   const { cart, removeFromCart, clearCart, totalAmount, totalOriginalAmount, totalSaved } = useCart();
 
   const [name, setName] = useState('Aarav Kumar');
-  const [email, setEmail] = useState('aarav.bihar@gmail.com');
-  const [phone, setPhone] = useState('+91-9876543210');
+  const [email, setEmail] = useState('studyfreepdf2@gmail.com');
+  const [phone, setPhone] = useState('+91 7544065425');
   const [paymentMethod, setPaymentMethod] = useState<'UPI' | 'CARD' | 'NETBANKING'>('UPI');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -86,6 +86,9 @@ export default function CheckoutPage() {
 
       const verifyData = await verifyRes.json();
       if (verifyData.success) {
+        localStorage.setItem('studyfreepdf_user_email', email);
+        localStorage.setItem('studyfreepdf_user_phone', phone);
+        localStorage.setItem('studyfreepdf_user_name', name);
         localStorage.setItem('exampustak_user_email', email);
         localStorage.setItem('exampustak_user_phone', phone);
         localStorage.setItem('exampustak_user_name', name);

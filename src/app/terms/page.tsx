@@ -66,9 +66,12 @@ export default function TermsPage() {
           </div>
 
           <div className="space-y-2">
-            <h2 className="text-base font-black text-slate-900">6. Governing Law &amp; Jurisdiction</h2>
+            <h2 className="text-base font-black text-slate-900">6. Governing Law &amp; Contact Inquiries</h2>
             <p>
               These Terms shall be governed by and construed in accordance with the laws of India. Any disputes arising out of these terms shall be subject to the exclusive jurisdiction of the competent courts in <strong>Patna, Bihar, India</strong>.
+            </p>
+            <p className="pt-2 text-slate-500">
+              For any licensing queries or legal communications, email us at <a href="mailto:studyfreepdf2@gmail.com" className="text-blue-600 hover:underline">studyfreepdf2@gmail.com</a>, call <a href="tel:+917544065425" className="text-blue-600 hover:underline">+91 7544065425</a>, or write to our registered office: Digital Developer Infinity Solution (DDIS), Near Zero Mile Metro Station, Patna, Bihar - 800007, India.
             </p>
           </div>
 

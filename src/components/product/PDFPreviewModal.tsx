@@ -89,7 +89,7 @@ export default function PDFPreviewModal({ product, onClose }: PDFPreviewModalPro
           {/* Floating Watermark Banner on Bottom of Canvas */}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-slate-900/90 backdrop-blur text-white text-xs px-4 py-1.5 rounded-full shadow-lg border border-slate-700/80 flex items-center gap-2 pointer-events-none opacity-90">
             <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
-            <span>EXAMPUSTAK.IN PREVIEW • UNAUTHORIZED SHARING PROHIBITED</span>
+            <span>STUDYFREEPDF.COM PREVIEW • UNAUTHORIZED SHARING PROHIBITED</span>
           </div>
         </div>
 

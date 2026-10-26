@@ -422,7 +422,7 @@ export default function InternshipHubPage() {
                   <input
                     type="tel"
                     required
-                    placeholder="+91-9876543210"
+                    placeholder="+91 7544065425"
                     value={studentPhone}
                     onChange={(e) => setStudentPhone(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-[#00A389] focus:outline-none"
@@ -434,7 +434,7 @@ export default function InternshipHubPage() {
                   </label>
                   <input
                     type="email"
-                    placeholder="student@college.edu.in"
+                    placeholder="studyfreepdf2@gmail.com"
                     value={studentEmail}
                     onChange={(e) => setStudentEmail(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-[#00A389] focus:outline-none"

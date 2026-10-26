@@ -21,16 +21,16 @@ import PDFPreviewModal from '@/components/product/PDFPreviewModal';
 
 export default function StudentDashboardPage() {
   const [purchasedList, setPurchasedList] = useState<any[]>([]);
-  const [userPhone, setUserPhone] = useState('+91-9876543210');
-  const [userEmail, setUserEmail] = useState('aarav.bihar@gmail.com');
+  const [userPhone, setUserPhone] = useState('+91 7544065425');
+  const [userEmail, setUserEmail] = useState('studyfreepdf2@gmail.com');
   const [userName, setUserName] = useState('Aarav Kumar');
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const [selectedPreview, setSelectedPreview] = useState<any | null>(null);
 
   useEffect(() => {
-    const savedPhone = localStorage.getItem('exampustak_user_phone');
-    const savedEmail = localStorage.getItem('exampustak_user_email');
-    const savedName = localStorage.getItem('exampustak_user_name');
+    const savedPhone = localStorage.getItem('studyfreepdf_user_phone') || localStorage.getItem('exampustak_user_phone');
+    const savedEmail = localStorage.getItem('studyfreepdf_user_email') || localStorage.getItem('exampustak_user_email');
+    const savedName = localStorage.getItem('studyfreepdf_user_name') || localStorage.getItem('exampustak_user_name');
     if (savedPhone) setUserPhone(savedPhone);
     if (savedEmail) setUserEmail(savedEmail);
     if (savedName) setUserName(savedName);

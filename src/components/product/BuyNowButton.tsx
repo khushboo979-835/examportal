@@ -15,8 +15,8 @@ export default function BuyNowButton({ product, className = '' }: BuyNowButtonPr
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState('Aarav Kumar');
-  const [email, setEmail] = useState('aarav.bihar@gmail.com');
-  const [phone, setPhone] = useState('+91-9876543210');
+  const [email, setEmail] = useState('studyfreepdf2@gmail.com');
+  const [phone, setPhone] = useState('+91 7544065425');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -66,6 +66,9 @@ export default function BuyNowButton({ product, className = '' }: BuyNowButtonPr
       const verifyData = await verifyRes.json();
       if (verifyData.success) {
         // Save user info locally for student library session
+        localStorage.setItem('studyfreepdf_user_email', email);
+        localStorage.setItem('studyfreepdf_user_phone', phone);
+        localStorage.setItem('studyfreepdf_user_name', name);
         localStorage.setItem('exampustak_user_email', email);
         localStorage.setItem('exampustak_user_phone', phone);
         localStorage.setItem('exampustak_user_name', name);
@@ -147,7 +150,7 @@ export default function BuyNowButton({ product, className = '' }: BuyNowButtonPr
                   required
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  placeholder="+91-9876543210"
+                  placeholder="+91 7544065425"
                   className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-hidden"
                 />
               </div>
@@ -159,7 +162,7 @@ export default function BuyNowButton({ product, className = '' }: BuyNowButtonPr
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="student@gmail.com"
+                  placeholder="studyfreepdf2@gmail.com"
                   className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-hidden"
                 />
               </div>

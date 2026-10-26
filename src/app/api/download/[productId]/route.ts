@@ -14,8 +14,8 @@ export async function GET(
 ) {
   const { productId } = await params;
   const { searchParams } = new URL(request.url);
-  const email = searchParams.get('email') || 'student@exampustak.in';
-  const phone = searchParams.get('phone') || '+91-9876543210';
+  const email = searchParams.get('email') || 'studyfreepdf2@gmail.com';
+  const phone = searchParams.get('phone') || '+91 7544065425';
   const orderNum = searchParams.get('order') || 'ORD-2026-X9Y2';
   const ip = request.headers.get('x-forwarded-for') || '127.0.0.1';
 
@@ -62,7 +62,7 @@ export async function GET(
       studentEmail: email,
       studentPhone: phone,
       orderNumber: orderNum,
-      watermarkText: `EXAMPUSTAK.IN  •  ${phone}`,
+      watermarkText: `STUDYFREEPDF.COM  •  ${phone}`,
     });
 
     // 3. Log download in database asynchronously

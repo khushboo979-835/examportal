@@ -20,7 +20,7 @@ export async function GET(
     }
 
     const { searchParams } = new URL(request.url);
-    const userPhone = searchParams.get('phone') || '+91 98765 43210';
+    const userPhone = searchParams.get('phone') || '+91 7544065425';
 
     await connectToDatabase();
 

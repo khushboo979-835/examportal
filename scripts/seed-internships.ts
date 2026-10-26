@@ -617,12 +617,12 @@ async function seed() {
   }
 
   // Seed Demo User
-  let demoUser = await User.findOne({ phone: '+91-9876543210' });
+  let demoUser = await User.findOne({ phone: '+91-7544065425' });
   if (!demoUser) {
     demoUser = await User.create({
       name: 'Aditya Verma',
-      phone: '+91-9876543210',
-      email: 'aditya.verma@college.edu.in',
+      phone: '+91-7544065425',
+      email: 'studyfreepdf2@gmail.com',
       role: 'STUDENT',
     });
   }
@@ -637,8 +637,8 @@ async function seed() {
           userId: demoUser._id,
           trackId: itTrack._id,
           studentName: 'Aditya Verma',
-          studentEmail: 'aditya.verma@college.edu.in',
-          studentPhone: '+91-9876543210',
+          studentEmail: 'studyfreepdf2@gmail.com',
+          studentPhone: '+91-7544065425',
           collegeName: 'Patna Science College, Patna University',
           rollNumber: 'PU-BCA-2023-089',
           degreeProgram: 'Bachelor of Computer Applications (BCA) - 3rd Year',

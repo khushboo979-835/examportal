@@ -373,8 +373,8 @@ async function main() {
   // 5. User
   await User.create({
     name: 'Aarav Kumar',
-    phone: '+91-9876543210',
-    email: 'aarav.bihar@gmail.com',
+    phone: '+91 7544065425',
+    email: 'studyfreepdf2@gmail.com',
     role: 'STUDENT',
     passExpiresAt: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
   });

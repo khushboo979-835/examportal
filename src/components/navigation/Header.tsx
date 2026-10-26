@@ -79,9 +79,9 @@ export default function Header() {
               <span>Verify Certificate</span>
             </Link>
             <span className="text-slate-700">|</span>
-            <a href="tel:+919876543210" className="flex items-center gap-1.5 hover:text-white transition-colors">
+            <a href="tel:+917544065425" className="flex items-center gap-1.5 hover:text-white transition-colors">
               <span className="text-amber-400">📞</span>
-              <span>Support: +91 98765 43210</span>
+              <span>Support: +91 7544065425</span>
             </a>
           </div>
         </div>

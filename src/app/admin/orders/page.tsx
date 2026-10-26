@@ -150,8 +150,8 @@ export default function AdminOrdersPage() {
                       </td>
                       <td className="p-3.5">
                         <div className="font-bold text-white">{o.customerName || 'Aarav Kumar'}</div>
-                        <div className="text-[10px] text-slate-400 font-mono">{o.customerPhone || '+91-9876543210'}</div>
-                        <div className="text-[10px] text-slate-500 truncate max-w-[180px]">{o.customerEmail || 'student@gmail.com'}</div>
+                        <div className="text-[10px] text-slate-400 font-mono">{o.customerPhone || '+91 7544065425'}</div>
+                        <div className="text-[10px] text-slate-500 truncate max-w-[180px]">{o.customerEmail || 'studyfreepdf2@gmail.com'}</div>
                       </td>
                       <td className="p-3.5 font-black text-white text-sm">
                         {formatINR(o.totalAmount)}

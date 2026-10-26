@@ -196,7 +196,7 @@ export default function PricingPolicyPage() {
                 6. What if my payment succeeds but the download does not start?
               </h3>
               <p>
-                Our server processes downloads instantly. If a network drop occurs, your purchase is safely linked to your phone number and accessible anytime from <Link href="/library" className="text-blue-600 font-bold hover:underline">My Student Library</Link>. You can also message our 24/7 WhatsApp helpdesk at <strong>+91 98765 43210</strong> with your payment screenshot for immediate assistance or an instant refund under our <Link href="/refund-policy" className="text-blue-600 font-bold hover:underline">7-Day Refund Policy</Link>.
+                Our server processes downloads instantly. If a network drop occurs, your purchase is safely linked to your phone number and accessible anytime from <Link href="/library" className="text-blue-600 font-bold hover:underline">My Student Library</Link>. You can also message our 24/7 WhatsApp helpdesk at <a href="tel:+917544065425" className="font-bold underline text-blue-600">+91 7544065425</a> or email <strong>studyfreepdf2@gmail.com</strong> with your payment screenshot for immediate assistance or an instant refund under our <Link href="/refund-policy" className="text-blue-600 font-bold hover:underline">7-Day Refund Policy</Link>.
               </p>
             </div>
 

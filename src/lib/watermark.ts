@@ -23,13 +23,13 @@ export async function applyDynamicWatermark(
   const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
   const totalPages = pdfDoc.getPageCount();
-  const buyerEmail = options.studentEmail || 'student@exampustak.in';
-  const buyerPhone = options.studentPhone || '+91-XXXXXXXXXX';
+  const buyerEmail = options.studentEmail || 'studyfreepdf2@gmail.com';
+  const buyerPhone = options.studentPhone || '+91-7544065425';
   const orderRef = options.orderNumber || 'EXAM-LIB';
   const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 19);
 
   const trackingText = `Licensed to: ${buyerPhone} (${buyerEmail}) | Order: ${orderRef} | IP Timestamp: ${timestamp}`;
-  const centerWatermark = options.watermarkText || `EXAMPUSTAK.IN  -  ${buyerPhone}`;
+  const centerWatermark = options.watermarkText || `STUDYFREEPDF.COM  -  ${buyerPhone}`;
 
   for (let i = 0; i < totalPages; i++) {
     const page = pdfDoc.getPage(i);
@@ -97,7 +97,7 @@ export async function createSamplePreviewPdf(
     color: rgb(0.08, 0.35, 0.85),
   });
 
-  page1.drawText('EXAMPUSTAK.IN -- PREMIER STUDY MATERIAL', {
+  page1.drawText('STUDYFREEPDF.COM -- PREMIER STUDY MATERIAL', {
     x: 40,
     y: height - 45,
     size: 14,
@@ -201,7 +201,7 @@ export async function createSamplePreviewPdf(
       rotate: degrees(40),
     });
 
-    page.drawText('EXAMPUSTAK.IN — UNLOCK FULL VERSION', {
+    page.drawText('STUDYFREEPDF.COM — UNLOCK FULL VERSION', {
       x: pW / 4,
       y: 30,
       size: 10,

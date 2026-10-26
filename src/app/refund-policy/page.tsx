@@ -93,7 +93,7 @@ export default function RefundPolicyPage() {
           <div className="space-y-2">
             <h2 className="text-base font-black text-slate-900">4. How to Request a Refund</h2>
             <p>
-              Send an email to <strong>refunds@studyfreepdf.com</strong> or WhatsApp our dedicated support hotline at <strong>+91 98765 43210</strong> with:
+              Send an email to <strong>studyfreepdf2@gmail.com</strong> or WhatsApp our dedicated support hotline at <a href="tel:+917544065425" className="font-bold underline text-blue-600">+91 7544065425</a> with:
             </p>
             <ul className="list-disc pl-5 space-y-1">
               <li>Your Registered Phone Number / Email Address</li>
@@ -109,9 +109,10 @@ export default function RefundPolicyPage() {
             </p>
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-1">
               <div><strong>Name:</strong> Er. Deepak Kumar (Grievance Officer)</div>
-              <div><strong>Email:</strong> grievance@studyfreepdf.com</div>
+              <div><strong>Email:</strong> <a href="mailto:studyfreepdf2@gmail.com" className="text-blue-600 hover:underline">studyfreepdf2@gmail.com</a></div>
               <div><strong>Entity:</strong> Digital Developer Infinity Solution (DDIS)</div>
-              <div><strong>Registered Office:</strong> Bailey Road, Patna, Bihar – 800001, India</div>
+              <div><strong>Registered Office:</strong> Near Zero Mile Metro Station, Patna, Bihar - 800007, India</div>
+              <div><strong>Direct Helpline:</strong> <a href="tel:+917544065425" className="text-blue-600 hover:underline">+91 7544065425</a></div>
               <div><strong>Response SLA:</strong> Acknowledgment within 24 hours, resolution within 7 business days.</div>
             </div>
           </div>

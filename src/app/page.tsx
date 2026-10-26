@@ -176,7 +176,7 @@ export default function HomePage() {
         body: JSON.stringify({
           trackId: enrollingProgram.id,
           studentName: studentName || 'Student Intern',
-          studentPhone: studentPhone || '+91 9876543210',
+          studentPhone: studentPhone || '+91 7544065425',
           collegeName: collegeName || 'Patliputra University, Patna',
           rollNumber: rollNumber || 'PPU-2026-904',
           degreeProgram: degreeProgram || 'BCA 3rd Year',
@@ -739,7 +739,7 @@ export default function HomePage() {
                   <input
                     type="tel"
                     required
-                    placeholder="+91 98765 43210"
+                    placeholder="+91 7544065425"
                     value={studentPhone}
                     onChange={(e) => setStudentPhone(e.target.value)}
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs font-medium focus:ring-2 focus:ring-[#00A389] focus:outline-none"

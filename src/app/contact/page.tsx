@@ -35,7 +35,7 @@ export default function ContactPage() {
             <h3 className="font-bold text-slate-900 text-sm">Phone &amp; WhatsApp</h3>
             <p className="text-xs text-slate-500">Fastest response for download &amp; payment inquiries.</p>
             <div className="text-xs font-black text-blue-600">
-              <a href="tel:+919876543210" className="hover:underline">+91 98765 43210</a>
+              <a href="tel:+917544065425" className="hover:underline">+91 7544065425</a>
             </div>
           </div>
 
@@ -46,7 +46,7 @@ export default function ContactPage() {
             <h3 className="font-bold text-slate-900 text-sm">Email Support</h3>
             <p className="text-xs text-slate-500">For invoice, licensing, or internship queries.</p>
             <div className="text-xs font-black text-emerald-600">
-              <a href="mailto:support@studyfreepdf.com" className="hover:underline">support@studyfreepdf.com</a>
+              <a href="mailto:studyfreepdf2@gmail.com" className="hover:underline">studyfreepdf2@gmail.com</a>
             </div>
           </div>
 
@@ -79,8 +79,8 @@ export default function ContactPage() {
               <h3 className="font-black text-slate-900 text-sm">Grievance Redressal Officer</h3>
               <p><strong>Name:</strong> Er. Deepak Kumar</p>
               <p><strong>Designation:</strong> Head of Student Grievance &amp; Academic Integrity</p>
-              <p><strong>Email:</strong> <a href="mailto:grievance@studyfreepdf.com" className="text-blue-600 hover:underline">grievance@studyfreepdf.com</a></p>
-              <p><strong>Direct Helpline:</strong> +91 98765 43210</p>
+              <p><strong>Email:</strong> <a href="mailto:studyfreepdf2@gmail.com" className="text-blue-600 hover:underline">studyfreepdf2@gmail.com</a></p>
+              <p><strong>Direct Helpline:</strong> <a href="tel:+917544065425" className="text-blue-600 hover:underline">+91 7544065425</a></p>
               <p><strong>Response SLA:</strong> Acknowledgment within 24 hours, resolution within 7 working days.</p>
             </div>
 
@@ -88,7 +88,18 @@ export default function ContactPage() {
               <h3 className="font-black text-slate-900 text-sm">Registered Corporate Headquarters</h3>
               <p><strong>Entity Name:</strong> Digital Developer Infinity Solution (DDIS)</p>
               <p><strong>Corporate Portal:</strong> <a href="https://www.digitalinfinityddis.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">https://www.digitalinfinityddis.com/</a></p>
-              <p><strong>Address:</strong> Bailey Road, Near Patna Junction, Patna, Bihar – 800001, India</p>
+              <p><strong>Office Address:</strong> Near Zero Mile Metro Station, Patna, Bihar - 800007, India</p>
+              <p className="pt-1">
+                <a
+                  href="https://maps.google.com/?q=Zero+Mile+Metro+Station+Patna+Bihar+800007"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-blue-600 hover:text-blue-800 font-bold hover:underline"
+                >
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>View on Google Maps</span>
+                </a>
+              </p>
               <p><strong>Regional Branch:</strong> Sector 62, Noida, Delhi NCR – 201301, India</p>
             </div>
           </div>

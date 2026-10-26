@@ -124,7 +124,7 @@ export default function AboutPage() {
             <div className="flex items-start gap-3 p-3.5 rounded-xl bg-slate-50">
               <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
               <div>
-                <strong>Dedicated Human Support:</strong> Immediate WhatsApp and phone assistance based out of Patna for any student inquiries.
+                <strong>Dedicated Human Support:</strong> Immediate WhatsApp and phone assistance (<a href="tel:+917544065425" className="text-blue-600 font-bold hover:underline">+91 7544065425</a> / <a href="mailto:studyfreepdf2@gmail.com" className="text-blue-600 hover:underline">studyfreepdf2@gmail.com</a>) from our Patna headquarters at Near Zero Mile Metro Station, Patna, Bihar - 800007, India.
               </div>
             </div>
           </div>

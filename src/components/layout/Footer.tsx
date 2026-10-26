@@ -88,15 +88,15 @@ export default function Footer() {
             <div className="text-xs text-slate-400 space-y-1.5 pt-1">
               <div className="flex items-center gap-2">
                 <MapPin className="w-3.5 h-3.5 text-blue-400 shrink-0" />
-                <span>Patna Office: Bailey Road, Patna, Bihar – 800001, India</span>
+                <span>Patna Office: Near Zero Mile Metro Station, Patna, Bihar - 800007, India</span>
               </div>
               <div className="flex items-center gap-2">
                 <Phone className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                <span>Customer Support: +91 98765 43210 (10 AM – 7 PM IST)</span>
+                <span>Customer Support: <a href="tel:+917544065425" className="hover:text-white transition-colors">+91 7544065425</a> (10 AM – 7 PM IST)</span>
               </div>
               <div className="flex items-center gap-2">
                 <Mail className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                <span>Email: support@studyfreepdf.com</span>
+                <span>Email: <a href="mailto:studyfreepdf2@gmail.com" className="hover:text-white transition-colors">studyfreepdf2@gmail.com</a></span>
               </div>
             </div>
           </div>
@@ -224,7 +224,7 @@ export default function Footer() {
               <strong className="text-slate-300">Legal Entity:</strong> Digital Developer Infinity Solution (DDIS) | Official Website: <a href="https://www.digitalinfinityddis.com/" target="_blank" rel="noopener noreferrer" className="text-[#00A389] hover:underline">digitalinfinityddis.com</a>
             </p>
             <p>
-              <strong className="text-slate-300">Grievance Redressal Officer:</strong> Er. Deepak Kumar | Email: <a href="mailto:grievance@studyfreepdf.com" className="text-slate-400 hover:text-white">grievance@studyfreepdf.com</a> | Timelines: Response within 24 hrs, resolution within 7 business days.
+              <strong className="text-slate-300">Grievance Redressal Officer:</strong> Er. Deepak Kumar | Email: <a href="mailto:studyfreepdf2@gmail.com" className="text-slate-400 hover:text-white">studyfreepdf2@gmail.com</a> | Timelines: Response within 24 hrs, resolution within 7 business days.
             </p>
           </div>
           <div className="text-center md:text-right shrink-0">

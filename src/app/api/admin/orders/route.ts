@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
         status: 200,
         headers: {
           'Content-Type': 'text/csv',
-          'Content-Disposition': `attachment; filename="exampustak_orders_${Date.now()}.csv"`,
+          'Content-Disposition': `attachment; filename="studyfreepdf_orders_${Date.now()}.csv"`,
         },
       });
     }

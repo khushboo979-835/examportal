@@ -23,8 +23,8 @@ import PDFPreviewModal from '@/components/product/PDFPreviewModal';
 
 export default function StudentLibraryPage() {
   const [purchasedProducts, setPurchasedProducts] = useState<PDFProduct[]>([]);
-  const [userEmail, setUserEmail] = useState('aarav.bihar@gmail.com');
-  const [userPhone, setUserPhone] = useState('+91-9876543210');
+  const [userEmail, setUserEmail] = useState('studyfreepdf2@gmail.com');
+  const [userPhone, setUserPhone] = useState('+91 7544065425');
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const [presignedStatus, setPresignedStatus] = useState<Record<string, { url: string; expiresAt: number }>>({});
   const [selectedPreview, setSelectedPreview] = useState<PDFProduct | null>(null);
@@ -32,8 +32,8 @@ export default function StudentLibraryPage() {
 
   useEffect(() => {
     // Read cached user credentials
-    const savedEmail = localStorage.getItem('exampustak_user_email');
-    const savedPhone = localStorage.getItem('exampustak_user_phone');
+    const savedEmail = localStorage.getItem('studyfreepdf_user_email') || localStorage.getItem('exampustak_user_email');
+    const savedPhone = localStorage.getItem('studyfreepdf_user_phone') || localStorage.getItem('exampustak_user_phone');
     if (savedEmail) setUserEmail(savedEmail);
     if (savedPhone) setUserPhone(savedPhone);
 

@@ -67,8 +67,9 @@ export default function PrivacyPage() {
             </p>
             <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
               <p><strong>Grievance Officer:</strong> Er. Deepak Kumar</p>
-              <p><strong>Email:</strong> privacy@studyfreepdf.com</p>
-              <p><strong>Address:</strong> Digital Developer Infinity Solution (DDIS), Bailey Road, Patna, Bihar – 800001, India</p>
+              <p><strong>Email:</strong> <a href="mailto:studyfreepdf2@gmail.com" className="text-blue-600 hover:underline">studyfreepdf2@gmail.com</a></p>
+              <p><strong>Helpline:</strong> <a href="tel:+917544065425" className="text-blue-600 hover:underline">+91 7544065425</a></p>
+              <p><strong>Address:</strong> Digital Developer Infinity Solution (DDIS), Near Zero Mile Metro Station, Patna, Bihar - 800007, India</p>
             </div>
           </div>
 

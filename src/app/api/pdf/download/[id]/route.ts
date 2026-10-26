@@ -14,8 +14,8 @@ export async function GET(
 ) {
   const { id } = await params;
   const { searchParams } = new URL(request.url);
-  const userPhone = searchParams.get('phone') || '+91-9876543210';
-  const userEmail = searchParams.get('email') || 'student@exampass.in';
+  const userPhone = searchParams.get('phone') || '+91 7544065425';
+  const userEmail = searchParams.get('email') || 'studyfreepdf2@gmail.com';
   const orderId = searchParams.get('order') || `PASS-${Date.now().toString(36).toUpperCase()}`;
 
   try {

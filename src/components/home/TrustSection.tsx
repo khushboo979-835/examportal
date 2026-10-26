@@ -39,7 +39,7 @@ export default function TrustSection() {
               Enterprise-Grade Dynamic PDF Watermarking
             </h2>
             <p className="text-sm text-slate-300 leading-relaxed">
-              When you download notes on ExamPustak, our backend dynamically stamps your verified registered phone number, email address, and order transaction timestamp onto every page margin.
+              When you download notes on StudyFree PDF, our backend dynamically stamps your verified registered phone number, email address, and order transaction timestamp onto every page margin.
             </p>
 
             <div className="space-y-2 pt-2">
@@ -61,7 +61,7 @@ export default function TrustSection() {
           {/* Simulated Watermark Visual Preview */}
           <div className="bg-white text-slate-900 rounded-2xl p-6 shadow-2xl border border-slate-200/40 relative font-sans text-xs">
             <div className="text-[9px] text-slate-400 font-mono border-b border-slate-100 pb-1.5 flex justify-between">
-              <span>Licensed to: +91-9876543210 (aarav.bihar@gmail.com)</span>
+              <span>Licensed to: +91 7544065425 (studyfreepdf2@gmail.com)</span>
               <span>ORD-2026-X9Y2</span>
             </div>
 
@@ -74,7 +74,7 @@ export default function TrustSection() {
               {/* Watermark Diagonal Overlay */}
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none rotate-[-25deg]">
                 <span className="text-xl sm:text-2xl font-black text-blue-500/20 tracking-widest uppercase">
-                  EXAMPUSTAK • +91-9876543210
+                  STUDYFREEPDF • +91 7544065425
                 </span>
               </div>
             </div>

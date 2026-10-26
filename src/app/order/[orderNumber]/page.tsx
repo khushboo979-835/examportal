@@ -24,8 +24,8 @@ export default function OrderConfirmationPage() {
   const orderNumber = params?.orderNumber as string;
 
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
-  const [userPhone, setUserPhone] = useState('+91-9876543210');
-  const [userEmail, setUserEmail] = useState('student@exampustak.in');
+  const [userPhone, setUserPhone] = useState('+91 7544065425');
+  const [userEmail, setUserEmail] = useState('studyfreepdf2@gmail.com');
 
   const products: PDFProduct[] = getHydratedProducts().slice(0, 2);
 
@@ -37,8 +37,8 @@ export default function OrderConfirmationPage() {
       origin: { y: 0.6 },
     });
 
-    const savedPhone = localStorage.getItem('exampustak_user_phone');
-    const savedEmail = localStorage.getItem('exampustak_user_email');
+    const savedPhone = localStorage.getItem('studyfreepdf_user_phone') || localStorage.getItem('exampustak_user_phone');
+    const savedEmail = localStorage.getItem('studyfreepdf_user_email') || localStorage.getItem('exampustak_user_email');
     if (savedPhone) setUserPhone(savedPhone);
     if (savedEmail) setUserEmail(savedEmail);
   }, []);

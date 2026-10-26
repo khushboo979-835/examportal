@@ -63,14 +63,14 @@ export async function POST(request: NextRequest) {
       await connectToDatabase();
       const userPhone = customerPhone || `+91-98${Math.floor(10000000 + Math.random() * 90000000)}`;
       let user = await User.findOne({
-        $or: [{ phone: userPhone }, { email: customerEmail || 'guest@exampustak.in' }],
+        $or: [{ phone: userPhone }, { email: customerEmail || 'guest@studyfreepdf.com' }],
       });
 
       if (!user) {
         user = await User.create({
           name: customerName || 'Exam Aspirant',
           phone: userPhone,
-          email: customerEmail || `student_${Date.now()}@exampustak.in`,
+          email: customerEmail || `student_${Date.now()}@studyfreepdf.com`,
           role: 'STUDENT',
         });
       }
@@ -98,8 +98,8 @@ export async function POST(request: NextRequest) {
         paymentStatus: 'PENDING',
         gatewayOrderId: razorpayOrder.id,
         customerName: customerName || 'Student',
-        customerEmail: customerEmail || 'student@exampustak.in',
-        customerPhone: customerPhone || '+91-9876543210',
+        customerEmail: customerEmail || 'studyfreepdf2@gmail.com',
+        customerPhone: customerPhone || '+91 7544065425',
         createdAt: new Date(),
         updatedAt: new Date(),
         orderItems: products.map((p) => ({
