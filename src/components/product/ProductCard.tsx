@@ -68,6 +68,11 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {/* Card Header & Title */}
         <div className="p-4 flex-1 flex flex-col">
+          <div className="flex items-center gap-1.5 text-[10px] font-bold text-emerald-600 mb-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Updated for 2026–2027 Syllabus</span>
+          </div>
+
           <Link href={`/p/${product.slug}`} className="block group-hover:text-blue-600 transition-colors">
             <h3 className="font-bold text-slate-900 text-sm sm:text-base line-clamp-2 leading-snug">
               {product.title}
@@ -92,6 +97,12 @@ export default function ProductCard({ product }: ProductCardProps) {
               <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
               <span>{product.rating}</span>
             </div>
+          </div>
+
+          {/* Access Guarantee Badge */}
+          <div className="py-1 px-2.5 rounded-lg bg-emerald-50 text-emerald-800 text-[10px] font-bold flex items-center justify-between border border-emerald-100 mb-2">
+            <span>✓ PDF Download Included</span>
+            <span>Lifetime Access</span>
           </div>
 
           {/* Subject & Format */}
@@ -124,19 +135,20 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
 
           <div className="grid grid-cols-2 gap-2">
-            {/* Preview Sample CTA */}
+            {/* Preview Sample CTA (Free Reading) */}
             <button
               onClick={() => setShowPreview(true)}
-              className="py-2 px-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-xs"
+              className="py-2 px-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-xs cursor-pointer"
+              title="Read free 3-page preview before paying"
             >
-              <Eye className="w-3.5 h-3.5 text-blue-600" /> Preview
+              <Eye className="w-3.5 h-3.5 text-blue-600" /> Free Preview
             </button>
 
             {/* Add to Cart / Buy CTA */}
             <button
               onClick={() => addToCart(product)}
               disabled={isInCart}
-              className={`py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md ${
+              className={`py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer ${
                 isInCart
                   ? 'bg-emerald-600 text-white cursor-default'
                   : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-500/20 active:scale-95'
@@ -148,7 +160,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 </>
               ) : (
                 <>
-                  <ShoppingCart className="w-3.5 h-3.5" /> Buy Now
+                  <ShoppingCart className="w-3.5 h-3.5" /> Buy ({formatINR(activePrice)})
                 </>
               )}
             </button>
