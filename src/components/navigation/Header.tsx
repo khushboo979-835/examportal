@@ -83,6 +83,10 @@ export default function Header() {
               <span className="text-amber-400">📞</span>
               <span>Support: +91 7544065425</span>
             </a>
+            <span className="text-slate-700">|</span>
+            <a href="mailto:studyfreepdf2@gmail.com" className="flex items-center gap-1 hover:text-[#00E599] transition-colors">
+              <span>studyfreepdf2@gmail.com</span>
+            </a>
           </div>
         </div>
       </div>

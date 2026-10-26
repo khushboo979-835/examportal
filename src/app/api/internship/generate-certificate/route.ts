@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
+import QRCode from 'qrcode';
 import connectToDatabase from '@/lib/db';
 import { DDISCertificate } from '@/models/DDISCertificate';
 import { StudentInternship } from '@/models/StudentInternship';
@@ -7,6 +9,129 @@ import { generateDDISCertificatePdf } from '@/lib/ddisCertificateGenerator';
 
 export const dynamic = 'force-dynamic';
 
+/**
+ * POST /api/internship/generate-certificate
+ * Enforce strict programmatic issuance gate (AC-08, AC-09):
+ * Dynamically block certificate generation if any mandatory weekly milestone is missing or unapproved.
+ */
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { internshipId, studentPhone, studentEmail } = body;
+
+    if (!internshipId) {
+      return NextResponse.json({ error: 'internshipId parameter is required' }, { status: 400 });
+    }
+
+    await connectToDatabase();
+
+    const internship = await StudentInternship.findById(internshipId).populate('trackId');
+    if (!internship) {
+      return NextResponse.json({ error: 'Internship record not found' }, { status: 404 });
+    }
+
+    // If certificate was already generated, return the existing credential
+    if (internship.certificateIssued && internship.certificateId) {
+      const existingCert = await DDISCertificate.findOne({ certificateId: internship.certificateId });
+      return NextResponse.json({
+        success: true,
+        message: 'Certificate already issued and verified.',
+        certificateId: internship.certificateId,
+        verificationUrl: existingCert?.verificationUrl || `https://studyfreepdf.com/verify/${internship.certificateId}`,
+      });
+    }
+
+    const totalRequiredWeeks = (internship.trackId as any)?.durationWeeks || 4;
+    const submissions = internship.submissions || [];
+
+    // Programmatic Gate: Check if all weekly milestones exist and are APPROVED
+    const unapprovedMilestones: number[] = [];
+    for (let w = 1; w <= totalRequiredWeeks; w++) {
+      const sub = submissions.find((s) => s.weekNumber === w);
+      if (!sub || sub.status !== 'APPROVED') {
+        unapprovedMilestones.push(w);
+      }
+    }
+
+    if (unapprovedMilestones.length > 0) {
+      return NextResponse.json(
+        {
+          error: `Certificate issuance blocked: All ${totalRequiredWeeks} weekly project milestones must be submitted and approved by an authorized mentor before certificate generation.`,
+          unapprovedWeeks: unapprovedMilestones,
+          totalRequiredWeeks,
+          approvedCount: submissions.filter((s) => s.status === 'APPROVED').length,
+        },
+        { status: 403 }
+      );
+    }
+
+    // Generate unique tamper-proof credential ID: DDIS-NEP-2026-{STREAM}-{HEX}
+    const rawStream = (internship.trackId as any)?.stream || 'IT';
+    const streamCode = rawStream.replace(/[^A-Za-z]/g, '').substring(0, 3).toUpperCase() || 'IT';
+    const hex = crypto.randomBytes(2).toString('hex').toUpperCase();
+    const certificateId = `DDIS-NEP-2026-${streamCode}-${hex}`;
+    const verificationUrl = `https://studyfreepdf.com/verify/${certificateId}`;
+
+    // Generate QR Code data URL
+    const qrCodeDataUrl = await QRCode.toDataURL(verificationUrl, {
+      margin: 1,
+      width: 250,
+      color: {
+        dark: '#0F172A',
+        light: '#FFFFFF',
+      },
+    });
+
+    // Create DDISCertificate in database
+    const cert = await DDISCertificate.create({
+      certificateId,
+      userId: internship.userId,
+      internshipId: internship._id,
+      studentName: internship.studentName || 'Student Intern',
+      collegeName: internship.collegeName,
+      degreeProgram: internship.degreeProgram || 'Undergraduate Degree',
+      stream: (internship.trackId as any)?.stream || 'IT',
+      faculty: (internship.trackId as any)?.faculty || (internship.trackId as any)?.stream || 'IT',
+      trackTitle: (internship.trackId as any)?.title || 'NEP-2020 Virtual Internship',
+      durationWeeks: totalRequiredWeeks,
+      nepCurriculumHours: (internship.trackId as any)?.nepCurriculumHours || 75,
+      grade: 'A+ (Distinction)',
+      issueDate: new Date(),
+      validityStatus: 'VALID',
+      qrCodeDataUrl,
+      verificationUrl,
+      certificatePdfUrl: `/api/internship/generate-certificate?id=${certificateId}`,
+      accreditationAuthority: 'Digital Developer Infinity Solution (DDIS) • NEP-2020 Compliant',
+    });
+
+    // Mark StudentInternship as completed
+    internship.certificateIssued = true;
+    internship.certificateId = certificateId;
+    internship.status = 'COMPLETED';
+    internship.isCompleted = true;
+    internship.completedDate = new Date();
+    await internship.save();
+
+    return NextResponse.json({
+      success: true,
+      message: 'Certificate successfully generated and accredited under DDIS.',
+      certificateId,
+      verificationUrl,
+      downloadUrl: `/api/internship/generate-certificate?id=${certificateId}`,
+    });
+  } catch (error: any) {
+    console.error('Certificate issuance gate error:', error);
+    return NextResponse.json(
+      { error: error.message || 'Failed to generate certificate' },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * GET /api/internship/generate-certificate?id=...
+ * Serves the official high-resolution landscape PDF certificate with QR link & viva dossier
+ */
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
@@ -19,7 +144,10 @@ export async function GET(request: NextRequest) {
     let internshipRecord: any = null;
 
     if (certificateId) {
-      certRecord = await DDISCertificate.findOne({ certificateId }).lean();
+      certRecord = await DDISCertificate.findOne({
+        $or: [{ certificateId }, { certificateId: certificateId.toUpperCase() }],
+      }).lean();
+
       if (certRecord && certRecord.internshipId) {
         internshipRecord = await StudentInternship.findById(certRecord.internshipId).populate('trackId').lean();
       }
@@ -27,18 +155,32 @@ export async function GET(request: NextRequest) {
       internshipRecord = await StudentInternship.findById(internshipId).populate('trackId').lean();
       if (internshipRecord && internshipRecord.certificateId) {
         certRecord = await DDISCertificate.findOne({ certificateId: internshipRecord.certificateId }).lean();
+      } else if (internshipRecord) {
+        // Enforce issuance gate: if milestones are not approved, block download
+        const totalWeeks = (internshipRecord.trackId as any)?.durationWeeks || 4;
+        const approvedCount = (internshipRecord.submissions || []).filter((s: any) => s.status === 'APPROVED').length;
+        if (approvedCount < totalWeeks && internshipRecord.status !== 'COMPLETED') {
+          return NextResponse.json(
+            { error: 'Certificate generation blocked: All weekly project milestones must be approved before PDF issuance.' },
+            { status: 403 }
+          );
+        }
       }
     }
 
+    if (certRecord && certRecord.validityStatus === 'REVOKED') {
+      return NextResponse.json({ error: 'This credential has been revoked.' }, { status: 403 });
+    }
+
     // Default fallback demo certificate if ID not in DB yet
-    const targetCertId = certificateId || internshipRecord?.certificateId || 'DDIS-NEP-IT-2026-9482';
+    const targetCertId = certificateId || internshipRecord?.certificateId || 'DDIS-NEP-2026-IT-9482';
     const studentName = certRecord?.studentName || internshipRecord?.studentName || 'Aditya Verma';
     const collegeName = certRecord?.collegeName || internshipRecord?.collegeName || 'Patna Science College, Patna University';
     const degreeProgram = certRecord?.degreeProgram || internshipRecord?.degreeProgram || 'Bachelor of Computer Applications (BCA)';
-    const stream = certRecord?.stream || 'BCA / Computer Applications & IT';
-    const trackTitle = certRecord?.trackTitle || internshipRecord?.trackId?.title || 'Full-Stack Web Engineering (Next.js, TypeScript & MongoDB)';
-    const durationWeeks = certRecord?.durationWeeks || internshipRecord?.trackId?.durationWeeks || 4;
-    const nepCurriculumHours = certRecord?.nepCurriculumHours || internshipRecord?.trackId?.nepCurriculumHours || 75;
+    const stream = certRecord?.stream || (internshipRecord?.trackId as any)?.stream || 'BCA / Computer Applications & IT';
+    const trackTitle = certRecord?.trackTitle || (internshipRecord?.trackId as any)?.title || 'Full-Stack Web Engineering (Next.js, TypeScript & MongoDB)';
+    const durationWeeks = certRecord?.durationWeeks || (internshipRecord?.trackId as any)?.durationWeeks || 4;
+    const nepCurriculumHours = certRecord?.nepCurriculumHours || (internshipRecord?.trackId as any)?.nepCurriculumHours || 75;
     const grade = certRecord?.grade || 'A+ (Distinction)';
     const issueDate = certRecord?.issueDate ? new Date(certRecord.issueDate) : new Date();
 
@@ -51,7 +193,7 @@ export async function GET(request: NextRequest) {
       taskDescription: s.mentorFeedback || s.mentorNotes || 'Approved industry deliverable with validated unit testing.',
       submissionUrl: s.submissionUrl || s.hostedLink || s.driveLink,
       status: s.status || 'APPROVED',
-      estimatedHours: 19,
+      estimatedHours: Math.round(nepCurriculumHours / durationWeeks),
     })) || [
       { weekNumber: 1, title: 'Foundational Architecture & Problem Scoping', taskDescription: 'Designed core module hierarchy and conducted competitor benchmarking.', status: 'APPROVED', estimatedHours: 18 },
       { weekNumber: 2, title: 'Data Flow & Core Logic Implementation', taskDescription: 'Built verified backend/computational pipeline with error boundary checks.', status: 'APPROVED', estimatedHours: 19 },

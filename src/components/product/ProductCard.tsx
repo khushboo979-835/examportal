@@ -135,13 +135,13 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
 
           <div className="grid grid-cols-2 gap-2">
-            {/* Preview Sample CTA (Free Reading) */}
+            {/* Preview Sample CTA (Free Sample Reading) */}
             <button
               onClick={() => setShowPreview(true)}
               className="py-2 px-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-xs cursor-pointer"
               title="Read free 3-page preview before paying"
             >
-              <Eye className="w-3.5 h-3.5 text-blue-600" /> Free Preview
+              <Eye className="w-3.5 h-3.5 text-blue-600" /> Free Sample Reading
             </button>
 
             {/* Add to Cart / Buy CTA */}

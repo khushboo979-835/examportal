@@ -1,7 +1,7 @@
 import mongoose, { Schema, Document, Model, Types } from 'mongoose';
 
 export type OrderType = 'SINGLE_PDF' | 'ALL_ACCESS_PASS';
-export type OrderStatus = 'PENDING' | 'SUCCESS' | 'FAILED';
+export type OrderStatus = 'PENDING' | 'SUCCESS' | 'FAILED' | 'REFUNDED';
 
 export interface IOrder extends Document {
   orderNumber: string;
@@ -12,6 +12,11 @@ export interface IOrder extends Document {
   status: OrderStatus;
   razorpayOrderId?: string;
   razorpayPaymentId?: string;
+  gatewaySignature?: string;
+  idempotencyKey?: string;
+  webhookProcessedAt?: Date;
+  refundReason?: string;
+  refundedAt?: Date;
   customerName?: string;
   customerPhone?: string;
   customerEmail?: string;
@@ -33,12 +38,17 @@ const OrderSchema: Schema = new Schema(
     amount: { type: Number, required: true, min: 0 },
     status: {
       type: String,
-      enum: ['PENDING', 'SUCCESS', 'FAILED'],
+      enum: ['PENDING', 'SUCCESS', 'FAILED', 'REFUNDED'],
       default: 'PENDING',
       index: true,
     },
     razorpayOrderId: { type: String, default: null, index: true },
-    razorpayPaymentId: { type: String, default: null },
+    razorpayPaymentId: { type: String, default: null, index: true },
+    gatewaySignature: { type: String, default: null },
+    idempotencyKey: { type: String, default: null, index: true },
+    webhookProcessedAt: { type: Date, default: null },
+    refundReason: { type: String, default: null },
+    refundedAt: { type: Date, default: null },
     customerName: { type: String },
     customerPhone: { type: String },
     customerEmail: { type: String },

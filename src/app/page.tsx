@@ -384,7 +384,7 @@ export default function HomePage() {
             <div className="space-y-4 text-center lg:text-left max-w-2xl">
               <div className="inline-flex items-center gap-1.5 bg-[#F59E0B] text-slate-950 px-3 py-1 rounded-full text-xs font-black uppercase shadow-xs">
                 <span>👑</span>
-                <span>TESTBOOK PDF PASS PRO</span>
+                <span>STUDYFREE ANNUAL PDF PASS PRO</span>
               </div>
 
               <h2 className="text-2xl sm:text-4xl font-black leading-tight tracking-tight">
@@ -422,6 +422,12 @@ export default function HomePage() {
                   <span><strong>Strictly Zero Auto-Debit:</strong> One-time ₹199 only</span>
                 </div>
               </div>
+
+              {/* Explicit Exclusions Declaration */}
+              <div className="pt-2 text-[11px] text-blue-200/90 italic flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+                <span>Notice: Excludes physical printed books &amp; private 1-on-1 personal mentorship.</span>
+              </div>
             </div>
 
             {/* Right Pass Box (Image 5) */}
@@ -439,7 +445,7 @@ export default function HomePage() {
               </div>
 
               <Link
-                href="/explore"
+                href="/checkout?plan=ANNUAL_PASS"
                 className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-[#F59E0B] hover:bg-[#d97706] text-slate-950 font-black text-xs sm:text-sm shadow-md hover:scale-105 transition-all flex items-center justify-center gap-1.5 shrink-0"
               >
                 <span>Get Pass Now</span>

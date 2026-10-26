@@ -16,8 +16,20 @@ export interface ISubmission {
   driveLink?: string;
   submittedAt?: Date;
   status: SubmissionStatus;
+  score?: number;
   mentorFeedback?: string;
   mentorNotes?: string;
+  evaluatedAt?: Date;
+  evaluatedBy?: string;
+}
+
+export interface IEvaluationAuditLog {
+  evaluatedBy: string;
+  mentorRole: string;
+  action: 'APPROVED' | 'REVISE' | 'REJECTED';
+  weekNumber: number;
+  feedback: string;
+  evaluatedAt: Date;
 }
 
 export interface IStudentInternship extends Document {
@@ -35,6 +47,7 @@ export interface IStudentInternship extends Document {
   startDate: Date;
   completedDate?: Date;
   submissions: ISubmission[];
+  evaluationAuditLogs: IEvaluationAuditLog[];
   certificateIssued: boolean;
   certificateId?: string;
   createdAt: Date;
@@ -77,6 +90,16 @@ const StudentInternshipSchema = new Schema<IStudentInternship>(
     startDate: { type: Date, default: Date.now },
     completedDate: { type: Date },
     submissions: [SubmissionSchema],
+    evaluationAuditLogs: [
+      {
+        evaluatedBy: { type: String, required: true },
+        mentorRole: { type: String, default: 'MENTOR' },
+        action: { type: String, enum: ['APPROVED', 'REVISE', 'REJECTED'], required: true },
+        weekNumber: { type: Number, required: true },
+        feedback: { type: String, default: '' },
+        evaluatedAt: { type: Date, default: Date.now },
+      },
+    ],
     certificateIssued: { type: Boolean, default: false, index: true },
     certificateId: { type: String, unique: true, sparse: true, index: true },
   },

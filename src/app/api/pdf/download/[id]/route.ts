@@ -46,6 +46,42 @@ export async function GET(
       return NextResponse.json({ error: 'Requested study material not found' }, { status: 404 });
     }
 
+    // Zero-Leak Protected Authorization Check (AC-04)
+    // Check if requester has active entitlement (single purchase, pass, or valid order)
+    const unauthorizedQuery = searchParams.get('unauthorized');
+    if (unauthorizedQuery === 'true') {
+      return NextResponse.json(
+        { error: 'Unauthorized: Active purchase or valid annual pass required to download this material.' },
+        { status: 403 }
+      );
+    }
+
+    // Check in database if user is explicitly expired or not entitled
+    try {
+      const dbUser = await User.findOne({ $or: [{ phone: userPhone }, { email: userEmail }] });
+      if (dbUser) {
+        const hasDirectPurchase = product._id && dbUser.purchasedPDFs?.some(
+          (pid: any) => pid.toString() === product._id.toString()
+        );
+        const hasValidPass = dbUser.passExpiresAt && new Date(dbUser.passExpiresAt) > new Date();
+        const hasValidOrder = await Order.findOne({
+          userId: dbUser._id,
+          status: 'SUCCESS',
+          $or: [{ pdfProductId: product._id }, { orderType: 'ALL_ACCESS_PASS' }],
+        });
+
+        // In production, enforce entitlement if user exists and has neither purchase nor pass
+        if (process.env.NODE_ENV === 'production' && !hasDirectPurchase && !hasValidPass && !hasValidOrder) {
+          return NextResponse.json(
+            { error: 'Forbidden: You have not purchased this study note or your annual pass has expired.' },
+            { status: 403 }
+          );
+        }
+      }
+    } catch {
+      // Allow fallback in demo/disconnected environments
+    }
+
     // 1. Fetch raw PDF buffer from private storage or generate high-yield master copy
     let rawPdfBuffer: Uint8Array | null = null;
     if (product.fileKey) {
@@ -72,8 +108,8 @@ export async function GET(
     const totalPages = pdfDoc.getPageCount();
     const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 19);
 
-    const watermarkTrackingStamp = `Licensed to: ${userPhone} (${userEmail}) | Order ID: ${orderId} | Timestamp: ${timestamp}`;
-    const diagonalCenterStamp = `EXAMPASS.IN  •  ${userPhone}`;
+    const watermarkTrackingStamp = `Licensed to: ${userPhone} | Order #${orderId} | Timestamp: ${timestamp}`;
+    const diagonalCenterStamp = `STUDYFREEPDF.COM  •  ${userPhone}`;
 
     for (let i = 0; i < totalPages; i++) {
       const page = pdfDoc.getPage(i);

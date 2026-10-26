@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, Suspense, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { 
   ShieldCheck, 
@@ -12,14 +12,55 @@ import {
   Loader2, 
   Smartphone, 
   CheckCircle2,
-  BookOpen
+  BookOpen,
+  HelpCircle,
+  Clock,
+  RotateCcw
 } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { formatINR } from '@/lib/utils';
+import { PDFProduct } from '@/types';
 
-export default function CheckoutPage() {
+const ANNUAL_PASS_PRODUCT: PDFProduct = {
+  id: 'pass-annual-all-access',
+  title: 'Annual All-Access Exam Pass (365 Days)',
+  slug: 'annual-all-access-pass',
+  price: 499,
+  discountedPrice: 199,
+  pageCount: 5000,
+  totalPages: 5000,
+  fileSize: 1024 * 1024 * 50,
+  medium: 'BILINGUAL',
+  subjectId: 'sub-all-exams',
+  subject: {
+    id: 'sub-all-exams',
+    name: 'All Bihar & Central Exams',
+    boardOrExam: { code: 'ALL-ACCESS', name: 'Annual Pass Pro' },
+  } as any,
+  materialType: 'NOTES',
+  rating: 4.9,
+  reviewCount: 342,
+  tags: ['Pass', 'All-Access', 'Unlimited'],
+  description: 'Unlimited access & downloads across BPSC, BSEB 10th/12th, CBSE & SSC notes, formula sheets and PYQs for 365 days.',
+  totalDownloads: 12500,
+  totalSales: 890,
+  isPassEligible: true,
+  isPublished: true,
+  isFeatured: true,
+  fileKey: 'passes/annual-pass-master.pdf',
+  fileFormat: 'PDF',
+  highlights: ['5,000+ Notes', '365 Days Access', 'Solved PYQs'],
+  tableOfContents: ['BPSC Modules', 'BSEB Modules', 'CBSE Modules', 'SSC Modules'],
+  createdAt: new Date(),
+  updatedAt: new Date(),
+};
+
+function CheckoutContent() {
   const router = useRouter();
-  const { cart, removeFromCart, clearCart, totalAmount, totalOriginalAmount, totalSaved } = useCart();
+  const searchParams = useSearchParams();
+  const planParam = searchParams.get('plan');
+
+  const { cart, addToCart, removeFromCart, clearCart, totalAmount, totalOriginalAmount, totalSaved } = useCart();
 
   const [name, setName] = useState('Aarav Kumar');
   const [email, setEmail] = useState('studyfreepdf2@gmail.com');
@@ -28,6 +69,17 @@ export default function CheckoutPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Auto-add Annual Pass if user arrived with ?plan=ANNUAL_PASS and cart has no items
+  useEffect(() => {
+    if (planParam === 'ANNUAL_PASS' && cart.length === 0) {
+      addToCart(ANNUAL_PASS_PRODUCT);
+    }
+  }, [planParam, cart.length, addToCart]);
+
+  const hasAnnualPass = cart.some(
+    (i) => i.product.id === 'pass-annual-all-access' || i.product.slug === 'annual-all-access-pass'
+  );
+
   if (cart.length === 0) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-20 text-center space-y-4">
@@ -35,13 +87,22 @@ export default function CheckoutPage() {
           <BookOpen className="w-8 h-8" />
         </div>
         <h2 className="text-xl font-black text-slate-900">Your Study Bag is Empty</h2>
-        <p className="text-xs text-slate-500">Please select study materials from our marketplace before checkout.</p>
-        <Link
-          href="/explore"
-          className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-6 py-3 rounded-xl shadow-md"
-        >
-          Explore Notes Catalog <ArrowRight className="w-4 h-4" />
-        </Link>
+        <p className="text-xs text-slate-500">Please select study materials or an Annual Pass from our marketplace before checkout.</p>
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <Link
+            href="/explore"
+            className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs px-6 py-3 rounded-xl shadow-md"
+          >
+            Explore Notes Catalog <ArrowRight className="w-4 h-4" />
+          </Link>
+          <button
+            type="button"
+            onClick={() => addToCart(ANNUAL_PASS_PRODUCT)}
+            className="inline-flex items-center gap-2 bg-[#F59E0B] hover:bg-[#d97706] text-slate-950 font-black text-xs px-6 py-3 rounded-xl shadow-md cursor-pointer"
+          >
+            Add Annual Pass @ ₹199
+          </button>
+        </div>
       </div>
     );
   }
@@ -66,13 +127,14 @@ export default function CheckoutPage() {
           customerName: name,
           customerEmail: email,
           customerPhone: phone,
+          orderType: hasAnnualPass ? 'ALL_ACCESS_PASS' : 'SINGLE_PDF',
         }),
       });
 
       const orderData = await res.json();
       if (!orderData.success) throw new Error(orderData.error || 'Failed to create order');
 
-      // 2. Verify payment (Razorpay / Instant Verification)
+      // 2. Verify payment (Razorpay / Instant Webhook reconciliation)
       const verifyRes = await fetch('/api/payment/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -203,10 +265,22 @@ export default function CheckoutPage() {
               </div>
             </div>
 
+            {/* Refund & Guarantee Notice */}
+            <div className="p-4 bg-emerald-50/70 border border-emerald-200 rounded-2xl flex items-start gap-3 text-xs text-emerald-900">
+              <RotateCcw className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+              <div>
+                <strong>7-Day Money-Back Guarantee:</strong>
+                <span className="text-emerald-800 ml-1">
+                  If the study material does not match its sample preview or description, request a full refund within 7 days via our{' '}
+                  <Link href="/refund-policy" className="underline font-bold hover:text-emerald-950">Refund Policy</Link>.
+                </span>
+              </div>
+            </div>
+
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold text-sm shadow-xl shadow-blue-500/25 flex items-center justify-center gap-2 transition-all hover:scale-[1.01]"
+              className="w-full py-4 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold text-sm shadow-xl shadow-blue-500/25 flex items-center justify-center gap-2 transition-all hover:scale-[1.01] cursor-pointer"
             >
               {isLoading ? (
                 <>
@@ -214,7 +288,7 @@ export default function CheckoutPage() {
                 </>
               ) : (
                 <>
-                  Pay {formatINR(totalAmount)} & Download Notes <ArrowRight className="w-4 h-4" />
+                  Pay {formatINR(totalAmount)} &amp; Download Notes <ArrowRight className="w-4 h-4" />
                 </>
               )}
             </button>
@@ -230,26 +304,39 @@ export default function CheckoutPage() {
         {/* Right Column: Order Summary */}
         <div className="lg:col-span-5 space-y-6">
           <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-lg space-y-4 sticky top-24">
-            <h3 className="font-extrabold text-base text-slate-900 border-b border-slate-100 pb-3">
-              Order Summary ({cart.length} items)
+            <h3 className="font-extrabold text-base text-slate-900 border-b border-slate-100 pb-3 flex items-center justify-between">
+              <span>Order Summary</span>
+              <span className="text-xs font-normal text-slate-500">({cart.length} item{cart.length > 1 ? 's' : ''})</span>
             </h3>
 
+            {/* Itemized List */}
             <div className="divide-y divide-slate-100 max-h-72 overflow-y-auto">
               {cart.map(({ product }, idx) => {
                 const itemKey = (product as any)._id || product.id || product.slug || `checkout-item-${idx}`;
                 const productId = product.id || (product as any)._id;
+                const isPass = product.id === 'pass-annual-all-access' || product.slug === 'annual-all-access-pass';
+
                 return (
                   <div key={itemKey} className="py-3 first:pt-0 flex items-start justify-between gap-3">
-                    <div>
+                    <div className="space-y-1">
                       <h4 className="text-xs font-bold text-slate-800 line-clamp-1">{product.title}</h4>
-                      <div className="text-[11px] text-slate-500">{(product as any).totalPages || product.pageCount} Pages • {product.medium}</div>
+                      <div className="flex items-center gap-2 text-[11px] text-slate-500">
+                        <span>{isPass ? '5,000+ Notes Library' : `${(product as any).totalPages || product.pageCount} Pages`}</span>
+                        <span>•</span>
+                        <span>{product.medium}</span>
+                      </div>
+                      <div className="text-[10px] text-emerald-700 font-semibold flex items-center gap-1">
+                        <Clock className="w-3 h-3 text-emerald-600 shrink-0" />
+                        <span>{isPass ? 'Access Duration: 365 Days Unlimited' : 'Access Duration: Lifetime Offline Access'}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 shrink-0">
                       <span className="text-xs font-black text-slate-900">{formatINR(product.discountedPrice ?? product.price)}</span>
                       <button
                         type="button"
                         onClick={() => removeFromCart(productId)}
-                        className="text-slate-400 hover:text-rose-600 p-1"
+                        className="text-slate-400 hover:text-rose-600 p-1 cursor-pointer"
+                        title="Remove item"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -259,9 +346,10 @@ export default function CheckoutPage() {
               })}
             </div>
 
+            {/* Tax & Price Breakdown */}
             <div className="space-y-2 pt-3 border-t border-slate-100 text-xs">
               <div className="flex justify-between text-slate-500">
-                <span>Subtotal</span>
+                <span>Subtotal (List Price)</span>
                 <span>{formatINR(totalOriginalAmount)}</span>
               </div>
               {totalSaved > 0 && (
@@ -270,16 +358,50 @@ export default function CheckoutPage() {
                   <span>- {formatINR(totalSaved)}</span>
                 </div>
               )}
+              <div className="flex justify-between text-slate-500">
+                <span>GST (18% inclusive)</span>
+                <span className="text-slate-700 font-medium">Included (₹0 extra)</span>
+              </div>
+              <div className="flex justify-between text-slate-500">
+                <span>Platform Convenience Fee</span>
+                <span className="text-emerald-600 font-bold">FREE (₹0)</span>
+              </div>
               <div className="flex justify-between text-base font-black text-slate-900 pt-2 border-t border-slate-200">
-                <span>Total Amount</span>
+                <span>Total Payable</span>
                 <span className="text-blue-600">{formatINR(totalAmount)}</span>
               </div>
             </div>
+
+            {/* Exclusions Notice for Annual Pass */}
+            {hasAnnualPass && (
+              <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-[10px] text-amber-900 leading-relaxed">
+                <strong>Annual Pass Terms:</strong> Grants 365-day access to all PDF notes, PYQs, and formula sheets across BPSC, BSEB, CBSE, and SSC. <em>Excludes premium physical printed books &amp; private 1-on-1 mentorship.</em>
+              </div>
+            )}
+
+            {/* Security stamp */}
+            <div className="pt-2 text-[10px] text-slate-400 text-center font-medium">
+              Dynamic Anti-Piracy Watermark stamped upon download • Verified Single User License
+            </div>
+
           </div>
         </div>
 
       </div>
 
     </div>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <div className="max-w-4xl mx-auto px-4 py-20 text-center text-slate-500 text-sm">
+        <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-blue-600" />
+        Loading secure checkout...
+      </div>
+    }>
+      <CheckoutContent />
+    </Suspense>
   );
 }

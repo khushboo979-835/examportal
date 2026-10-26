@@ -79,6 +79,8 @@ export interface PDFProduct {
   };
   isPublished: boolean;
   isFeatured: boolean;
+  isPassEligible?: boolean;
+  accessType?: string;
   rating: number;
   reviewCount: number;
   totalDownloads: number;
