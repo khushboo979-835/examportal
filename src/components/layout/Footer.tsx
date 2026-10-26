@@ -67,14 +67,13 @@ export default function Footer() {
           
           {/* Brand & Corporate Overview */}
           <div className="md:col-span-2 space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#1A73E8] to-[#00A389] flex items-center justify-center text-white shadow-sm shadow-blue-500/20">
-                <BookOpen className="w-5 h-5 text-white" />
-              </div>
+            <div className="flex items-center gap-3">
+              <img
+                src="/logo.png"
+                alt="StudyFree PDF Logo"
+                className="h-10 sm:h-12 w-auto object-contain rounded-xl"
+              />
               <div className="flex flex-col">
-                <span className="font-black text-xl text-white tracking-tight">
-                  Study<span className="text-[#00A389]">Free</span> <span className="text-xs font-bold bg-slate-800 text-slate-300 px-1.5 py-0.5 rounded">PDF</span>
-                </span>
                 <span className="text-[10px] text-slate-400 font-semibold">
                   A Unit of Digital Developer Infinity Solution (DDIS)
                 </span>

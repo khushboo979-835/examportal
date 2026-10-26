@@ -97,19 +97,15 @@ export default function Header() {
           
           {/* Left: Minimal Modern Brand Logo */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#1A73E8] to-[#00A389] flex items-center justify-center text-white shadow-sm shadow-blue-500/20 group-hover:scale-105 transition-transform duration-200">
-              <BookOpen className="w-4 h-4 text-white" />
+            <div className="relative h-9 sm:h-10 w-auto flex items-center">
+              <img
+                src="/logo.png"
+                alt="StudyFree PDF - Your Gateway to Success"
+                className="h-8 sm:h-9 w-auto object-contain rounded-lg group-hover:scale-105 transition-transform duration-200"
+              />
             </div>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-1.5 leading-none">
-                <span className="font-black text-lg tracking-tight text-slate-900 dark:text-white">
-                  Study<span className="text-[#1A73E8]">Free</span>
-                </span>
-                <span className="text-[9px] font-black tracking-wider uppercase px-1.5 py-0.5 rounded-md bg-slate-900 text-white dark:bg-white dark:text-slate-900">
-                  PDF
-                </span>
-              </div>
-              <span className="text-[9px] font-bold text-slate-400 tracking-wide mt-0.5">
+            <div className="hidden sm:flex flex-col">
+              <span className="text-[9px] font-bold text-slate-400 tracking-wide">
                 Accredited by <strong className="text-[#00A389] font-extrabold">DDIS Solutions</strong>
               </span>
             </div>

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import mongoose from 'mongoose';
 import { PDFDocument, rgb, StandardFonts, degrees } from 'pdf-lib';
 import connectToDatabase from '@/lib/db';
 import { PDFProduct, User, Order, DownloadLog } from '@/models';
@@ -23,9 +24,11 @@ export async function GET(
 
     let product: any = null;
     try {
-      product = await PDFProduct.findOne({
-        $or: [{ _id: id }, { slug: id }],
-      }).populate('sectorId categoryId examNodeId');
+      const isObjectId = mongoose.Types.ObjectId.isValid(id);
+      const orClauses: any[] = [{ slug: id }];
+      if (isObjectId) orClauses.push({ _id: id });
+
+      product = await PDFProduct.findOne({ $or: orClauses }).populate('sectorId categoryId examNodeId');
     } catch {
       // Fallback
     }

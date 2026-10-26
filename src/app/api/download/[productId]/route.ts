@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import mongoose from 'mongoose';
 import { applyDynamicWatermark, createSamplePreviewPdf } from '@/lib/watermark';
 import { fetchFileBuffer } from '@/lib/storage';
 import connectToDatabase from '@/lib/db';
@@ -23,9 +24,13 @@ export async function GET(
     let product: any = null;
     try {
       await connectToDatabase();
-      product = await PDFProduct.findOne({
-        $or: [{ _id: productId }, { slug: productId }],
-      }).populate('examNodeId categoryId sectorId').lean();
+      const isObjectId = mongoose.Types.ObjectId.isValid(productId);
+      const orClauses: any[] = [{ slug: productId }];
+      if (isObjectId) orClauses.push({ _id: productId });
+
+      product = await PDFProduct.findOne({ $or: orClauses })
+        .populate('examNodeId categoryId sectorId')
+        .lean();
     } catch {
       product = mockPDFProducts.find((p) => p.id === productId || p.slug === productId);
     }

@@ -47,17 +47,37 @@ export async function POST(request: NextRequest) {
         { new: true }
       ).populate('pdfProductId userId').lean();
 
-      if (order && order.pdfProductId) {
-        await PDFProduct.updateOne(
-          { _id: (order.pdfProductId as any)._id || order.pdfProductId },
-          { $inc: { totalSales: 1 } }
-        );
+      if (order) {
+        if (order.pdfProductId) {
+          const pId = (order.pdfProductId as any)._id || order.pdfProductId;
+          try {
+            await PDFProduct.updateOne(
+              { _id: pId },
+              { $inc: { totalSales: 1, totalDownloads: 1 } }
+            );
+          } catch {}
 
-        if (order.userId) {
-          await User.updateOne(
-            { _id: (order.userId as any)._id || order.userId },
-            { $addToSet: { purchasedPDFs: (order.pdfProductId as any)._id || order.pdfProductId } }
-          );
+          if (order.userId) {
+            const uId = (order.userId as any)._id || order.userId;
+            try {
+              await User.updateOne(
+                { _id: uId },
+                { $addToSet: { purchasedPDFs: pId } }
+              );
+            } catch {}
+          }
+        }
+
+        // Grant 365-day All-Access Pass
+        if (order.orderType === 'ALL_ACCESS_PASS' && order.userId) {
+          const uId = (order.userId as any)._id || order.userId;
+          const oneYear = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
+          try {
+            await User.updateOne(
+              { _id: uId },
+              { $set: { passExpiresAt: oneYear } }
+            );
+          } catch {}
         }
       }
 

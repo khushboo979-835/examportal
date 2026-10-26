@@ -123,7 +123,7 @@ function CheckoutContent() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          productIds: cart.map((i) => i.product.id),
+          productIds: cart.map((i) => (i.product as any)._id || i.product.id || i.product.slug),
           customerName: name,
           customerEmail: email,
           customerPhone: phone,
