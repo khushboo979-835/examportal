@@ -209,38 +209,39 @@ export default function HomePage() {
     <div className="space-y-16 pb-20">
       
       {/* ========================================================================= */}
-      {/* 1. HERO SECTION: DUAL-ENGINE FLAGSHIP (NOTES VAULT + NEP-2020 INTERNSHIPS) */}
+      {/* 1. HERO SECTION: LUMINOUS DRIBBLE-GRADE LIGHT CANVAS (NO DARK BLUE)       */}
       {/* ========================================================================= */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#090E1A] via-[#101827] to-[#0A0F1D] text-white pt-10 sm:pt-14 pb-20 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#F8FAFC] via-[#F1F5F9]/60 to-[#FFFFFF] text-slate-900 pt-12 sm:pt-16 pb-20 px-4 sm:px-6 lg:px-8 border-b border-slate-200/80">
         
-        {/* Ambient background glow & radial gradient */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[360px] bg-gradient-to-tr from-[#00E599]/15 via-[#1A73E8]/20 to-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+        {/* Soft Ambient Mesh Glows (Emerald, Warm Gold & Indigo) */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[450px] bg-gradient-to-r from-emerald-100/50 via-teal-100/40 to-amber-100/50 rounded-full blur-3xl pointer-events-none -z-0" />
+        <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
 
         <div className="max-w-5xl mx-auto text-center relative z-10 space-y-6">
           
           {/* Official Company Slogan Hero Pill (Glowing, Premium & Attractive) */}
-          <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-gradient-to-r from-amber-500/15 via-emerald-500/20 to-teal-500/15 border border-amber-400/40 backdrop-blur-md shadow-lg shadow-amber-500/10">
-            <Sparkles className="w-4 h-4 text-amber-400 shrink-0 animate-pulse" />
-            <span className="text-amber-300 font-black text-xs sm:text-sm tracking-wide">
+          <div className="inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-gradient-to-r from-amber-500/10 via-amber-400/20 to-emerald-500/10 border-2 border-amber-400/60 shadow-md shadow-amber-500/10 backdrop-blur-md">
+            <Sparkles className="w-4 h-4 text-amber-600 shrink-0 animate-pulse" />
+            <span className="text-amber-900 font-black text-xs sm:text-sm tracking-wide">
               &quot;Talent Aapka, Rasta Hamara&quot; (टैलेंट आपका, रास्ता हमारा)
             </span>
-            <span className="hidden sm:inline text-white/40 text-xs">•</span>
-            <span className="hidden sm:inline text-[11px] font-bold text-emerald-300">
+            <span className="hidden sm:inline text-amber-400 font-bold">•</span>
+            <span className="hidden sm:inline text-[11px] font-black uppercase text-emerald-800 bg-emerald-100/90 px-2.5 py-0.5 rounded-full border border-emerald-300">
               Digital Developer Infinity Solution (DDIS)
             </span>
           </div>
 
           {/* Clear Primary Headline */}
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.15] text-white">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.12] text-slate-900">
             Study Notes &amp; Practice PDFs for{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00E599] via-teal-300 to-amber-300">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00A389] via-teal-600 to-amber-600">
               Bihar &amp; Central Exams
             </span>
           </h1>
 
           {/* Simple, Clear Subtitle */}
-          <p className="text-xs sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed font-normal">
-            Instant digital downloads of topper handwritten summaries, 10-year solved PYQs, and formula cheat sheets in <strong className="text-amber-300">Hindi &amp; English Medium</strong> — plus mandatory <strong className="text-emerald-300">NEP-2020 UGC virtual college internships</strong>.
+          <p className="text-xs sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal">
+            Instant digital downloads of topper handwritten summaries, 10-year solved PYQs, and formula cheat sheets in <strong className="text-slate-900 font-bold">Hindi &amp; English Medium</strong> — plus mandatory <strong className="text-[#00A389] font-bold">NEP-2020 UGC virtual college internships</strong>.
           </p>
 
           {/* Two Primary CTAs (Two Clear Journeys) */}
@@ -248,7 +249,7 @@ export default function HomePage() {
             <button
               type="button"
               onClick={scrollToStudyMaterial}
-              className="px-8 py-4 rounded-2xl bg-gradient-to-r from-[#00A389] to-[#008f77] hover:from-[#008f77] hover:to-[#007b66] text-white font-black text-xs sm:text-sm shadow-xl shadow-emerald-500/25 flex items-center gap-2 transition-all active:scale-95 cursor-pointer"
+              className="px-8 py-4 rounded-2xl bg-[#00A389] hover:bg-[#008f77] text-white font-black text-xs sm:text-sm shadow-xl shadow-emerald-500/25 flex items-center gap-2 transition-all active:scale-95 cursor-pointer"
             >
               <BookOpen className="w-4 h-4" />
               <span>Browse Study Material</span>
@@ -258,24 +259,24 @@ export default function HomePage() {
             <button
               type="button"
               onClick={scrollToInternships}
-              className="px-8 py-4 rounded-2xl bg-white/10 hover:bg-white/15 text-white font-black text-xs sm:text-sm border border-white/20 backdrop-blur-md shadow-lg flex items-center gap-2 transition-all active:scale-95 cursor-pointer"
+              className="px-8 py-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs sm:text-sm shadow-xl shadow-slate-900/20 flex items-center gap-2 transition-all active:scale-95 cursor-pointer"
             >
-              <GraduationCap className="w-4 h-4 text-emerald-300" />
+              <GraduationCap className="w-4 h-4 text-emerald-400" />
               <span>Explore Internship Programs</span>
-              <ArrowRight className="w-4 h-4 text-emerald-300" />
+              <ArrowRight className="w-4 h-4 text-emerald-400" />
             </button>
           </div>
 
           {/* Search Box Trigger */}
           <div className="max-w-2xl mx-auto pt-3">
-            <div className="bg-white/10 backdrop-blur-lg p-2 rounded-2xl border border-white/20 shadow-2xl">
+            <div className="bg-white p-2 rounded-2xl border-2 border-slate-200/90 shadow-xl shadow-slate-200/50 hover:border-[#00A389] transition-all">
               <SearchBar placeholder="Search 'BPSC 70th Bihar Special', 'BSEB 12th Physics', 'Class 10 Math'..." />
             </div>
           </div>
 
           {/* Quick Trending Chips */}
           <div className="flex flex-wrap items-center justify-center gap-2 pt-1 text-xs">
-            <span className="font-bold text-slate-400">Popular:</span>
+            <span className="font-bold text-slate-500">Popular:</span>
             {[
               { label: 'BPSC 70th Bihar Special GK', tab: 'BPSC' },
               { label: 'BSEB 12th Physics Formula Sheet', tab: 'BSEB' },
@@ -289,7 +290,7 @@ export default function HomePage() {
                   setSelectedExamTab(chip.tab as ExamCategoryTab);
                   scrollToStudyMaterial();
                 }}
-                className="px-3 py-1 rounded-full bg-white/10 hover:bg-[#00A389] text-slate-200 hover:text-white transition-colors border border-white/10 cursor-pointer"
+                className="px-3.5 py-1.5 rounded-full bg-white hover:bg-[#00A389] text-slate-600 hover:text-white transition-colors border border-slate-200 shadow-xs cursor-pointer font-semibold"
               >
                 {chip.label}
               </button>
@@ -298,33 +299,33 @@ export default function HomePage() {
 
           {/* Simple 3-Pillar Micro Trust Ribbon */}
           <div className="max-w-4xl mx-auto pt-5 grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
-            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-[#00E599] flex items-center justify-center shrink-0">
-                <Download className="w-4 h-4" />
+            <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-[#00A389] flex items-center justify-center shrink-0">
+                <Download className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-xs font-bold text-white">Instant PDF Download</div>
-                <div className="text-[11px] text-slate-400">Lifetime offline storage + watermark</div>
+                <div className="text-xs font-bold text-slate-900">Instant PDF Download</div>
+                <div className="text-[11px] text-slate-500">Lifetime offline storage + watermark</div>
               </div>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0">
-                <Sparkles className="w-4 h-4" />
+            <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                <Sparkles className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-xs font-bold text-white">₹49 Single / ₹199 Annual</div>
-                <div className="text-[11px] text-slate-400">Transparent &amp; 7-day refund policy</div>
+                <div className="text-xs font-bold text-slate-900">₹49 Single / ₹199 Annual</div>
+                <div className="text-[11px] text-slate-500">Transparent &amp; 7-day refund policy</div>
               </div>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-300 flex items-center justify-center shrink-0">
-                <Award className="w-4 h-4" />
+            <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                <Award className="w-5 h-5" />
               </div>
               <div>
-                <div className="text-xs font-bold text-white">DDIS NEP-2020 Internships</div>
-                <div className="text-[11px] text-slate-400">Mandatory college credit + QR dossier</div>
+                <div className="text-xs font-bold text-slate-900">DDIS NEP-2020 Internships</div>
+                <div className="text-[11px] text-slate-500">Mandatory college credit + QR dossier</div>
               </div>
             </div>
           </div>
@@ -333,15 +334,15 @@ export default function HomePage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* SPOTLIGHT: "Talent Aapka, Rasta Hamara" Simple 2-Path Navigation Banner  */}
+      {/* SPOTLIGHT: "Talent Aapka, Rasta Hamara" Executive 2-Path Banner          */}
       {/* ========================================================================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
-        <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden text-white">
+        <div className="bg-gradient-to-br from-slate-950 via-[#0B1519] to-slate-900 border-2 border-emerald-500/20 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden text-white">
           <div className="absolute -right-16 -bottom-16 w-72 h-72 bg-[#00A389]/15 rounded-full blur-3xl pointer-events-none" />
 
           <div className="flex flex-col lg:flex-row items-center justify-between gap-6 relative z-10">
             <div className="space-y-2 text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[11px] font-black uppercase">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 text-xs font-black uppercase">
                 <Sparkles className="w-3.5 h-3.5 text-amber-400" />
                 <span>DDIS Core Philosophy</span>
               </div>
@@ -356,7 +357,7 @@ export default function HomePage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 w-full lg:w-auto shrink-0">
               <div
                 onClick={scrollToStudyMaterial}
-                className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all cursor-pointer group"
+                className="p-5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-amber-400/40 transition-all cursor-pointer group"
               >
                 <div className="text-xs font-black text-amber-400 flex items-center gap-1.5 mb-1">
                   <BookOpen className="w-4 h-4" />
@@ -372,16 +373,16 @@ export default function HomePage() {
 
               <div
                 onClick={scrollToInternships}
-                className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all cursor-pointer group"
+                className="p-5 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 hover:border-emerald-400/40 transition-all cursor-pointer group"
               >
-                <div className="text-xs font-black text-indigo-400 flex items-center gap-1.5 mb-1">
+                <div className="text-xs font-black text-emerald-400 flex items-center gap-1.5 mb-1">
                   <GraduationCap className="w-4 h-4" />
                   <span>College Internships (NEP)</span>
                 </div>
                 <div className="text-xs text-slate-300 font-medium leading-snug">
                   4-8 Week Training across BCA/IT, Science, Commerce &amp; Arts
                 </div>
-                <div className="text-[11px] text-indigo-300 font-bold mt-2.5 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                <div className="text-[11px] text-emerald-300 font-bold mt-2.5 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
                   <span>Explore 18 Tracks</span> →
                 </div>
               </div>
@@ -474,7 +475,7 @@ export default function HomePage() {
       {/* 3. MUST-HAVE 5: ANNUAL PASS SECTION (NO VAGUE PROMISES) (IMAGE 1 & 5)      */}
       {/* ========================================================================= */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-gradient-to-r from-[#2563EB] via-[#4338CA] to-[#1D4ED8] rounded-3xl p-6 sm:p-10 text-white shadow-2xl relative overflow-hidden space-y-8">
+        <div className="bg-gradient-to-br from-[#064E3B] via-[#047857] to-[#0F172A] rounded-3xl p-6 sm:p-10 text-white shadow-2xl relative overflow-hidden space-y-8 border-2 border-emerald-400/30">
           
           <div className="flex flex-col lg:flex-row items-center justify-between gap-8">
             
@@ -489,12 +490,12 @@ export default function HomePage() {
                 Unlock 5,000+ Notes, Formula Sheets &amp; Solved Papers
               </h2>
 
-              <p className="text-xs sm:text-sm text-blue-100 leading-relaxed font-medium">
+              <p className="text-xs sm:text-sm text-emerald-100 leading-relaxed font-medium">
                 One annual subscription. Unlimited dynamic watermarked downloads for BPSC, BSEB, CBSE, and SSC for a full year. No vague promises—see the exact breakdown below.
               </p>
 
               {/* Explicit Inclusion Checklist (Must-Have 5) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 text-xs text-blue-100 text-left font-medium">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 text-xs text-emerald-100 text-left font-medium">
                 <div className="flex items-center gap-2">
                   <CheckCircle2 className="w-4 h-4 text-amber-300 shrink-0" />
                   <span><strong>BPSC 70th &amp; 71st CCE:</strong> Complete Prelims &amp; Mains</span>
@@ -522,7 +523,7 @@ export default function HomePage() {
               </div>
 
               {/* Explicit Exclusions Declaration */}
-              <div className="pt-2 text-[11px] text-blue-200/90 italic flex items-center gap-1.5">
+              <div className="pt-2 text-[11px] text-emerald-200/90 italic flex items-center gap-1.5">
                 <ShieldCheck className="w-3.5 h-3.5 text-amber-300 shrink-0" />
                 <span>Notice: Excludes physical printed books &amp; private 1-on-1 personal mentorship.</span>
               </div>
@@ -531,11 +532,11 @@ export default function HomePage() {
             {/* Right Pass Box (Image 5) */}
             <div className="bg-white/10 backdrop-blur-md p-6 sm:p-7 rounded-2xl border border-white/20 flex flex-col sm:flex-row items-center justify-between gap-6 w-full lg:w-auto shrink-0 shadow-lg text-center sm:text-left">
               <div className="space-y-1">
-                <div className="text-[11px] font-bold text-blue-200 uppercase tracking-wider">
+                <div className="text-[11px] font-bold text-emerald-200 uppercase tracking-wider">
                   All-Access Annual Pass
                 </div>
                 <div className="text-3xl sm:text-4xl font-black text-white">
-                  ₹199 <span className="text-xs font-normal text-blue-200">/ 365 days</span>
+                  ₹199 <span className="text-xs font-normal text-emerald-200">/ 365 days</span>
                 </div>
                 <div className="text-[10px] text-emerald-300 font-bold">
                   ✓ Includes all upcoming 2026-2027 updates
@@ -557,13 +558,13 @@ export default function HomePage() {
           <div className="pt-6 border-t border-white/15 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
             <div className="bg-black/20 p-4 rounded-xl border border-white/10 space-y-1">
               <span className="font-bold text-amber-300">Single PDF Access (₹49):</span>
-              <p className="text-blue-100">
+              <p className="text-emerald-100">
                 Buy individual notes only when needed. Full PDF download included with lifetime offline storage on your device. Free 3-page preview available before purchase.
               </p>
             </div>
             <div className="bg-black/20 p-4 rounded-xl border border-white/10 space-y-1">
               <span className="font-bold text-emerald-300">Annual Pass Access (₹199):</span>
-              <p className="text-blue-100">
+              <p className="text-emerald-100">
                 Best value for students preparing for multiple exams. Download and read all 5,000+ notes, formula sheets, and solved papers across all categories for 365 days.
               </p>
             </div>

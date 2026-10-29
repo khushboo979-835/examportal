@@ -63,20 +63,20 @@ export default function Header() {
   return (
     <>
       {/* Top Announcement Bar (NEP-2020 University Notice) */}
-      <div className="bg-[#0B132B] text-white text-[11px] py-1.5 px-4 font-medium border-b border-slate-800">
-        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span className="bg-[#00E599]/20 text-[#00E599] border border-[#00E599]/40 text-[10px] font-black uppercase px-2 py-0.5 rounded-full shrink-0">
+      <div className="bg-slate-950 text-slate-200 text-xs py-2 px-4 font-medium border-b border-slate-800/80 shadow-xs">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2.5">
+          <div className="flex items-center gap-2.5">
+            <span className="bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 text-[11px] font-black uppercase px-2.5 py-0.5 rounded-full shrink-0">
               NEW NEP-2020 BATCH
             </span>
-            <span className="text-slate-200 truncate">
-              DDIS • <strong className="text-amber-300 font-bold">&quot;Talent Aapka, Rasta Hamara&quot;</strong> (टैलेंट आपका, रास्ता हमारा) — UGC / NEP-2020 Internships
+            <span className="text-slate-300 truncate text-xs sm:text-sm">
+              DDIS • <strong className="text-amber-400 font-extrabold">&quot;Talent Aapka, Rasta Hamara&quot;</strong> (टैलेंट आपका, रास्ता हमारा) — UGC / NEP-2020 Internships
             </span>
           </div>
           <div className="flex items-center gap-4 text-xs font-semibold text-slate-300 shrink-0">
-            <Link href="/verify" className="flex items-center gap-1 hover:text-[#00E599] transition-colors">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#00E599]" />
-              <span>Verify Certificate</span>
+            <Link href="/verify" className="flex items-center gap-1.5 hover:text-[#00E599] transition-colors">
+              <ShieldCheck className="w-4 h-4 text-[#00E599]" />
+              <span className="font-bold">Verify Certificate</span>
             </Link>
             <span className="text-slate-700">|</span>
             <a href="tel:+917544065425" className="flex items-center gap-1.5 hover:text-white transition-colors">
@@ -93,29 +93,29 @@ export default function Header() {
 
       {/* Top Floating Pill-Shaped Glassmorphic Header */}
       <header className="sticky top-2 z-50 px-3 sm:px-6 max-w-7xl mx-auto w-full transition-all duration-300">
-        <div className="backdrop-blur-md bg-white/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3">
+        <div className="backdrop-blur-md bg-white/95 dark:bg-slate-900/95 border border-slate-200/90 dark:border-slate-800 shadow-md shadow-slate-900/5 hover:shadow-lg transition-all duration-300 rounded-2xl px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
           
           {/* Left: Minimal Modern Brand Logo */}
-          <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
-            <div className="relative h-9 sm:h-10 w-auto flex items-center">
+          <Link href="/" className="flex items-center gap-3 shrink-0 group">
+            <div className="relative h-10 sm:h-12 w-auto flex items-center">
               <img
                 src="/logo.png"
                 alt="StudyFree PDF - Your Gateway to Success"
-                className="h-8 sm:h-9 w-auto object-contain rounded-lg group-hover:scale-105 transition-transform duration-200"
+                className="h-9 sm:h-11 w-auto object-contain rounded-lg group-hover:scale-105 transition-transform duration-200"
               />
             </div>
             <div className="hidden sm:flex flex-col">
-              <span className="text-[11px] font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+              <span className="text-sm sm:text-base font-black text-slate-900 dark:text-white tracking-tight leading-tight flex items-center gap-1">
                 StudyFree <span className="text-[#00A389]">PDF</span>
               </span>
-              <span className="text-[9px] font-bold text-slate-500 tracking-wide flex items-center gap-1 mt-0.5">
-                Accredited by <strong className="text-[#00A389] font-extrabold">DDIS</strong> • <span className="text-amber-600 dark:text-amber-400 font-extrabold">&quot;Talent Aapka, Rasta Hamara&quot;</span>
+              <span className="text-[11px] font-bold text-slate-500 tracking-normal flex items-center gap-1.5 mt-0.5">
+                Accredited by <strong className="text-[#00A389] font-black">DDIS</strong> • <span className="text-amber-600 dark:text-amber-400 font-black">&quot;Talent Aapka, Rasta Hamara&quot;</span>
               </span>
             </div>
           </Link>
 
           {/* Center: Dribbble-Grade Mega Menus */}
-          <nav className="hidden lg:flex items-center gap-1 xl:gap-2 text-xs font-bold text-slate-700 dark:text-slate-200">
+          <nav className="hidden lg:flex items-center gap-1.5 xl:gap-2 text-sm font-bold text-slate-700 dark:text-slate-200">
             
             {/* 1. Study Material Mega Menu */}
             <div
@@ -437,7 +437,7 @@ export default function Header() {
             >
               <Link
                 href="/dashboard"
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0F172A] hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-xs"
+                className="flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl bg-[#00A389] hover:bg-[#008f77] text-white text-xs sm:text-sm font-black shadow-md shadow-emerald-500/20 hover:shadow-lg hover:-translate-y-0.5 transition-all"
               >
                 <User className="w-3.5 h-3.5 text-emerald-400" />
                 <span className="hidden sm:inline">Student Login</span>
