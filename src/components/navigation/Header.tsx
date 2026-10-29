@@ -70,7 +70,8 @@ export default function Header() {
               NEW NEP-2020 BATCH
             </span>
             <span className="text-slate-200 truncate">
-              Digital Developer Infinity Solution (DDIS) • &quot;Talent Aapka, Rasta Hamara&quot; — UGC / NEP-2020 Internships</span>
+              DDIS • <strong className="text-amber-300 font-bold">&quot;Talent Aapka, Rasta Hamara&quot;</strong> (टैलेंट आपका, रास्ता हमारा) — UGC / NEP-2020 Internships
+            </span>
           </div>
           <div className="flex items-center gap-4 text-xs font-semibold text-slate-300 shrink-0">
             <Link href="/verify" className="flex items-center gap-1 hover:text-[#00E599] transition-colors">
@@ -104,11 +105,11 @@ export default function Header() {
               />
             </div>
             <div className="hidden sm:flex flex-col">
-              <span className="text-[9px] font-bold text-slate-400 tracking-wide">
-                Accredited by <strong className="text-[#00A389] font-extrabold">DDIS Solutions</strong>
+              <span className="text-[11px] font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+                StudyFree <span className="text-[#00A389]">PDF</span>
               </span>
-              <span className="text-[9px] font-bold text-amber-500 tracking-tight">
-                &quot;Talent Aapka, Rasta Hamara&quot;
+              <span className="text-[9px] font-bold text-slate-500 tracking-wide flex items-center gap-1 mt-0.5">
+                Accredited by <strong className="text-[#00A389] font-extrabold">DDIS</strong> • <span className="text-amber-600 dark:text-amber-400 font-extrabold">&quot;Talent Aapka, Rasta Hamara&quot;</span>
               </span>
             </div>
           </Link>

@@ -209,35 +209,42 @@ export default function HomePage() {
     <div className="space-y-16 pb-20">
       
       {/* ========================================================================= */}
-      {/* 1. MUST-HAVE 1 & 2: CLEAR LOCAL HEADLINE & TWO PRIMARY CTAS (IMAGE 1)     */}
+      {/* 1. HERO SECTION: DUAL-ENGINE FLAGSHIP (NOTES VAULT + NEP-2020 INTERNSHIPS) */}
       {/* ========================================================================= */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#0F172A] via-[#1E293B] to-[#0F172A] text-white pt-12 pb-20 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#090E1A] via-[#101827] to-[#0A0F1D] text-white pt-10 sm:pt-14 pb-20 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
         
-        {/* Ambient background glow */}
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[320px] bg-gradient-to-tr from-[#00A389]/20 via-[#1A73E8]/20 to-purple-500/10 rounded-full blur-3xl pointer-events-none" />
+        {/* Ambient background glow & radial gradient */}
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[360px] bg-gradient-to-tr from-[#00E599]/15 via-[#1A73E8]/20 to-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="max-w-5xl mx-auto text-center relative z-10 space-y-6">
           
-          {/* Trust Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-bold text-emerald-300">
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>Digital Developer Infinity Solution (DDIS) • &quot;Talent Aapka, Rasta Hamara&quot; (टैलेंट आपका, रास्ता हमारा)</span>
+          {/* Official Company Slogan Hero Pill (Glowing, Premium & Attractive) */}
+          <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full bg-gradient-to-r from-amber-500/15 via-emerald-500/20 to-teal-500/15 border border-amber-400/40 backdrop-blur-md shadow-lg shadow-amber-500/10">
+            <Sparkles className="w-4 h-4 text-amber-400 shrink-0 animate-pulse" />
+            <span className="text-amber-300 font-black text-xs sm:text-sm tracking-wide">
+              &quot;Talent Aapka, Rasta Hamara&quot; (टैलेंट आपका, रास्ता हमारा)
+            </span>
+            <span className="hidden sm:inline text-white/40 text-xs">•</span>
+            <span className="hidden sm:inline text-[11px] font-bold text-emerald-300">
+              Digital Developer Infinity Solution (DDIS)
+            </span>
           </div>
 
-          {/* MUST-HAVE 1: Clear Headline */}
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-white">
+          {/* Clear Primary Headline */}
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.15] text-white">
             Study Notes &amp; Practice PDFs for{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00A389] via-teal-300 to-amber-300">
-              Bihar Exams
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00E599] via-teal-300 to-amber-300">
+              Bihar &amp; Central Exams
             </span>
           </h1>
 
-          <p className="text-xs sm:text-base text-slate-300 max-w-3xl mx-auto leading-relaxed font-normal">
-            Instant digital access to topper handwritten summaries, 10-year solved PYQs, and formula cheat sheets in <strong className="text-amber-300">Hindi &amp; English Medium</strong> for <strong className="text-white">BPSC 70th/71st</strong>, <strong className="text-white">Bihar Board (BSEB 10th &amp; 12th)</strong>, <strong className="text-white">CBSE</strong>, and <strong className="text-white">SSC</strong>.
+          {/* Simple, Clear Subtitle */}
+          <p className="text-xs sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed font-normal">
+            Instant digital downloads of topper handwritten summaries, 10-year solved PYQs, and formula cheat sheets in <strong className="text-amber-300">Hindi &amp; English Medium</strong> — plus mandatory <strong className="text-emerald-300">NEP-2020 UGC virtual college internships</strong>.
           </p>
 
-          {/* MUST-HAVE 2: Two Primary CTAs (Separate Journeys, Separate Buttons) */}
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-4">
+          {/* Two Primary CTAs (Two Clear Journeys) */}
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-3.5">
             <button
               type="button"
               onClick={scrollToStudyMaterial}
@@ -245,7 +252,7 @@ export default function HomePage() {
             >
               <BookOpen className="w-4 h-4" />
               <span>Browse Study Material</span>
-              <ChevronDown className="w-4 h-4" />
+              <ChevronDown className="w-4 h-4 opacity-75" />
             </button>
 
             <button
@@ -260,7 +267,7 @@ export default function HomePage() {
           </div>
 
           {/* Search Box Trigger */}
-          <div className="max-w-2xl mx-auto pt-4">
+          <div className="max-w-2xl mx-auto pt-3">
             <div className="bg-white/10 backdrop-blur-lg p-2 rounded-2xl border border-white/20 shadow-2xl">
               <SearchBar placeholder="Search 'BPSC 70th Bihar Special', 'BSEB 12th Physics', 'Class 10 Math'..." />
             </div>
@@ -282,13 +289,104 @@ export default function HomePage() {
                   setSelectedExamTab(chip.tab as ExamCategoryTab);
                   scrollToStudyMaterial();
                 }}
-                className="px-3 py-1 rounded-full bg-white/10 hover:bg-[#00A389] text-slate-200 hover:text-white transition-colors border border-white/10"
+                className="px-3 py-1 rounded-full bg-white/10 hover:bg-[#00A389] text-slate-200 hover:text-white transition-colors border border-white/10 cursor-pointer"
               >
                 {chip.label}
               </button>
             ))}
           </div>
 
+          {/* Simple 3-Pillar Micro Trust Ribbon */}
+          <div className="max-w-4xl mx-auto pt-5 grid grid-cols-1 sm:grid-cols-3 gap-3 text-left">
+            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-[#00E599] flex items-center justify-center shrink-0">
+                <Download className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="text-xs font-bold text-white">Instant PDF Download</div>
+                <div className="text-[11px] text-slate-400">Lifetime offline storage + watermark</div>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center shrink-0">
+                <Sparkles className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="text-xs font-bold text-white">₹49 Single / ₹199 Annual</div>
+                <div className="text-[11px] text-slate-400">Transparent &amp; 7-day refund policy</div>
+              </div>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-300 flex items-center justify-center shrink-0">
+                <Award className="w-4 h-4" />
+              </div>
+              <div>
+                <div className="text-xs font-bold text-white">DDIS NEP-2020 Internships</div>
+                <div className="text-[11px] text-slate-400">Mandatory college credit + QR dossier</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* SPOTLIGHT: "Talent Aapka, Rasta Hamara" Simple 2-Path Navigation Banner  */}
+      {/* ========================================================================= */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6">
+        <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden text-white">
+          <div className="absolute -right-16 -bottom-16 w-72 h-72 bg-[#00A389]/15 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="flex flex-col lg:flex-row items-center justify-between gap-6 relative z-10">
+            <div className="space-y-2 text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[11px] font-black uppercase">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>DDIS Core Philosophy</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
+                &quot;Talent Aapka, Rasta Hamara&quot; <span className="text-amber-400 font-extrabold text-xl sm:text-2xl block sm:inline">(टैलेंट आपका, रास्ता हमारा)</span>
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-300 max-w-xl font-normal leading-relaxed">
+                Aapki lagan aur mehnat ko sahi raaste par lane ke liye — StudyFree PDF aur DDIS provide karte hain topper-verified study material aur official college virtual internships.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 w-full lg:w-auto shrink-0">
+              <div
+                onClick={scrollToStudyMaterial}
+                className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all cursor-pointer group"
+              >
+                <div className="text-xs font-black text-amber-400 flex items-center gap-1.5 mb-1">
+                  <BookOpen className="w-4 h-4" />
+                  <span>Exam Preparation (₹49)</span>
+                </div>
+                <div className="text-xs text-slate-300 font-medium leading-snug">
+                  BPSC, BSEB 10th/12th, CBSE &amp; SSC Topper Notes &amp; PYQs
+                </div>
+                <div className="text-[11px] text-[#00E599] font-bold mt-2.5 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                  <span>Browse Exam Notes</span> →
+                </div>
+              </div>
+
+              <div
+                onClick={scrollToInternships}
+                className="p-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all cursor-pointer group"
+              >
+                <div className="text-xs font-black text-indigo-400 flex items-center gap-1.5 mb-1">
+                  <GraduationCap className="w-4 h-4" />
+                  <span>College Internships (NEP)</span>
+                </div>
+                <div className="text-xs text-slate-300 font-medium leading-snug">
+                  4-8 Week Training across BCA/IT, Science, Commerce &amp; Arts
+                </div>
+                <div className="text-[11px] text-indigo-300 font-bold mt-2.5 flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                  <span>Explore 18 Tracks</span> →
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
