@@ -369,13 +369,13 @@ export default function Header() {
             {/* 3. Direct Shortcut: Verify Certificate */}
             <Link
               href="/verify"
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl transition-all whitespace-nowrap shrink-0 ${
                 pathname === '/verify'
-                  ? 'bg-slate-100 dark:bg-slate-800 text-[#00A389]'
-                  : 'hover:bg-slate-50 dark:hover:bg-slate-800/60 text-slate-700 dark:text-slate-200'
+                  ? 'bg-emerald-50 text-[#00A389] font-black border border-emerald-200/80 shadow-xs'
+                  : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200'
               }`}
             >
-              <FileCheck2 className="w-3.5 h-3.5 text-emerald-600" />
+              <FileCheck2 className="w-4 h-4 text-emerald-600" />
               <span>Verify Certificate</span>
             </Link>
 
@@ -388,12 +388,12 @@ export default function Header() {
             <button
               type="button"
               onClick={() => setSearchModalOpen(true)}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200/70 dark:border-slate-700 text-slate-400 text-xs hover:text-slate-700 dark:hover:text-white transition-colors"
+              className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-800 border border-slate-200/90 dark:border-slate-700 text-slate-600 dark:text-slate-300 text-xs sm:text-sm transition-all whitespace-nowrap shrink-0"
               title="Search (Cmd+K)"
             >
-              <Search className="w-3.5 h-3.5" />
-              <span className="hidden md:inline">Search notes, exams...</span>
-              <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[9px] font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded text-slate-400">
+              <Search className="w-4 h-4 text-slate-500" />
+              <span className="hidden md:inline font-medium">Search notes, exams...</span>
+              <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] font-mono bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded text-slate-500 shadow-2xs">
                 ⌘K
               </kbd>
             </button>
@@ -437,11 +437,10 @@ export default function Header() {
             >
               <Link
                 href="/dashboard"
-                className="flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl bg-[#00A389] hover:bg-[#008f77] text-white text-xs sm:text-sm font-black shadow-md shadow-emerald-500/20 hover:shadow-lg hover:-translate-y-0.5 transition-all"
+                className="flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl bg-[#00A389] hover:bg-[#008f77] text-white text-xs sm:text-sm font-black shadow-md shadow-emerald-500/20 hover:shadow-lg hover:-translate-y-0.5 transition-all whitespace-nowrap shrink-0"
               >
-                <User className="w-3.5 h-3.5 text-emerald-400" />
-                <span className="hidden sm:inline">Student Login</span>
-                <span className="sm:hidden">Login</span>
+                <User className="w-4 h-4 text-white" />
+                <span className="whitespace-nowrap">Student Login</span>
               </Link>
 
               {accountMenuOpen && (

@@ -103,24 +103,24 @@ export default async function VerifiedCertificateDirectPage({ params }: VerifyPa
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] pb-24">
-      {/* Header Banner */}
-      <div className="bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white pt-10 pb-16 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
+      {/* Header Banner: Luminous Dribbble Light Theme */}
+      <div className="bg-gradient-to-b from-[#F8FAFC] via-[#F1F5F9]/60 to-[#FFFFFF] text-slate-900 pt-10 pb-16 px-4 sm:px-6 lg:px-8 border-b border-slate-200/80">
         <div className="max-w-4xl mx-auto space-y-2">
           <Link
             href="/verify"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-300 hover:text-white mb-2 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-[#00A389] mb-2 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Back to Search Verification</span>
           </Link>
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-5 h-5 text-emerald-400" />
-            <span className="text-xs font-bold text-emerald-300 uppercase tracking-wider">
+            <ShieldCheck className="w-5 h-5 text-[#00A389]" />
+            <span className="text-xs font-black text-emerald-800 uppercase tracking-wider bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
               Public Verified Credential Record
             </span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black">
-            Certificate ID: <span className="font-mono text-amber-300">{cert.certificateId}</span>
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900">
+            Certificate ID: <span className="font-mono text-emerald-700">{cert.certificateId}</span>
           </h1>
         </div>
       </div>

@@ -134,53 +134,57 @@ export default function InternshipHubPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] pb-24">
-      {/* 1. Hero Banner */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#0F172A] via-[#1E293B] to-[#0F172A] text-white pt-16 pb-20 px-4 sm:px-6 lg:px-8 border-b border-slate-800">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-gradient-to-r from-[#00A389]/20 to-[#1A73E8]/20 rounded-full blur-3xl pointer-events-none" />
+      {/* 1. Hero Banner: Luminous Dribbble Light Theme */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#F8FAFC] via-[#F1F5F9]/60 to-[#FFFFFF] text-slate-900 pt-12 sm:pt-16 pb-20 px-4 sm:px-6 lg:px-8 border-b border-slate-200/80 text-center">
+        {/* Soft Ambient Mesh Glows */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[400px] bg-gradient-to-r from-emerald-100/50 via-teal-100/40 to-amber-100/50 rounded-full blur-3xl pointer-events-none -z-0" />
+        <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
 
         <div className="max-w-5xl mx-auto text-center relative z-10 space-y-6">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-bold text-emerald-300">
-            <Sparkles className="w-4 h-4 text-amber-400" />
-            <span>&quot;Talent Aapka, Rasta Hamara&quot; (टैलेंट आपका, रास्ता हमारा) • NEP-2020 College Internships</span>
+          <div className="inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full bg-gradient-to-r from-amber-500/10 via-amber-400/20 to-emerald-500/10 border-2 border-amber-400/60 shadow-md shadow-amber-500/10 backdrop-blur-md">
+            <Sparkles className="w-4 h-4 text-amber-600 animate-pulse" />
+            <span className="text-amber-900 font-black text-xs sm:text-sm tracking-wide">
+              &quot;Talent Aapka, Rasta Hamara&quot; (टैलेंट आपका, रास्ता हमारा) • NEP-2020 College Internships
+            </span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight text-white">
-            Undergraduate Industry Internship & <br className="hidden sm:inline" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00A389] via-teal-300 to-indigo-400">
+          <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight text-slate-900">
+            Undergraduate Industry Internship &amp; <br className="hidden sm:inline" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00A389] via-teal-600 to-indigo-700">
               Government Accredited DDIS Certification
             </span>
           </h1>
 
-          <p className="text-sm sm:text-base text-slate-300 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-600 max-w-3xl mx-auto leading-relaxed font-normal">
             Accredited under{' '}
             <a
               href="https://www.digitalinfinityddis.com/"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-bold text-amber-300 hover:underline inline-flex items-center gap-1"
+              className="font-bold text-[#00A389] hover:underline inline-flex items-center gap-1"
             >
               Digital Developer Infinity Solution (DDIS) <ExternalLink className="w-3.5 h-3.5" />
             </a>
-            . Fulfills 4-Week & 8-Week UGC/NEP college credit requirements across Science, Commerce, Arts, and BCA/IT with verified QR credentials.
+            . Fulfills 4-Week &amp; 8-Week UGC/NEP college credit requirements across Science, Commerce, Arts, and BCA/IT with verified QR credentials.
           </p>
 
           {/* Quick Metrics Bar */}
           <div className="pt-4 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-4xl mx-auto text-left">
-            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-              <div className="text-emerald-400 font-extrabold text-xl">NEP-2020</div>
-              <div className="text-[11px] text-slate-400 font-medium">UGC Guidelines Compliant</div>
+            <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs">
+              <div className="text-[#00A389] font-black text-xl">NEP-2020</div>
+              <div className="text-xs text-slate-500 font-medium mt-0.5">UGC Guidelines Compliant</div>
             </div>
-            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-              <div className="text-amber-400 font-extrabold text-xl">4 & 8 Weeks</div>
-              <div className="text-[11px] text-slate-400 font-medium">Flexible Project Milestones</div>
+            <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs">
+              <div className="text-amber-600 font-black text-xl">4 &amp; 8 Weeks</div>
+              <div className="text-xs text-slate-500 font-medium mt-0.5">Flexible Project Milestones</div>
             </div>
-            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-              <div className="text-blue-400 font-extrabold text-xl">QR Verified</div>
-              <div className="text-[11px] text-slate-400 font-medium">Instant Online Credential</div>
+            <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs">
+              <div className="text-indigo-600 font-black text-xl">QR Verified</div>
+              <div className="text-xs text-slate-500 font-medium mt-0.5">Instant Online Credential</div>
             </div>
-            <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm">
-              <div className="text-teal-400 font-extrabold text-xl">Viva Ready</div>
-              <div className="text-[11px] text-slate-400 font-medium">Includes 2-Page Project Dossier</div>
+            <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs">
+              <div className="text-purple-600 font-black text-xl">Viva Dossier</div>
+              <div className="text-xs text-slate-500 font-medium mt-0.5">2-Page Defense Report</div>
             </div>
           </div>
         </div>

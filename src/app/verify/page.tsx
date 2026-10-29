@@ -69,27 +69,29 @@ export default function CertificateVerificationPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] pb-24">
-      {/* 1. Header Banner */}
-      <section className="bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white pt-14 pb-20 px-4 sm:px-6 lg:px-8 border-b border-slate-800 text-center relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+      {/* 1. Header Banner: Luminous Dribbble Light Theme */}
+      <section className="bg-gradient-to-b from-[#F8FAFC] via-[#F1F5F9]/60 to-[#FFFFFF] text-slate-900 pt-12 sm:pt-16 pb-20 px-4 sm:px-6 lg:px-8 border-b border-slate-200/80 text-center relative overflow-hidden">
+        {/* Soft Ambient Mesh Glows */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[350px] bg-gradient-to-r from-emerald-100/50 via-teal-100/40 to-amber-100/50 rounded-full blur-3xl pointer-events-none -z-0" />
+        <div className="absolute inset-0 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none" />
 
         <div className="max-w-3xl mx-auto space-y-4 relative z-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-xs font-bold text-emerald-300">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
-            <span>Official University & Employer Verification Engine</span>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-300/80 text-xs font-black text-emerald-800 shadow-xs">
+            <ShieldCheck className="w-4 h-4 text-[#00A389]" />
+            <span>Official University &amp; Employer Verification Engine</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-white">
+          <h1 className="text-3xl sm:text-5xl font-black tracking-tight text-slate-900 leading-[1.15]">
             Verify DDIS Student Certificate
           </h1>
 
-          <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto leading-relaxed font-normal">
             Verify authenticity of National Education Policy (NEP-2020) undergraduate internship certificates issued by{' '}
-            <strong className="text-white">Digital Developer Infinity Solution (DDIS)</strong> • <em className="text-amber-300 font-semibold">&quot;Talent Aapka, Rasta Hamara&quot;</em>.
+            <strong className="text-slate-900 font-bold">Digital Developer Infinity Solution (DDIS)</strong> • <strong className="text-amber-600 font-black">&quot;Talent Aapka, Rasta Hamara&quot;</strong> (टैलेंट आपका, रास्ता हमारा).
           </p>
 
           {/* Search Box */}
-          <form onSubmit={handleVerify} className="max-w-xl mx-auto pt-4 flex gap-2">
+          <form onSubmit={handleVerify} className="max-w-xl mx-auto pt-3 flex flex-col sm:flex-row gap-2.5">
             <div className="relative flex-1">
               <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
               <input
@@ -97,13 +99,13 @@ export default function CertificateVerificationPage() {
                 placeholder="Enter Certificate ID (e.g. DDIS-NEP-2026-IT-9482)"
                 value={certInput}
                 onChange={(e) => setCertInput(e.target.value)}
-                className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white text-slate-900 text-xs font-medium placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#00A389] shadow-lg"
+                className="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-white text-slate-900 text-xs sm:text-sm font-semibold border-2 border-slate-200/90 shadow-lg shadow-slate-200/50 placeholder:text-slate-400 focus:outline-none focus:border-[#00A389]"
               />
             </div>
             <button
               type="submit"
               disabled={loading || !certInput.trim()}
-              className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#00A389] to-[#1A73E8] hover:from-[#008f78] hover:to-[#1558b3] text-white font-extrabold text-xs shadow-md shadow-emerald-500/20 flex items-center gap-1.5 transition-all disabled:opacity-50 shrink-0"
+              className="px-8 py-3.5 rounded-2xl bg-[#00A389] hover:bg-[#008f77] text-white font-black text-xs sm:text-sm shadow-xl shadow-emerald-500/25 flex items-center justify-center gap-2 transition-all active:scale-95 disabled:opacity-50 shrink-0 cursor-pointer"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ShieldCheck className="w-4 h-4" />}
               <span>Verify Now</span>
@@ -111,19 +113,19 @@ export default function CertificateVerificationPage() {
           </form>
 
           {/* Quick Demo Certificate Buttons */}
-          <div className="pt-2 flex flex-wrap items-center justify-center gap-2 text-[11px] text-slate-400">
+          <div className="pt-2 flex flex-wrap items-center justify-center gap-2 text-xs text-slate-500 font-medium">
             <span>Try sample IDs:</span>
             <button
               type="button"
               onClick={() => handleQuickLookup('DDIS-NEP-2026-IT-9482')}
-              className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-emerald-300 font-mono transition-colors"
+              className="px-3 py-1.5 rounded-xl bg-white hover:bg-emerald-50 text-emerald-700 font-mono text-xs border border-slate-200 shadow-xs transition-colors cursor-pointer font-bold"
             >
               DDIS-NEP-2026-IT-9482 (IT)
             </button>
             <button
               type="button"
               onClick={() => handleQuickLookup('DDIS-NEP-2026-COM-8104')}
-              className="px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-amber-300 font-mono transition-colors"
+              className="px-3 py-1.5 rounded-xl bg-white hover:bg-amber-50 text-amber-700 font-mono text-xs border border-slate-200 shadow-xs transition-colors cursor-pointer font-bold"
             >
               DDIS-NEP-2026-COM-8104 (Commerce)
             </button>
