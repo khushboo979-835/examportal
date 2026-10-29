@@ -14,6 +14,9 @@ export default function AboutPage() {
         
         {/* Hero Section */}
         <div className="text-center space-y-3">
+          <div className="inline-block px-4 py-1.5 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-xs font-black uppercase tracking-wider mb-2">
+            Company Motto: &quot;Talent Aapka, Rasta Hamara&quot; (टैलेंट आपका, रास्ता हमारा)
+          </div>
           <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-xs font-black uppercase">
             <Award className="w-4 h-4 text-blue-600" />
             <span>Official Corporate Identity &amp; Educational Mission</span>
@@ -32,6 +35,7 @@ export default function AboutPage() {
             <div>
               <span className="text-[11px] font-black uppercase text-blue-600 tracking-wider">Parent Organization</span>
               <h2 className="text-2xl font-black text-slate-900">Digital Developer Infinity Solution (DDIS)</h2>
+              <p className="text-xs font-bold text-[#00A389] mt-0.5">Motto: &quot;Talent Aapka, Rasta Hamara&quot; (टैलेंट आपका, रास्ता हमारा)</p>
               <p className="text-xs text-slate-500 mt-0.5">Corporate Website: <a href="https://www.digitalinfinityddis.com/" target="_blank" rel="noopener noreferrer" className="text-[#00A389] font-bold hover:underline">digitalinfinityddis.com</a></p>
             </div>
             <a

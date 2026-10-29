@@ -77,6 +77,9 @@ export default function Footer() {
                 <span className="text-[10px] text-slate-400 font-semibold">
                   A Unit of Digital Developer Infinity Solution (DDIS)
                 </span>
+                <span className="text-xs font-bold text-[#00E599] tracking-wide mt-1">
+                  &quot;Talent Aapka, Rasta Hamara&quot; (टैलेंट आपका, रास्ता हमारा)
+                </span>
               </div>
             </div>
 
@@ -220,7 +223,7 @@ export default function Footer() {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-center md:text-left space-y-1">
             <p>
-              <strong className="text-slate-300">Legal Entity:</strong> Digital Developer Infinity Solution (DDIS) | Official Website: <a href="https://www.digitalinfinityddis.com/" target="_blank" rel="noopener noreferrer" className="text-[#00A389] hover:underline">digitalinfinityddis.com</a>
+              <strong className="text-slate-300">Legal Entity:</strong> Digital Developer Infinity Solution (DDIS) | <strong className="text-emerald-400">&quot;Talent Aapka, Rasta Hamara&quot;</strong> | Official Website: <a href="https://www.digitalinfinityddis.com/" target="_blank" rel="noopener noreferrer" className="text-[#00A389] hover:underline">digitalinfinityddis.com</a>
             </p>
             <p>
               <strong className="text-slate-300">Grievance Redressal Officer:</strong> Er. Deepak Kumar | Email: <a href="mailto:studyfreepdf2@gmail.com" className="text-slate-400 hover:text-white">studyfreepdf2@gmail.com</a> | Timelines: Response within 24 hrs, resolution within 7 business days.

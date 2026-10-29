@@ -70,8 +70,7 @@ export default function Header() {
               NEW NEP-2020 BATCH
             </span>
             <span className="text-slate-200 truncate">
-              Patliputra &amp; Bihar University UG Students: Enrol in 4-Week Mandatory Industry Internship
-            </span>
+              Digital Developer Infinity Solution (DDIS) • &quot;Talent Aapka, Rasta Hamara&quot; — UGC / NEP-2020 Internships</span>
           </div>
           <div className="flex items-center gap-4 text-xs font-semibold text-slate-300 shrink-0">
             <Link href="/verify" className="flex items-center gap-1 hover:text-[#00E599] transition-colors">
@@ -107,6 +106,9 @@ export default function Header() {
             <div className="hidden sm:flex flex-col">
               <span className="text-[9px] font-bold text-slate-400 tracking-wide">
                 Accredited by <strong className="text-[#00A389] font-extrabold">DDIS Solutions</strong>
+              </span>
+              <span className="text-[9px] font-bold text-amber-500 tracking-tight">
+                &quot;Talent Aapka, Rasta Hamara&quot;
               </span>
             </div>
           </Link>
@@ -557,6 +559,9 @@ export default function Header() {
                   <div className="flex items-center gap-2">
                     <BookOpen className="w-5 h-5 text-[#00A389]" />
                     <span className="font-black text-base">StudyFreePDF Menu</span>
+                    <span className="text-[10px] font-bold text-amber-500 block">
+                      &quot;Talent Aapka, Rasta Hamara&quot;
+                    </span>
                   </div>
                   <button onClick={() => setMobileMenuOpen(false)} className="p-1 text-slate-400">
                     <X className="w-5 h-5" />

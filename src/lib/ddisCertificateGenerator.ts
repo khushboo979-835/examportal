@@ -107,7 +107,7 @@ export async function generateDDISCertificatePdf(data: DDISCertificateInput): Pr
     color: darkNavy,
   });
 
-  const orgSub = 'CIN / MSME Reg. • ISO 9001:2015 Certified • Accredited Industry Training Partner';
+  const orgSub = 'CIN / MSME Reg. • "Talent Aapka, Rasta Hamara" • Accredited Industry Training Partner';
   const orgSubWidth = fontRegular.widthOfTextAtSize(orgSub, 9.5);
   page1.drawText(orgSub, {
     x: (width - orgSubWidth) / 2,
@@ -375,7 +375,7 @@ export async function generateDDISCertificatePdf(data: DDISCertificateInput): Pr
     color: darkNavy,
   });
 
-  page2.drawText('DIGITAL DEVELOPER INFINITY SOLUTION (DDIS)', {
+  page2.drawText('DIGITAL DEVELOPER INFINITY SOLUTION (DDIS) • "Talent Aapka, Rasta Hamara"', {
     x: 40,
     y: p2H - 50,
     size: 13,

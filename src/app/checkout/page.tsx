@@ -185,8 +185,30 @@ function CheckoutContent() {
           <form onSubmit={handleCheckoutSubmit} className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-lg space-y-6">
             
             {error && (
-              <div className="p-4 bg-rose-50 border border-rose-200 text-rose-700 rounded-2xl text-xs font-semibold">
-                {error}
+              <div className="p-4 bg-rose-50 border border-rose-200 text-rose-700 rounded-2xl text-xs font-semibold space-y-2">
+                <div className="font-bold flex items-center gap-1.5">
+                  <span>⚠️</span>
+                  <span>{error}</span>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      clearCart();
+                      addToCart(ANNUAL_PASS_PRODUCT);
+                      setError(null);
+                    }}
+                    className="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-[11px] shadow-sm cursor-pointer"
+                  >
+                    Reset &amp; Add Annual Pass @ ₹199
+                  </button>
+                  <Link
+                    href="/explore"
+                    className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-900 text-white font-bold text-[11px]"
+                  >
+                    Browse Catalog
+                  </Link>
+                </div>
               </div>
             )}
 

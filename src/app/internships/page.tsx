@@ -141,7 +141,7 @@ export default function InternshipHubPage() {
         <div className="max-w-5xl mx-auto text-center relative z-10 space-y-6">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-bold text-emerald-300">
             <Sparkles className="w-4 h-4 text-amber-400" />
-            <span>NEP-2020 Aligned Mandatory Undergraduate College Internships</span>
+            <span>&quot;Talent Aapka, Rasta Hamara&quot; (टैलेंट आपका, रास्ता हमारा) • NEP-2020 College Internships</span>
           </div>
 
           <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight text-white">

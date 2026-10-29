@@ -221,7 +221,7 @@ export default function HomePage() {
           {/* Trust Badge */}
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-xs font-bold text-emerald-300">
             <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>Bihar Exam Prep Portal &amp; DDIS Accredited Academic Center</span>
+            <span>Digital Developer Infinity Solution (DDIS) • &quot;Talent Aapka, Rasta Hamara&quot; (टैलेंट आपका, रास्ता हमारा)</span>
           </div>
 
           {/* MUST-HAVE 1: Clear Headline */}
@@ -480,8 +480,13 @@ export default function HomePage() {
       <section id="internships-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 scroll-mt-20">
         
         <div className="space-y-2">
-          <div className="text-xs font-black uppercase text-indigo-600 tracking-wider">
-            OFFICIAL STREAMS • NEP-2020 ACCREDITED
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-xs font-black uppercase text-indigo-600 tracking-wider">
+              OFFICIAL STREAMS • NEP-2020 ACCREDITED
+            </span>
+            <span className="bg-amber-100 text-amber-800 text-[11px] font-black px-2.5 py-0.5 rounded-full border border-amber-300/60">
+              &quot;Talent Aapka, Rasta Hamara&quot; (टैलेंट आपका, रास्ता हमारा)
+            </span>
           </div>
           <h2 className="text-2xl sm:text-4xl font-black text-slate-900">
             Mandatory College Internships with Government-Recognized DDIS Certification
@@ -617,6 +622,9 @@ export default function HomePage() {
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
                 Digital Developer Infinity Solution (DDIS)
               </h2>
+              <div className="inline-flex items-center gap-2 mt-1.5 px-3 py-1 bg-emerald-50 text-[#00A389] border border-emerald-200 rounded-full text-xs font-extrabold">
+                <span>Motto: &quot;Talent Aapka, Rasta Hamara&quot; (टैलेंट आपका, रास्ता हमारा)</span>
+              </div>
               <p className="text-xs text-slate-500 mt-1">
                 Registered IT Organization &amp; EdTech Infrastructure Provider • Website:{' '}
                 <a href="https://www.digitalinfinityddis.com/" target="_blank" rel="noopener noreferrer" className="text-blue-600 font-bold hover:underline">

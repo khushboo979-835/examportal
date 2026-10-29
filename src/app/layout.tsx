@@ -6,8 +6,8 @@ import Footer from "@/components/layout/Footer";
 import CartDrawer from "@/components/layout/CartDrawer";
 
 export const metadata: Metadata = {
-  title: "StudyFreePDF.com | Notes Marketplace & NEP-2020 DDIS Virtual Internships",
-  description: "Download verified topper notes, 10-year solved PYQs, and enroll in UGC/NEP-2020 accredited undergraduate virtual internships certified under Digital Developer Infinity Solution (DDIS).",
+  title: "StudyFree PDF • Talent Aapka, Rasta Hamara | DDIS Notes & NEP-2020 Internships",
+  description: "Talent Aapka, Rasta Hamara (टैलेंट आपका, रास्ता हमारा) — Download verified topper notes, 10-year solved PYQs, and enroll in UGC/NEP-2020 accredited undergraduate virtual internships certified under Digital Developer Infinity Solution (DDIS).",
   icons: {
     icon: '/logo.png',
     shortcut: '/logo.png',

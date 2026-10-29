@@ -85,7 +85,7 @@ export default function CertificateVerificationPage() {
 
           <p className="text-xs sm:text-sm text-slate-300 max-w-xl mx-auto leading-relaxed">
             Verify authenticity of National Education Policy (NEP-2020) undergraduate internship certificates issued by{' '}
-            <strong className="text-white">Digital Developer Infinity Solution (DDIS)</strong>.
+            <strong className="text-white">Digital Developer Infinity Solution (DDIS)</strong> • <em className="text-amber-300 font-semibold">&quot;Talent Aapka, Rasta Hamara&quot;</em>.
           </p>
 
           {/* Search Box */}

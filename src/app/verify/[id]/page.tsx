@@ -143,7 +143,7 @@ export default async function VerifiedCertificateDirectPage({ params }: VerifyPa
                   Digital Developer Infinity Solution (DDIS)
                 </h3>
                 <div className="text-xs text-emerald-100 font-medium">
-                  National Education Policy (NEP-2020) Accredited Partner
+                  &quot;Talent Aapka, Rasta Hamara&quot; (टैलेंट आपका, रास्ता हमारा) • NEP-2020 Accredited Partner
                 </div>
               </div>
             </div>
