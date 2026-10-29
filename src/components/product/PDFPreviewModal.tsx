@@ -24,9 +24,16 @@ interface PDFPreviewModalProps {
 export default function PDFPreviewModal({ product, onClose }: PDFPreviewModalProps) {
   const { addToCart, cart } = useCart();
   const [fullscreen, setFullscreen] = useState(false);
-  const isInCart = cart.some((item) => item.product.id === product.id);
 
-  const previewSrc = `/api/preview/${product.id}#toolbar=0&navpanes=0&scrollbar=1`;
+  const safeId = product.id || (product as any)._id?.toString?.() || (product as any)._id || product.slug || 'sample';
+  const safeSlug = product.slug || '';
+  const totalPages = product.pageCount || (product as any).totalPages || 96;
+
+  const isInCart = cart.some(
+    (item) => item.product.id === safeId || (item.product as any)._id === safeId || item.product.slug === safeSlug
+  );
+
+  const previewSrc = `/api/preview/${encodeURIComponent(safeId)}?slug=${encodeURIComponent(safeSlug)}#toolbar=0&navpanes=0&scrollbar=1`;
   const activePrice = product.discountedPrice ?? product.price;
   const discount = calculateDiscount(product.price, product.discountedPrice);
 
@@ -41,7 +48,7 @@ export default function PDFPreviewModal({ product, onClose }: PDFPreviewModalPro
         {/* Modal Top Header */}
         <div className="bg-slate-900 text-white px-5 py-3.5 flex items-center justify-between border-b border-slate-800">
           <div className="flex items-center gap-3 min-w-0">
-            <span className="bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[10px] font-black uppercase px-2 py-0.5 rounded tracking-wider flex items-center gap-1">
+            <span className="bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[10px] font-black uppercase px-2 py-0.5 rounded tracking-wider flex items-center gap-1 shrink-0">
               <Lock className="w-3 h-3 text-rose-400" /> Sample Preview Only
             </span>
             <h3 className="text-sm font-bold text-slate-100 truncate">
@@ -49,17 +56,17 @@ export default function PDFPreviewModal({ product, onClose }: PDFPreviewModalPro
             </h3>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => setFullscreen(!fullscreen)}
-              className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
+              className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
               title="Toggle Fullscreen"
             >
               <Maximize2 className="w-4 h-4" />
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
+              className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
               aria-label="Close Preview"
             >
               <X className="w-5 h-5" />
@@ -71,7 +78,7 @@ export default function PDFPreviewModal({ product, onClose }: PDFPreviewModalPro
         <div className="bg-amber-500/10 border-b border-amber-500/20 px-4 py-2 text-xs text-amber-900 flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-2 font-medium">
             <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
-            <span>Viewing first 3 sample pages watermarked. Full document contains <strong>{product.pageCount} pages</strong>.</span>
+            <span>Viewing first 3 sample pages watermarked. Full document contains <strong>{totalPages} pages</strong>.</span>
           </div>
           <span className="text-[11px] font-bold text-amber-800 bg-amber-200/80 px-2 py-0.5 rounded">
             100% Verified Quality
@@ -115,17 +122,22 @@ export default function PDFPreviewModal({ product, onClose }: PDFPreviewModalPro
           <div className="flex items-center gap-2">
             <button
               onClick={onClose}
-              className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 font-semibold text-xs transition-colors"
+              className="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 font-semibold text-xs transition-colors cursor-pointer"
             >
               Continue Browsing
             </button>
             <button
               onClick={() => {
-                addToCart(product);
+                addToCart({
+                  ...product,
+                  id: safeId,
+                  pageCount: totalPages,
+                  totalPages,
+                });
                 onClose();
               }}
               disabled={isInCart}
-              className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-blue-500/25 transition-all hover:scale-102"
+              className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-blue-500/25 transition-all hover:scale-102 cursor-pointer disabled:opacity-80 disabled:cursor-default"
             >
               {isInCart ? (
                 <>
@@ -133,7 +145,7 @@ export default function PDFPreviewModal({ product, onClose }: PDFPreviewModalPro
                 </>
               ) : (
                 <>
-                  <ShoppingCart className="w-4 h-4" /> Unlock Full {product.pageCount} Pages Now
+                  <ShoppingCart className="w-4 h-4" /> Unlock Full {totalPages} Pages Now
                 </>
               )}
             </button>

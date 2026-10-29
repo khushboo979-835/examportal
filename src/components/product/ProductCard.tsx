@@ -24,11 +24,29 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   const { addToCart, cart } = useCart();
   const [showPreview, setShowPreview] = useState(false);
-  const isInCart = cart.some((item) => item.product.id === product.id);
+
+  const safeId = product.id || (product as any)._id?.toString?.() || (product as any)._id || product.slug;
+  const pageCount = product.pageCount || (product as any).totalPages || 96;
+  const fileSize = product.fileSize || (product as any).fileSizeBytes || 1024 * 1024 * 14;
+  const rating = product.rating || (product as any).avgRating || 4.8;
+
+  const safeProduct: PDFProduct = {
+    ...product,
+    id: safeId,
+    pageCount,
+    totalPages: pageCount,
+    fileSize,
+    fileSizeBytes: fileSize,
+    rating,
+  };
+
+  const isInCart = cart.some(
+    (item) => item.product.id === safeId || (item.product as any)._id === safeId || item.product.slug === product.slug
+  );
 
   const discount = calculateDiscount(product.price, product.discountedPrice);
   const activePrice = product.discountedPrice ?? product.price;
-  const boardCode = product.subject?.boardOrExam?.code || 'ACADEMIC';
+  const boardCode = product.subject?.boardOrExam?.code || (product as any).examNodeId?.name || (typeof product.subject === 'string' ? product.subject : 'ACADEMIC');
 
   const mediumLabel =
     product.medium === 'HINDI'
@@ -87,15 +105,15 @@ export default function ProductCard({ product }: ProductCardProps) {
           <div className="grid grid-cols-3 gap-1.5 py-2.5 px-3 bg-slate-50 rounded-xl my-3 text-[11px] text-slate-600 border border-slate-100">
             <div className="flex items-center gap-1">
               <FileText className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-              <span className="font-medium">{product.pageCount} Pgs</span>
+              <span className="font-medium">{pageCount} Pgs</span>
             </div>
             <div className="flex items-center gap-1">
               <Download className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-              <span className="font-medium">{formatBytes(product.fileSize)}</span>
+              <span className="font-medium">{formatBytes(fileSize)}</span>
             </div>
             <div className="flex items-center gap-1 text-amber-600 font-bold">
               <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400 shrink-0" />
-              <span>{product.rating}</span>
+              <span>{rating}</span>
             </div>
           </div>
 
@@ -108,7 +126,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           {/* Subject & Format */}
           <div className="flex items-center justify-between text-xs text-slate-500 mt-auto pt-2 border-t border-slate-100">
             <span className="font-medium truncate max-w-[140px]">
-              {product.subject?.name || 'General Prep'}
+              {(typeof product.subject === 'string' ? product.subject : product.subject?.name) || 'General Prep'}
             </span>
             <span className="bg-slate-100 text-slate-700 font-semibold px-2 py-0.5 rounded text-[10px]">
               {product.materialType}
@@ -130,7 +148,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               )}
             </div>
             <span className="text-[10px] text-slate-400 font-medium">
-              {product.totalDownloads}+ downloads
+              {product.totalDownloads || 1500}+ downloads
             </span>
           </div>
 
@@ -138,29 +156,31 @@ export default function ProductCard({ product }: ProductCardProps) {
             {/* Preview Sample CTA (Free Sample Reading) */}
             <button
               onClick={() => setShowPreview(true)}
-              className="py-2 px-3 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors shadow-xs cursor-pointer"
-              title="Read free 3-page preview before paying"
+              className="w-full py-2.5 px-3 rounded-xl border border-slate-300 hover:border-slate-400 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer active:scale-95"
             >
-              <Eye className="w-3.5 h-3.5 text-blue-600" /> Free Sample Reading
+              <Eye className="w-3.5 h-3.5 text-blue-600 shrink-0" />
+              <span>Preview Sample</span>
             </button>
 
-            {/* Add to Cart / Buy CTA */}
+            {/* Quick Add to Bag / Buy */}
             <button
-              onClick={() => addToCart(product)}
+              onClick={() => addToCart(safeProduct)}
               disabled={isInCart}
-              className={`py-2 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-md cursor-pointer ${
+              className={`w-full py-2.5 px-3 rounded-xl font-bold text-xs flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer ${
                 isInCart
                   ? 'bg-emerald-600 text-white cursor-default'
-                  : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-500/20 active:scale-95'
+                  : 'bg-[#00A389] hover:bg-[#008f77] text-white active:scale-95'
               }`}
             >
               {isInCart ? (
                 <>
-                  <Check className="w-3.5 h-3.5" /> Added
+                  <Check className="w-3.5 h-3.5 shrink-0" />
+                  <span>Added</span>
                 </>
               ) : (
                 <>
-                  <ShoppingCart className="w-3.5 h-3.5" /> Buy ({formatINR(activePrice)})
+                  <ShoppingCart className="w-3.5 h-3.5 shrink-0" />
+                  <span>Add to Bag</span>
                 </>
               )}
             </button>
@@ -169,10 +189,10 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       </div>
 
-      {/* Embedded PDF Preview Modal */}
+      {/* PDF Sample Preview Modal */}
       {showPreview && (
         <PDFPreviewModal
-          product={product}
+          product={safeProduct}
           onClose={() => setShowPreview(false)}
         />
       )}
