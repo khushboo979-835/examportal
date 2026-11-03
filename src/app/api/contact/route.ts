@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { rateLimit } from '@/lib/rate-limiter';
+import { sendInquiryEmail } from '@/lib/mailer';
 
 export const dynamic = 'force-dynamic';
 
@@ -26,13 +27,26 @@ export async function POST(request: NextRequest) {
 
     const ticketId = `TKT-2026-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
 
-    // Log contact submission for support team
-    console.log(`[CONTACT INQUIRY ${ticketId}] from ${name} (${phone || email}) - ${subject || 'No Subject'}: ${message}`);
+    // Dispatch email notification to studyfreepdf2@gmail.com
+    await sendInquiryEmail({
+      type: 'CONTACT_FORM',
+      studentName: name.trim(),
+      studentPhone: phone?.trim(),
+      studentEmail: email?.trim(),
+      subject: subject || `Student Inquiry (${category})`,
+      message: message.trim(),
+      ticketId,
+      metadata: {
+        category,
+        ipAddress: ip,
+        submittedAt: new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
+      },
+    });
 
     return NextResponse.json({
       success: true,
       ticketId,
-      message: 'Your inquiry has been submitted successfully! Our student support team will respond within 24 hours.',
+      message: 'Your inquiry has been submitted successfully! An alert has been forwarded to studyfreepdf2@gmail.com and our student support desk.',
       whatsappDirectUrl: `https://wa.me/917544065425?text=${encodeURIComponent(
         `Hi StudyFreePDF Support team, my ticket is ${ticketId}. I sent an inquiry: ${subject || message.substring(0, 50)}`
       )}`,

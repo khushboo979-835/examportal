@@ -5,6 +5,7 @@ import { Order } from '@/models/Order';
 import { PDFProduct } from '@/models/PDFProduct';
 import { User } from '@/models/User';
 import { mockOrders } from '@/lib/mock-db';
+import { sendInquiryEmail } from '@/lib/mailer';
 
 export const dynamic = 'force-dynamic';
 
@@ -79,6 +80,28 @@ export async function POST(request: NextRequest) {
             );
           } catch {}
         }
+      }
+
+      // Send email alert to studyfreepdf2@gmail.com
+      try {
+        await sendInquiryEmail({
+          type: 'ORDER_PLACED',
+          studentName: order?.customerName || 'Student Customer',
+          studentPhone: order?.customerPhone,
+          studentEmail: order?.customerEmail,
+          subject: `Order Paid - ₹${order?.amount || 49} (Order #${order?.orderNumber})`,
+          message: `Order #${order?.orderNumber} successfully paid via UPI/Cards. Order Type: ${order?.orderType}. Gateway Payment ID: ${razorpayPaymentId}`,
+          ticketId: order?.orderNumber || `ORD-${Date.now()}`,
+          metadata: {
+            orderNumber: order?.orderNumber,
+            amount: `₹${order?.amount || 49}`,
+            orderType: order?.orderType,
+            razorpayPaymentId,
+            status: 'PAID',
+          },
+        });
+      } catch (mailErr) {
+        console.warn('Order mail notification notice:', mailErr);
       }
 
       return NextResponse.json({

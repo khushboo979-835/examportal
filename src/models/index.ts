@@ -10,3 +10,4 @@ export * from './DownloadLog';
 export * from './InternshipTrack';
 export * from './StudentInternship';
 export * from './DDISCertificate';
+export * from './Inquiry';

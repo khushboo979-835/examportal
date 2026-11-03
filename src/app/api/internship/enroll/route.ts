@@ -3,6 +3,7 @@ import connectToDatabase from '@/lib/db';
 import { InternshipTrack } from '@/models/InternshipTrack';
 import { StudentInternship } from '@/models/StudentInternship';
 import { User } from '@/models/User';
+import { sendInquiryEmail } from '@/lib/mailer';
 
 export const dynamic = 'force-dynamic';
 
@@ -78,6 +79,29 @@ export async function POST(request: NextRequest) {
       submissions: [],
       certificateIssued: false,
     });
+
+    // Send email alert to studyfreepdf2@gmail.com
+    try {
+      await sendInquiryEmail({
+        type: 'INTERNSHIP_APPLICATION',
+        studentName: studentName.trim(),
+        studentPhone: normalizedPhone,
+        studentEmail: studentEmail?.trim()?.toLowerCase(),
+        subject: `New NEP-2020 Internship Application: ${track.title}`,
+        message: `Student enrolled in ${track.title} (${track.stream}). College: ${collegeName.trim()} | Degree: ${degreeProgram.trim()} | Roll: ${rollNumber.trim()}`,
+        ticketId: `INT-${newInternship._id.toString().substring(18).toUpperCase()}`,
+        metadata: {
+          trackTitle: track.title,
+          trackStream: track.stream,
+          collegeName: collegeName.trim(),
+          rollNumber: rollNumber.trim(),
+          degreeProgram: degreeProgram.trim(),
+          durationWeeks: `${track.durationWeeks || 4} Weeks`,
+        },
+      });
+    } catch (mailErr) {
+      console.warn('Internship mail notification notice:', mailErr);
+    }
 
     return NextResponse.json({
       success: true,
