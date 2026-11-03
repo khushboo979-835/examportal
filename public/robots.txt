@@ -1,0 +1,28 @@
+User-agent: *
+Allow: /
+Allow: /explore
+Allow: /p/*
+Allow: /exams/*
+Allow: /internships
+Allow: /verify
+Allow: /verify/*
+Allow: /about
+Allow: /pricing-policy
+Allow: /refund-policy
+Allow: /terms
+Allow: /privacy
+Allow: /disclaimer
+Allow: /contact
+
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /dashboard
+Disallow: /dashboard/*
+Disallow: /library
+Disallow: /library/*
+Disallow: /order/*
+Disallow: /checkout
+Disallow: /checkout/*
+Disallow: /api/*
+
+Sitemap: https://studyfreepdf.com/sitemap.xml

@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { FALLBACK_INTERNSHIP_TRACKS } from '@/lib/internship-catalog';
 import {
   GraduationCap,
   ShieldCheck,
@@ -53,9 +54,9 @@ const STREAM_PILLS = [
 
 export default function InternshipHubPage() {
   const router = useRouter();
-  const [tracks, setTracks] = useState<InternshipTrack[]>([]);
+  const [tracks, setTracks] = useState<any[]>(FALLBACK_INTERNSHIP_TRACKS);
   const [selectedStream, setSelectedStream] = useState('ALL');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   // Enrollment Modal state
   const [enrollingTrack, setEnrollingTrack] = useState<InternshipTrack | null>(null);
@@ -290,7 +291,7 @@ export default function InternshipHubPage() {
                     <div className="text-[10px] font-extrabold uppercase text-slate-400 tracking-wider">
                       Core Competencies
                     </div>
-                    {track.learningOutcomes?.slice(0, 3).map((item, idx) => (
+                    {track.learningOutcomes?.slice(0, 3).map((item: string, idx: number) => (
                       <div key={idx} className="flex items-start gap-1.5 text-[11px] text-slate-700">
                         <Check className="w-3.5 h-3.5 text-[#00A389] shrink-0 mt-0.5" />
                         <span className="line-clamp-1">{item}</span>

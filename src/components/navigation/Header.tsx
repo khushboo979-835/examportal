@@ -43,12 +43,31 @@ export default function Header() {
   const [searchModalOpen, setSearchModalOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [language, setLanguage] = useState<'HI' | 'EN'>('EN');
+  const [studentUser, setStudentUser] = useState<{ name?: string; phone?: string; email?: string } | null>(null);
 
   const studyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const internshipTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const accountTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Keyboard shortcut listener (Cmd+K / Ctrl+K)
+  // Check user session
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.authenticated && d?.user) {
+          setStudentUser(d.user);
+        } else {
+          const savedName = localStorage.getItem('studyfreepdf_user_name');
+          const savedPhone = localStorage.getItem('studyfreepdf_user_phone');
+          if (savedName || savedPhone) {
+            setStudentUser({ name: savedName || 'Student', phone: savedPhone || '' });
+          } else {
+            setStudentUser(null);
+          }
+        }
+      })
+      .catch(() => {});
+  }, [pathname]);
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -440,7 +459,7 @@ export default function Header() {
                 className="flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl bg-[#00A389] hover:bg-[#008f77] text-white text-xs sm:text-sm font-black shadow-md shadow-emerald-500/20 hover:shadow-lg hover:-translate-y-0.5 transition-all whitespace-nowrap shrink-0"
               >
                 <User className="w-4 h-4 text-white" />
-                <span className="whitespace-nowrap">Student Login</span>
+                <span className="whitespace-nowrap">{studentUser?.name ? studentUser.name.split(' ')[0] : 'Student Login'}</span>
               </Link>
 
               {accountMenuOpen && (
@@ -456,14 +475,36 @@ export default function Header() {
                     <BookOpen className="w-4 h-4 text-[#00A389]" />
                     <span>My Study Room</span>
                   </Link>
-                  <Link
-                    href="/login"
-                    onClick={() => setAccountMenuOpen(false)}
-                    className="px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2.5 transition-colors"
-                  >
-                    <User className="w-4 h-4 text-emerald-600" />
-                    <span>Sign In / Register</span>
-                  </Link>
+                  {studentUser ? (
+                    <button
+                      type="button"
+                      onClick={async () => {
+                        setAccountMenuOpen(false);
+                        try {
+                          await fetch('/api/auth/logout', { method: 'POST' });
+                        } catch {}
+                        localStorage.removeItem('studyfreepdf_token');
+                        localStorage.removeItem('studyfreepdf_user_phone');
+                        localStorage.removeItem('studyfreepdf_user_email');
+                        localStorage.removeItem('studyfreepdf_user_name');
+                        setStudentUser(null);
+                        router.push('/login');
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/40 text-xs font-bold text-rose-600 flex items-center gap-2.5 transition-colors"
+                    >
+                      <User className="w-4 h-4 text-rose-500" />
+                      <span>Sign Out ({studentUser.name?.split(' ')[0] || 'User'})</span>
+                    </button>
+                  ) : (
+                    <Link
+                      href="/login"
+                      onClick={() => setAccountMenuOpen(false)}
+                      className="px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 text-xs font-bold text-slate-800 dark:text-slate-100 flex items-center gap-2.5 transition-colors"
+                    >
+                      <User className="w-4 h-4 text-emerald-600" />
+                      <span>Sign In / Register</span>
+                    </Link>
+                  )}
                   <Link
                     href="/dashboard/internships"
                     onClick={() => setAccountMenuOpen(false)}

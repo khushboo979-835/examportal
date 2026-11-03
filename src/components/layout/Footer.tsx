@@ -203,6 +203,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/disclaimer" className="hover:text-white transition-colors">
+                  Disclaimer &amp; Academic Notice
+                </Link>
+              </li>
+              <li>
                 <Link href="/about" className="hover:text-white transition-colors">
                   About Us (DDIS Accreditation)
                 </Link>

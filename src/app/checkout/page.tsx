@@ -62,12 +62,33 @@ function CheckoutContent() {
 
   const { cart, addToCart, removeFromCart, clearCart, totalAmount, totalOriginalAmount, totalSaved } = useCart();
 
-  const [name, setName] = useState('Aarav Kumar');
-  const [email, setEmail] = useState('studyfreepdf2@gmail.com');
-  const [phone, setPhone] = useState('+91 7544065425');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<'UPI' | 'CARD' | 'NETBANKING'>('UPI');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Sync authenticated student profile or stored student details
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.authenticated && data.user) {
+          if (data.user.name) setName(data.user.name);
+          if (data.user.email) setEmail(data.user.email);
+          if (data.user.phone) setPhone(data.user.phone);
+        } else {
+          const savedName = localStorage.getItem('studyfreepdf_user_name') || localStorage.getItem('exampustak_user_name');
+          const savedEmail = localStorage.getItem('studyfreepdf_user_email') || localStorage.getItem('exampustak_user_email');
+          const savedPhone = localStorage.getItem('studyfreepdf_user_phone') || localStorage.getItem('exampustak_user_phone');
+          if (savedName) setName(savedName);
+          if (savedEmail) setEmail(savedEmail);
+          if (savedPhone) setPhone(savedPhone);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // Auto-add Annual Pass if user arrived with ?plan=ANNUAL_PASS and cart has no items
   useEffect(() => {
@@ -226,6 +247,7 @@ function CheckoutContent() {
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    placeholder="Enter student full name"
                     className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-blue-500 outline-hidden"
                   />
                 </div>
@@ -238,6 +260,7 @@ function CheckoutContent() {
                       required
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
+                      placeholder="+91 9876543210"
                       className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-blue-500 outline-hidden"
                     />
                   </div>
@@ -249,6 +272,7 @@ function CheckoutContent() {
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
+                      placeholder="student@example.com"
                       className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:border-blue-500 outline-hidden"
                     />
                   </div>
