@@ -57,6 +57,11 @@ export default function InternshipHubPage() {
   const [tracks, setTracks] = useState<any[]>(FALLBACK_INTERNSHIP_TRACKS);
   const [selectedStream, setSelectedStream] = useState('ALL');
   const [loading, setLoading] = useState(false);
+  const displayedTracks = tracks.filter((track) => {
+    if (selectedStream === 'ALL') return true;
+    if (selectedStream === 'BCA_IT') return track.stream === 'BCA_IT' || track.stream === 'IT';
+    return track.stream === selectedStream;
+  });
 
   // Enrollment Modal state
   const [enrollingTrack, setEnrollingTrack] = useState<InternshipTrack | null>(null);
@@ -231,12 +236,12 @@ export default function InternshipHubPage() {
           </Link>
         </div>
 
-        {loading ? (
+        {loading && tracks.length === 0 ? (
           <div className="py-24 text-center">
             <Loader2 className="w-8 h-8 text-[#00A389] animate-spin mx-auto mb-3" />
-            <p className="text-xs font-bold text-slate-500">Loading industry tracks from MongoDB...</p>
+            <p className="text-xs font-bold text-slate-500">Loading accredited NEP-2020 internship programs...</p>
           </div>
-        ) : tracks.length === 0 ? (
+        ) : displayedTracks.length === 0 ? (
           <div className="bg-white rounded-3xl p-12 text-center border border-slate-200">
             <BookOpen className="w-12 h-12 text-slate-300 mx-auto mb-3" />
             <h3 className="text-base font-bold text-slate-800">No tracks found for this stream</h3>
@@ -250,7 +255,7 @@ export default function InternshipHubPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {tracks.map((track) => (
+            {displayedTracks.map((track) => (
               <div
                 key={track._id}
                 className="bg-white rounded-3xl border border-slate-200/90 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between overflow-hidden group hover:-translate-y-1"
