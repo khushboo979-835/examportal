@@ -47,6 +47,22 @@ export default function StudentDashboardPage() {
   const [downloadHistory, setDownloadHistory] = useState<{ title: string; time: string; size: string }[]>([]);
 
   useEffect(() => {
+    // 1. Check server-authenticated session first
+    fetch('/api/auth/me')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.authenticated && data.user) {
+          if (data.user.name) setUserName(data.user.name);
+          if (data.user.phone) setUserPhone(data.user.phone);
+          if (data.user.email) setUserEmail(data.user.email);
+          if (data.user.purchasedPDFs && data.user.purchasedPDFs.length > 0) {
+            setPurchasedList(data.user.purchasedPDFs);
+          }
+        }
+      })
+      .catch(() => {});
+
+    // 2. Read client localStorage cache
     const savedPhone = localStorage.getItem('studyfreepdf_user_phone') || localStorage.getItem('exampustak_user_phone');
     const savedEmail = localStorage.getItem('studyfreepdf_user_email') || localStorage.getItem('exampustak_user_email');
     const savedName = localStorage.getItem('studyfreepdf_user_name') || localStorage.getItem('exampustak_user_name');
