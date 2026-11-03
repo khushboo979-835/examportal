@@ -13,7 +13,8 @@ import {
   Loader2, 
   CheckCircle2, 
   BookOpen, 
-  GraduationCap 
+  GraduationCap,
+  Building
 } from 'lucide-react';
 
 export default function LoginPage() {
@@ -23,6 +24,7 @@ export default function LoginPage() {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [college, setCollege] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
@@ -30,7 +32,7 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!identifier.trim()) {
-      setErrorMsg('Please enter your WhatsApp/Phone number or registered Email');
+      setErrorMsg('Please enter your Student ID (STU-XXXXX), WhatsApp/Phone number or registered Email');
       return;
     }
 
@@ -50,15 +52,15 @@ export default function LoginPage() {
         throw new Error(data.error || 'Login failed');
       }
 
-      // Save user profile in localStorage for client caching
       if (typeof window !== 'undefined') {
         localStorage.setItem('studyfreepdf_user_name', data.user.name);
         localStorage.setItem('studyfreepdf_user_phone', data.user.phone);
         if (data.user.email) localStorage.setItem('studyfreepdf_user_email', data.user.email);
+        if (data.user.studentId) localStorage.setItem('studyfreepdf_user_student_id', data.user.studentId);
         localStorage.setItem('studyfreepdf_token', data.token);
       }
 
-      setSuccessMsg('Login successful! Redirecting to your dashboard...');
+      setSuccessMsg(`Login successful! Welcome back, ${data.user.name}. Redirecting to your dashboard...`);
       setTimeout(() => {
         router.push('/dashboard');
       }, 1000);
@@ -88,6 +90,7 @@ export default function LoginPage() {
           name: name.trim(),
           phone: phone.trim(),
           email: email.trim() || undefined,
+          college: college.trim() || undefined,
         }),
       });
 
@@ -100,13 +103,14 @@ export default function LoginPage() {
         localStorage.setItem('studyfreepdf_user_name', data.user.name);
         localStorage.setItem('studyfreepdf_user_phone', data.user.phone);
         if (data.user.email) localStorage.setItem('studyfreepdf_user_email', data.user.email);
+        if (data.user.studentId) localStorage.setItem('studyfreepdf_user_student_id', data.user.studentId);
         localStorage.setItem('studyfreepdf_token', data.token);
       }
 
-      setSuccessMsg('Account created successfully! Redirecting...');
+      setSuccessMsg(`Account created! Your Student ID is ${data.user.studentId || 'generated'}. Redirecting to your dashboard...`);
       setTimeout(() => {
         router.push('/dashboard');
-      }, 1000);
+      }, 1200);
     } catch (err: any) {
       setErrorMsg(err.message || 'Registration failed');
     } finally {
@@ -133,7 +137,7 @@ export default function LoginPage() {
             {mode === 'LOGIN' ? 'Student Sign In' : 'Create Student Account'}
           </h1>
           <p className="text-xs text-slate-500">
-            Access your purchased study notes, bookmarks, and DDIS NEP-2020 internship portal.
+            Access your Student ID, purchased study notes, bookmarks, and DDIS NEP-2020 internship portal.
           </p>
         </div>
 
@@ -151,7 +155,7 @@ export default function LoginPage() {
                   : 'text-slate-500 hover:text-slate-800'
               }`}
             >
-              Instant Sign In
+              Sign In (ID / Phone)
             </button>
             <button
               type="button"
@@ -183,21 +187,21 @@ export default function LoginPage() {
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Phone Number or Email Address
+                  Student ID, Phone Number or Email
                 </label>
                 <div className="relative">
                   <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     required
-                    placeholder="+91 98765 43210 or name@example.com"
+                    placeholder="e.g. STU-2026-AB12, +91 7544065425 or email"
                     value={identifier}
                     onChange={(e) => setIdentifier(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 text-slate-900 text-xs sm:text-sm font-medium focus:outline-none focus:border-[#00A389] focus:ring-1 focus:ring-[#00A389]"
                   />
                 </div>
                 <p className="text-[11px] text-slate-400 mt-1">
-                  Enter the phone or email used during your note purchase or internship enrollment.
+                  Enter your generated Student ID, or the phone number/email provided during registration.
                 </p>
               </div>
 
@@ -221,7 +225,7 @@ export default function LoginPage() {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Aarav Kumar"
+                    placeholder="e.g. Rahul Sharma"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 text-slate-900 text-xs sm:text-sm font-medium focus:outline-none focus:border-[#00A389] focus:ring-1 focus:ring-[#00A389]"
@@ -238,7 +242,7 @@ export default function LoginPage() {
                   <input
                     type="tel"
                     required
-                    placeholder="+91 7544065425"
+                    placeholder="+91 9876543210"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 text-slate-900 text-xs sm:text-sm font-medium focus:outline-none focus:border-[#00A389] focus:ring-1 focus:ring-[#00A389]"
@@ -262,13 +266,29 @@ export default function LoginPage() {
                 </div>
               </div>
 
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  College / University Name (Optional)
+                </label>
+                <div className="relative">
+                  <Building className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="e.g. Patna Science College, Magadh University"
+                    value={college}
+                    onChange={(e) => setCollege(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 text-slate-900 text-xs sm:text-sm font-medium focus:outline-none focus:border-[#00A389] focus:ring-1 focus:ring-[#00A389]"
+                  />
+                </div>
+              </div>
+
               <button
                 type="submit"
                 disabled={loading}
                 className="w-full py-3.5 rounded-xl bg-[#00A389] hover:bg-[#008f77] text-white font-extrabold text-xs sm:text-sm shadow-md shadow-emerald-500/20 flex items-center justify-center gap-2 transition-all disabled:opacity-50 cursor-pointer"
               >
                 {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
-                <span>Create Student Account</span>
+                <span>Generate Student ID &amp; Create Account</span>
               </button>
             </form>
           )}
@@ -280,19 +300,25 @@ export default function LoginPage() {
               <span>Offline Watermarked PDFs</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <GraduationCap className="w-3.5 h-3.5 text-indigo-600" />
-              <span>NEP-2020 College Credit</span>
+              <GraduationCap className="w-3.5 h-3.5 text-blue-600" />
+              <span>DDIS NEP-2020 Internships</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <ShieldCheck className="w-3.5 h-3.5 text-amber-500" />
+              <span>Tamper-Proof Certificates</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+              <span>Dynamic QR Verification</span>
             </div>
           </div>
 
         </div>
 
-        {/* Back Link */}
-        <div className="text-center text-xs text-slate-500">
-          Need help signing in? Contact student helpdesk at{' '}
-          <a href="mailto:studyfreepdf2@gmail.com" className="text-[#00A389] font-bold hover:underline">
-            studyfreepdf2@gmail.com
-          </a>
+        {/* Security Disclosures */}
+        <div className="text-center text-xs text-slate-400 space-y-1">
+          <p>Protected by 256-bit SSL encryption &amp; sliding-window rate limiters.</p>
+          <p>Digital Developer Infinity Solution (DDIS) • Patna Zero Mile Metro Station</p>
         </div>
 
       </div>

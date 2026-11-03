@@ -21,6 +21,8 @@ export interface IUser extends Document {
   phone: string;
   email?: string;
   role: UserRole;
+  studentId?: string;
+  collegeName?: string;
   passExpiresAt?: Date;
   purchasedPDFs: Types.ObjectId[];
   bookmarks: IUserBookmark[];
@@ -39,6 +41,8 @@ const UserSchema: Schema = new Schema(
       enum: ['STUDENT', 'MENTOR', 'COLLEGE_COORDINATOR', 'ADMIN', 'CREATOR'],
       default: 'STUDENT',
     },
+    studentId: { type: String, sparse: true, index: true },
+    collegeName: { type: String, default: '' },
     passExpiresAt: { type: Date, default: null },
     purchasedPDFs: [{ type: Schema.Types.ObjectId, ref: 'PDFProduct' }],
     bookmarks: [

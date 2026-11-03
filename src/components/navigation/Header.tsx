@@ -537,7 +537,15 @@ export default function Header() {
                       className="px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 text-[11px] font-medium text-slate-500 flex items-center gap-2.5 transition-colors"
                     >
                       <ShieldCheck className="w-3.5 h-3.5 text-slate-400" />
-                      <span>Admin Evaluation Panel</span>
+                      <span>NEP-2020 Grading Desk</span>
+                    </Link>
+                    <Link
+                      href="/admin"
+                      onClick={() => setAccountMenuOpen(false)}
+                      className="px-3 py-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800 text-[11px] font-bold text-amber-600 flex items-center gap-2.5 transition-colors"
+                    >
+                      <ShieldCheck className="w-3.5 h-3.5 text-amber-500" />
+                      <span>Admin Executive Command (/admin)</span>
                     </Link>
                   </div>
                 </div>

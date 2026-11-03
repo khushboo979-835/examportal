@@ -8,20 +8,22 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { identifier, name } = body; // identifier can be phone or email
+    const { identifier, name } = body; // identifier can be Student ID, phone or email
 
     if (!identifier) {
       return NextResponse.json(
-        { error: 'Phone number or email is required to sign in' },
+        { error: 'Student ID, phone number or email is required to sign in' },
         { status: 400 }
       );
     }
 
     const cleanIdentifier = identifier.trim().toLowerCase();
+    const cleanUpper = identifier.trim().toUpperCase();
     await connectToDatabase();
 
     let user = await User.findOne({
       $or: [
+        { studentId: cleanUpper },
         { phone: cleanIdentifier },
         { email: cleanIdentifier },
         { phone: `+91-${cleanIdentifier.replace(/^(\+91|0)/, '')}` },
@@ -32,12 +34,17 @@ export async function POST(request: NextRequest) {
     // Auto-create student account if first time logging in with phone
     if (!user) {
       const isEmail = cleanIdentifier.includes('@');
+      const newStudentId = `STU-2026-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
       user = await User.create({
         name: name?.trim() || 'Student Aspirant',
         phone: isEmail ? `+91-${Date.now().toString().slice(-10)}` : cleanIdentifier,
         email: isEmail ? cleanIdentifier : `student_${Date.now()}@studyfreepdf.com`,
+        studentId: newStudentId,
         role: 'STUDENT',
       });
+    } else if (!user.studentId) {
+      user.studentId = `STU-2026-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
+      await user.save();
     }
 
     const token = createAuthToken(user);
@@ -46,9 +53,11 @@ export async function POST(request: NextRequest) {
       message: 'Logged in successfully!',
       user: {
         id: user._id,
+        studentId: user.studentId,
         name: user.name,
         phone: user.phone,
         email: user.email,
+        college: user.collegeName,
         role: user.role,
       },
       token,

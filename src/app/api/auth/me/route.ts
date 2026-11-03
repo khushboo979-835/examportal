@@ -37,9 +37,11 @@ export async function GET(request: NextRequest) {
       authenticated: true,
       user: {
         id: user._id,
+        studentId: (user as any).studentId || `STU-2026-${user._id.toString().substring(18).toUpperCase()}`,
         name: user.name,
         phone: user.phone,
         email: user.email,
+        college: (user as any).collegeName || '',
         role: user.role,
         purchasedPDFs: user.purchasedPDFs || [],
         bookmarks: user.bookmarks || [],

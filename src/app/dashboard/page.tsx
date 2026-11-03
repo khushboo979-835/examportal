@@ -26,7 +26,13 @@ import {
   ShoppingBag,
   ExternalLink,
   User as UserIcon,
-  HelpCircle
+  HelpCircle,
+  GraduationCap,
+  Calendar,
+  Send,
+  Building,
+  Hash,
+  AlertCircle
 } from 'lucide-react';
 import { getHydratedProducts } from '@/lib/mock-db';
 import { formatBytes, formatINR } from '@/lib/utils';
@@ -55,12 +61,44 @@ interface OrderItem {
   razorpayPaymentId?: string;
 }
 
+interface EnrolledInternship {
+  _id: string;
+  studentName: string;
+  studentEmail?: string;
+  studentPhone?: string;
+  collegeName: string;
+  rollNumber: string;
+  degreeProgram: string;
+  status: 'ENROLLED' | 'IN_PROGRESS' | 'REVIEW_PENDING' | 'COMPLETED';
+  startDate: string;
+  completedDate?: string;
+  certificateIssued: boolean;
+  certificateId?: string;
+  submissions: Array<{
+    weekNumber: number;
+    submissionUrl?: string;
+    hostedLink?: string;
+    driveLink?: string;
+    status: string;
+    mentorFeedback?: string;
+  }>;
+  trackId: {
+    _id: string;
+    title: string;
+    slug?: string;
+    stream: string;
+    durationWeeks: number;
+  };
+}
+
 export default function StudentDashboardPage() {
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [isLoadingAuth, setIsLoadingAuth] = useState<boolean>(true);
+  const [studentId, setStudentId] = useState<string>('');
   const [purchasedList, setPurchasedList] = useState<any[]>([]);
   const [ordersList, setOrdersList] = useState<OrderItem[]>([]);
+  const [enrolledInternships, setEnrolledInternships] = useState<EnrolledInternship[]>([]);
   const [userPhone, setUserPhone] = useState<string>('');
   const [userEmail, setUserEmail] = useState<string>('');
   const [userName, setUserName] = useState<string>('Student');
@@ -69,7 +107,7 @@ export default function StudentDashboardPage() {
   
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const [selectedPreview, setSelectedPreview] = useState<any | null>(null);
-  const [activeTab, setActiveTab] = useState<'MATERIALS' | 'ORDERS' | 'BOOKMARKS' | 'DOWNLOADS'>('MATERIALS');
+  const [activeTab, setActiveTab] = useState<'MATERIALS' | 'INTERNSHIPS' | 'ORDERS' | 'BOOKMARKS' | 'DOWNLOADS'>('MATERIALS');
   const [bookmarks, setBookmarks] = useState<BookmarkItem[]>([]);
   const [lastReadNote, setLastReadNote] = useState<{ title: string; page: number; total: number; slug: string } | null>(null);
   const [downloadSuccess, setDownloadSuccess] = useState<string | null>(null);
@@ -88,6 +126,12 @@ export default function StudentDashboardPage() {
           if (data.user.name) setUserName(data.user.name);
           if (data.user.phone) setUserPhone(data.user.phone);
           if (data.user.email) setUserEmail(data.user.email);
+          if (data.user.studentId) setStudentId(data.user.studentId);
+
+          // Real enrolled internships
+          if (Array.isArray(data.internships)) {
+            setEnrolledInternships(data.internships);
+          }
 
           // Real purchased PDFs
           if (Array.isArray(data.user.purchasedPDFs) && data.user.purchasedPDFs.length > 0) {
@@ -99,7 +143,6 @@ export default function StudentDashboardPage() {
           // Real orders
           if (Array.isArray(data.orders)) {
             setOrdersList(data.orders);
-            // Check if user has an active pass from orders
             const passOrder = data.orders.find(
               (o: any) => o.orderType === 'ALL_ACCESS_PASS' && (o.status === 'SUCCESS' || o.status === 'PAID')
             );
@@ -120,20 +163,21 @@ export default function StudentDashboardPage() {
             }
           }
         } else {
-          // Fallback to localStorage saved student information if previously entered
+          // Fallback to localStorage saved student information
           const savedPhone = localStorage.getItem('studyfreepdf_user_phone') || localStorage.getItem('exampustak_user_phone');
           const savedEmail = localStorage.getItem('studyfreepdf_user_email') || localStorage.getItem('exampustak_user_email');
           const savedName = localStorage.getItem('studyfreepdf_user_name') || localStorage.getItem('exampustak_user_name');
+          const savedId = localStorage.getItem('studyfreepdf_user_student_id');
 
           if (savedPhone || savedEmail) {
             if (savedName) setUserName(savedName);
             if (savedPhone) setUserPhone(savedPhone);
             if (savedEmail) setUserEmail(savedEmail);
+            if (savedId) setStudentId(savedId);
             setIsAuthenticated(true);
           } else {
             setIsAuthenticated(false);
           }
-          // Do NOT inject fake notes for unauthenticated users! Empty state by default
           setPurchasedList([]);
           setOrdersList([]);
         }
@@ -180,6 +224,7 @@ export default function StudentDashboardPage() {
     localStorage.removeItem('studyfreepdf_user_phone');
     localStorage.removeItem('studyfreepdf_user_email');
     localStorage.removeItem('studyfreepdf_user_name');
+    localStorage.removeItem('studyfreepdf_user_student_id');
     setIsAuthenticated(false);
     router.push('/login');
   };
@@ -270,16 +315,27 @@ export default function StudentDashboardPage() {
       {/* Student Study Room Header */}
       <div className="bg-gradient-to-r from-slate-900 via-slate-950 to-indigo-950 text-white rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div className="space-y-2">
-          <div className="flex items-center gap-2 text-xs font-bold text-[#00A389] uppercase tracking-wider">
+          <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-[#00A389] uppercase tracking-wider">
             <BookOpen className="w-4 h-4" />
-            <span>My Study Room &amp; Digital Vault</span>
+            <span>My Student Study Room &amp; Digital Vault</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black">
-            Welcome, {userName}!
-          </h1>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="text-2xl sm:text-3xl font-black">
+              Welcome, {userName}!
+            </h1>
+            {studentId && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-mono text-xs font-bold">
+                <GraduationCap className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Student ID: {studentId}</span>
+              </span>
+            )}
+          </div>
+
           <p className="text-xs sm:text-sm text-slate-400">
-            Access your personalized, dynamically watermarked PDF notes, real purchase receipts, bookmarks, and solved paper vaults.
+            Access your personalized, dynamically watermarked PDF notes, NEP-2020 internship milestones, real invoices, and tamper-proof DDIS certificates.
           </p>
+
           <div className="flex flex-wrap items-center gap-3 pt-1 text-xs text-slate-400">
             {userPhone && (
               <span className="flex items-center gap-1 font-mono text-slate-300 bg-slate-800/80 px-2.5 py-1 rounded-lg border border-slate-700/60">
@@ -352,7 +408,7 @@ export default function StudentDashboardPage() {
                 You are currently browsing as a guest
               </div>
               <div className="text-xs text-amber-700">
-                Sign in with your registered phone or email to sync your purchased PDFs, college internship progress, and verified certificates.
+                Sign in with your Student ID, phone or email to sync your purchased PDFs, college internship progress, and verified certificates.
               </div>
             </div>
           </div>
@@ -373,7 +429,7 @@ export default function StudentDashboardPage() {
         </div>
       )}
 
-      {/* Resume Reading Utility Banner (Only shown if student has an active reading session) */}
+      {/* Resume Reading Utility Banner */}
       {lastReadNote && (
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-3xl p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -428,6 +484,19 @@ export default function StudentDashboardPage() {
 
         <button
           type="button"
+          onClick={() => setActiveTab('INTERNSHIPS')}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+            activeTab === 'INTERNSHIPS'
+              ? 'bg-slate-900 text-white shadow-md'
+              : 'text-slate-600 hover:bg-slate-100'
+          }`}
+        >
+          <GraduationCap className="w-3.5 h-3.5 text-blue-500" />
+          <span>My Internships &amp; Milestones ({enrolledInternships.length})</span>
+        </button>
+
+        <button
+          type="button"
           onClick={() => setActiveTab('ORDERS')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
             activeTab === 'ORDERS'
@@ -435,7 +504,7 @@ export default function StudentDashboardPage() {
               : 'text-slate-600 hover:bg-slate-100'
           }`}
         >
-          <Receipt className="w-3.5 h-3.5" />
+          <Receipt className="w-3.5 h-3.5 text-amber-500" />
           <span>My Orders &amp; Invoices ({ordersList.length})</span>
         </button>
 
@@ -505,7 +574,6 @@ export default function StudentDashboardPage() {
               <p className="text-xs font-bold text-slate-500">Loading your licensed study vault...</p>
             </div>
           ) : purchasedList.length === 0 ? (
-            /* Clean Empty State without Demo Mock Data */
             <div className="bg-white rounded-3xl p-10 sm:p-14 text-center border border-slate-200/90 shadow-sm space-y-4">
               <div className="w-16 h-16 rounded-3xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
                 <BookOpen className="w-8 h-8" />
@@ -572,7 +640,6 @@ export default function StudentDashboardPage() {
                         {product.title}
                       </h3>
 
-                      {/* Editorial & Syllabus Citation */}
                       <div className="mt-2 text-[10px] text-slate-500 flex items-center gap-1.5">
                         <FileCheck2 className="w-3.5 h-3.5 text-blue-600 shrink-0" />
                         <span>Syllabus: 2026-27 Aligned • Verified by Toppers</span>
@@ -621,7 +688,140 @@ export default function StudentDashboardPage() {
         </div>
       )}
 
-      {/* Tab 2: Orders & Invoices */}
+      {/* Tab 2: Enrolled Internships & Assignments Workspace */}
+      {activeTab === 'INTERNSHIPS' && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
+                <GraduationCap className="w-4 h-4 text-blue-600" />
+                <span>My NEP-2020 Internships &amp; Weekly Assignments ({enrolledInternships.length})</span>
+              </h2>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Accredited Virtual College Internships under Digital Developer Infinity Solution (DDIS).
+              </p>
+            </div>
+            <Link
+              href="/internships"
+              className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1"
+            >
+              Enroll in Another Track <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          {enrolledInternships.length === 0 ? (
+            <div className="bg-white rounded-3xl p-10 sm:p-14 text-center border border-slate-200/90 shadow-sm space-y-4">
+              <div className="w-16 h-16 rounded-3xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto">
+                <GraduationCap className="w-8 h-8" />
+              </div>
+              <div className="space-y-1.5 max-w-md mx-auto">
+                <h3 className="text-lg font-black text-slate-800">No Enrolled Internships Yet</h3>
+                <p className="text-xs text-slate-500 leading-relaxed">
+                  Enroll in a 4-week or 8-week virtual internship track across Science, Commerce, Arts, or BCA/IT to fulfill mandatory UGC/NEP-2020 college credits and earn a verified DDIS certificate.
+                </p>
+              </div>
+              <div className="pt-2">
+                <Link
+                  href="/internships"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-extrabold text-xs shadow-md shadow-blue-500/20"
+                >
+                  <GraduationCap className="w-4 h-4" />
+                  <span>Explore All 18 NEP-2020 Tracks</span>
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {enrolledInternships.map((internship) => {
+                const totalWeeks = internship.trackId?.durationWeeks || 4;
+                const approvedCount = internship.submissions?.filter((s) => s.status === 'APPROVED')?.length || 0;
+                const isCompleted = internship.status === 'COMPLETED' || approvedCount >= totalWeeks;
+
+                return (
+                  <div
+                    key={internship._id}
+                    className="bg-white rounded-3xl border border-slate-200/90 p-6 flex flex-col justify-between space-y-5 hover:border-blue-500 hover:shadow-xl transition-all"
+                  >
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800">
+                          {internship.trackId?.stream || 'NEP-2020'}
+                        </span>
+                        <span
+                          className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${
+                            isCompleted
+                              ? 'bg-emerald-100 text-emerald-800'
+                              : 'bg-amber-100 text-amber-800'
+                          }`}
+                        >
+                          {isCompleted ? '✓ Completed' : 'In Progress'}
+                        </span>
+                      </div>
+
+                      <h3 className="text-base font-extrabold text-slate-900 leading-snug">
+                        {internship.trackId?.title || 'NEP-2020 Industry Internship'}
+                      </h3>
+
+                      <div className="space-y-1 text-xs text-slate-600">
+                        <div className="flex items-center gap-1.5">
+                          <Building className="w-3.5 h-3.5 text-slate-400" />
+                          <span>College: <strong>{internship.collegeName}</strong></span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <Hash className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Roll / Degree: <strong>{internship.rollNumber} • {internship.degreeProgram}</strong></span>
+                        </div>
+                      </div>
+
+                      {/* Milestone Progress Bar */}
+                      <div className="space-y-1 pt-2">
+                        <div className="flex items-center justify-between text-[11px] font-bold">
+                          <span className="text-slate-500">Milestone Progress:</span>
+                          <span className="text-blue-600">{approvedCount} of {totalWeeks} Weeks Approved</span>
+                        </div>
+                        <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                          <div
+                            className="bg-gradient-to-r from-blue-500 to-emerald-500 h-full rounded-full transition-all duration-500"
+                            style={{ width: `${Math.min(100, (approvedCount / totalWeeks) * 100)}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="pt-3 border-t border-slate-100 space-y-2">
+                      <Link
+                        href={`/dashboard/internship/${internship._id}`}
+                        className="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-md shadow-blue-500/20 transition-all"
+                      >
+                        <Send className="w-3.5 h-3.5" />
+                        <span>Open Task Workspace &amp; Submit Assignments</span>
+                      </Link>
+
+                      {isCompleted ? (
+                        <a
+                          href={`/api/internship/generate-certificate?internshipId=${internship._id}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs flex items-center justify-center gap-2 shadow-md shadow-emerald-500/20 transition-all"
+                        >
+                          <Award className="w-3.5 h-3.5" />
+                          <span>Download Verified DDIS Certificate &amp; Viva Dossier</span>
+                        </a>
+                      ) : (
+                        <div className="text-[11px] text-center text-slate-400 font-medium">
+                          Certificate unlocks upon approval of all {totalWeeks} weekly milestones.
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Tab 3: Orders & Invoices */}
       {activeTab === 'ORDERS' && (
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -721,7 +921,7 @@ export default function StudentDashboardPage() {
         </div>
       )}
 
-      {/* Tab 3: Bookmarks */}
+      {/* Tab 4: Bookmarks */}
       {activeTab === 'BOOKMARKS' && (
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
           <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
@@ -777,7 +977,7 @@ export default function StudentDashboardPage() {
         </div>
       )}
 
-      {/* Tab 4: Downloads History */}
+      {/* Tab 5: Downloads History */}
       {activeTab === 'DOWNLOADS' && (
         <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-4">
           <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
@@ -811,7 +1011,7 @@ export default function StudentDashboardPage() {
                       <td className="py-3 text-slate-500">{d.time}</td>
                       <td className="py-3 text-slate-500">{d.size}</td>
                       <td className="py-3 text-emerald-700 font-mono text-[10px]">
-                        Stamped: {userPhone || 'Registered User'} ✓
+                        Stamped: {userPhone || studentId || 'Registered User'} ✓
                       </td>
                     </tr>
                   ))}
