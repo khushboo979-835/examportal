@@ -311,6 +311,63 @@ function CheckoutContent() {
               </div>
             </div>
 
+            {/* PhonePe QR Scanner for UPI Payment */}
+            {paymentMethod === 'UPI' && (
+              <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-indigo-50/70 via-white to-purple-50/50 border border-indigo-200 shadow-sm space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-xs font-black uppercase text-indigo-900 tracking-wider">
+                      PhonePe UPI QR Scanner
+                    </span>
+                  </div>
+                  <span className="text-[11px] font-bold bg-indigo-100 text-indigo-800 px-2 py-0.5 rounded-full">
+                    Payee: UJJWAL KUMAR
+                  </span>
+                </div>
+
+                <div className="flex flex-col sm:flex-row items-center gap-5">
+                  <div className="relative group shrink-0">
+                    <img
+                      src="/images/phonepe-qr.jpg"
+                      alt="PhonePe QR Code - Ujjwal Kumar"
+                      className="w-44 h-auto rounded-xl border-2 border-indigo-300 shadow-md transition-all group-hover:scale-105"
+                    />
+                    <div className="text-[10px] text-center font-black text-slate-700 mt-1">
+                      Scan with any UPI App
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 text-left">
+                    <h4 className="text-sm font-extrabold text-slate-900">
+                      Scan &amp; Pay Using PhonePe, Google Pay, or Paytm
+                    </h4>
+                    <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                      Scan this verified QR code from your mobile banking or UPI app to transfer{' '}
+                      <strong className="text-indigo-700 font-extrabold">{formatINR(totalAmount)}</strong> directly.
+                    </p>
+                    <div className="p-2.5 rounded-xl bg-indigo-100/60 border border-indigo-200/80 text-[11px] text-indigo-900 font-semibold space-y-1">
+                      <div>• Account Holder: <strong>UJJWAL KUMAR</strong></div>
+                      <div>• Supported Apps: PhonePe, GPay, Paytm, BHIM, Cred, Amazon Pay</div>
+                      <div>• Instant Unlock: Share screenshot on WhatsApp for immediate 1-minute activation</div>
+                    </div>
+                    <div className="pt-1">
+                      <a
+                        href={`https://wa.me/917544065425?text=${encodeURIComponent(
+                          `Hi StudyFreePDF, I have scanned and paid ₹${totalAmount} via PhonePe Scanner for: ${cart.map((c) => c.title).join(', ') || 'Study Notes'}. Student: ${name || 'Aspirant'}, Phone: ${phone}`
+                        )}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#25D366] hover:bg-[#1EBE5D] text-white font-extrabold text-xs shadow-sm transition-all"
+                      >
+                        <span>💬 Share Payment Screenshot on WhatsApp (+91 7544065425)</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Refund & Guarantee Notice */}
             <div className="p-4 bg-emerald-50/70 border border-emerald-200 rounded-2xl flex items-start gap-3 text-xs text-emerald-900">
               <RotateCcw className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />

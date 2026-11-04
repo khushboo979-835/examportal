@@ -127,6 +127,10 @@ export default function InternshipHubPage() {
         localStorage.setItem('ddis_student_name', studentName);
         localStorage.setItem('ddis_student_phone', studentPhone);
         localStorage.setItem('ddis_student_college', collegeName);
+        if (data.token) localStorage.setItem('studyfreepdf_token', data.token);
+        if (data.user?.studentId) localStorage.setItem('studyfreepdf_user_student_id', data.user.studentId);
+        if (data.user?.name) localStorage.setItem('studyfreepdf_user_name', data.user.name);
+        setEnrollingTrack(null);
       }
 
       // Redirect directly to the student dashboard for this internship
