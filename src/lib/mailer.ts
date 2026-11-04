@@ -19,12 +19,15 @@ const ADMIN_EMAIL = process.env.ADMIN_NOTIFICATION_EMAIL || 'studyfreepdf2@gmail
  * Returns a configured nodemailer transporter using environment variables.
  */
 function getTransporter() {
-  const user = process.env.SMTP_USER || process.env.GMAIL_USER;
-  const pass = process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD;
+  const rawUser = process.env.SMTP_USER || process.env.GMAIL_USER;
+  const rawPass = process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD;
 
-  if (!user || !pass) {
+  if (!rawUser || !rawPass) {
     return null;
   }
+
+  const user = rawUser.trim();
+  const pass = rawPass.trim().replace(/\s+/g, '');
 
   const host = process.env.SMTP_HOST || 'smtp.gmail.com';
   const port = Number(process.env.SMTP_PORT || 465);
