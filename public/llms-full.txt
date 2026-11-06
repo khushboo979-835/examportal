@@ -1,0 +1,37 @@
+# StudyFree PDF & DDIS — Complete Platform Architecture & LLM Index
+
+## About
+StudyFree PDF (https://studyfreepdf.com) provides instant digital downloads of topper-curated exam study material and UGC-aligned NEP-2020 virtual undergraduate internship programs. It operates under Digital Developer Infinity Solution (DDIS), Patna, Bihar.
+
+## Platform Features
+
+### 1. Study Notes Vault
+- Exams: BPSC 70th/71st CCE, BSEB 10th Matric, BSEB 12th Inter (Physics, Chemistry, Math, Biology, Hindi, English), CBSE 10th & 12th NCERT Crux, SSC CGL & CHSL.
+- Formats: High-resolution PDF with dynamic anti-piracy watermarking stamping student phone & order ID.
+- Pricing: ₹49 per individual note (lifetime download) or ₹199 Annual All-Access Pass (365 days of unlimited downloads).
+
+### 2. UGC NEP-2020 Internship Accreditation
+- 4-Week (75 hours) and 8-Week (150 hours) college credit fulfillments.
+- Weekly project milestones with real GitHub, Drive, and live URL submissions evaluated by industry mentors.
+- Certification: 2-page tamper-proof digital certificate with cryptographic credential ID (format: DDIS-NEP-2026-XX-XXXX) and dynamic QR code resolving to https://studyfreepdf.com/verify/[id].
+- College Viva Dossier: Comprehensive defense report detailing weekly assignments and mentor remarks for college external examiners.
+
+### 3. Payment Processing
+- Integrates PhonePe UPI QR Scanner (Payee: UJJWAL KUMAR) and Razorpay 256-bit SSL encrypted gateway.
+- Webhook HMAC-SHA256 signature verification with duplicate idempotency protection.
+- Statutory 7-day money-back guarantee under the Consumer Protection (E-Commerce) Rules, 2020.
+
+### 4. Technical Architecture
+- Framework: Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS.
+- Database: MongoDB Atlas with Mongoose schema modeling and compound indexing.
+- Storage: Cloudflare R2 / AWS S3 presigned URL streams with least-privilege token access.
+- Security: Sliding-window IP rate limiting, HMAC-SHA256 authentication tokens, and strict HTTP-only cookies.
+- SEO: Canonical tags, XML sitemaps, robots crawl directives, Schema.org JSON-LD, Google Tag Manager (GTM-PKDVWCW4), and Meta Pixel tracking.
+
+### 5. Corporate Entity & Legal Notice
+- Operating Company: Digital Developer Infinity Solution (DDIS)
+- Slogan: "Talent Aapka, Rasta Hamara" (टैलेंट आपका, रास्ता हमारा)
+- Registered Address: Near Zero Mile Metro Station, Patna, Bihar - 800007, India
+- Grievance Redressal Officer: Er. Deepak Kumar
+- Official Email: studyfreepdf2@gmail.com
+- Customer Support: +91 7544065425

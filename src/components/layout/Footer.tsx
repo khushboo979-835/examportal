@@ -102,6 +102,8 @@ export default function Footer() {
               <Link href="/" className="inline-flex items-center gap-3 group">
                 <img
                   src="/logo.png"
+                  width={150}
+                  height={48}
                   alt="StudyFree PDF Logo"
                   className="h-11 sm:h-12 w-auto object-contain rounded-xl shadow-md group-hover:scale-105 transition-transform"
                 />
@@ -137,6 +139,42 @@ export default function Footer() {
               <span className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-800 text-slate-300 flex items-center gap-1">
                 <Award className="w-3.5 h-3.5 text-amber-400" /> DDIS Certified
               </span>
+            </div>
+
+            {/* Official Social Links (Facebook, LinkedIn, DDIS) */}
+            <div className="pt-2">
+              <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider block mb-2">
+                Official Communities &amp; Social
+              </span>
+              <div className="flex items-center gap-2 flex-wrap">
+                <a
+                  href="https://www.facebook.com/studyfreepdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-blue-600 text-slate-300 hover:text-white border border-slate-800 text-xs font-bold transition-all inline-flex items-center gap-1.5"
+                  aria-label="Official Facebook Page"
+                >
+                  <span>Facebook</span>
+                </a>
+                <a
+                  href="https://www.linkedin.com/company/digital-developer-infinity-solution"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-sky-600 text-slate-300 hover:text-white border border-slate-800 text-xs font-bold transition-all inline-flex items-center gap-1.5"
+                  aria-label="Official LinkedIn Profile"
+                >
+                  <span>LinkedIn</span>
+                </a>
+                <a
+                  href="https://www.digitalinfinityddis.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-emerald-600 text-slate-300 hover:text-white border border-slate-800 text-xs font-bold transition-all inline-flex items-center gap-1.5"
+                  aria-label="DDIS Corporate Portal"
+                >
+                  <span>DDIS Portal</span>
+                </a>
+              </div>
             </div>
           </div>
 

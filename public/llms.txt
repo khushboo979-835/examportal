@@ -1,0 +1,34 @@
+# StudyFree PDF
+> Talent Aapka, Rasta Hamara (टैलेंट आपका, रास्ता हमारा)
+
+StudyFree PDF is Bihar and Central India's premier digital study material vault and National Education Policy (NEP-2020) accredited virtual undergraduate internship platform, operated in partnership with Digital Developer Infinity Solution (DDIS).
+
+## Mission & Services
+- **Exam Study Notes**: Curated topper handwritten summaries, 10-year chapter-wise solved PYQs, and formula cheat sheets across BPSC (CCE 70th/71st), BSEB Class 10th & 12th Inter (Science/Arts/Commerce), CBSE Board, and SSC CGL/CHSL. Available in Hindi & English medium.
+- **NEP-2020 Virtual Internships**: UGC-aligned 4-week and 8-week structured project internships across 4 key university streams:
+  - BCA / IT: Full-Stack Cloud Engineering (Next.js, TypeScript & MongoDB)
+  - Commerce: Corporate Accounting, Tax Compliance & GST Operations
+  - Science: Scientific Computing, Data Science & Statistical Analysis
+  - Arts: Public Policy, Technical Content Writing & Digital Communications
+- **Verifiable Credentials**: Every internship issues an accredited tamper-proof certificate and 2-page College Viva Defense Dossier with live cryptographic QR verification.
+
+## Core Hubs & URLs
+- Homepage: https://studyfreepdf.com/
+- Explore Study Notes: https://studyfreepdf.com/explore
+- NEP-2020 Internship Hub: https://studyfreepdf.com/internships
+- Certificate Verification Engine: https://studyfreepdf.com/verify
+- Student Login & Registration Portal: https://studyfreepdf.com/login
+- Pricing Policy (₹49 Single Note & ₹199 Annual Pass): https://studyfreepdf.com/pricing-policy
+- 100% Refund & Cancellation Guarantee: https://studyfreepdf.com/refund-policy
+- DPDP Act 2023 Privacy Policy: https://studyfreepdf.com/privacy
+- Terms of Service & Anti-Piracy DRM: https://studyfreepdf.com/terms
+- Contact & 24/7 Support Desk: https://studyfreepdf.com/contact
+
+## Governance & Contacts
+- Legal Entity: Digital Developer Infinity Solution (DDIS)
+- Registered Office: Near Zero Mile Metro Station, Patna, Bihar - 800007, India
+- Grievance Redressal Officer: Er. Deepak Kumar
+- Official Support Email: studyfreepdf2@gmail.com
+- Support Helpline / WhatsApp: +91 7544065425
+- Official Website: https://studyfreepdf.com
+- Corporate Partner: https://www.digitalinfinityddis.com

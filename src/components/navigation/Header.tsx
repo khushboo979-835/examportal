@@ -119,6 +119,8 @@ export default function Header() {
             <div className="relative h-10 sm:h-12 w-auto flex items-center">
               <img
                 src="/logo.png"
+                width={140}
+                height={44}
                 alt="StudyFree PDF - Your Gateway to Success"
                 className="h-9 sm:h-11 w-auto object-contain rounded-lg group-hover:scale-105 transition-transform duration-200"
               />

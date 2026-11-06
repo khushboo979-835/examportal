@@ -21,6 +21,8 @@ export default function robots(): MetadataRoute.Robots {
           '/terms',
           '/privacy',
           '/contact',
+          '/llms.txt',
+          '/llms-full.txt',
         ],
         disallow: [
           '/admin',

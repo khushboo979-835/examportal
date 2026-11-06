@@ -13,6 +13,8 @@ Allow: /terms
 Allow: /privacy
 Allow: /disclaimer
 Allow: /contact
+Allow: /llms.txt
+Allow: /llms-full.txt
 
 Disallow: /admin
 Disallow: /admin/*
